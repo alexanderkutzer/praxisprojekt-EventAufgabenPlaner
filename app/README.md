@@ -9,11 +9,12 @@ npm install
 
 installiert werden können.
 
-Und mit
+und mit jeweils im ordner
 
 ```sh
 npm run dev
 ```
+
 gestartet werden fürs development im watch mode.
 
 
