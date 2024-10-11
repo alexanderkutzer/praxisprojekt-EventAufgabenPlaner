@@ -1,4 +1,7 @@
+Zum mitarbeiten:
 Bitte Forken und Clonen in einem neuen Branch arbeiten und dann einen Pull Request erstellen.
+
+Bevor ihr mit der arbeit beginnt:
 Fork Sync(github) und git pull(local) nicht vergessen und darauf achten das ihr im richtigen Branch arbeitet.
 
 EventAufgabenPlaner:
