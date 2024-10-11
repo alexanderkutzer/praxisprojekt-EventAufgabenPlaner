@@ -1,3 +1,29 @@
+export class UserService {
+    constructor(dbService) {
+        this.table = "users";
+    }
+    getAll() {
+        return dbService.getAll(this.table);
+    }
+    getOne(id) {
+        return dbService.getOne(this.table, id);
+    }
+    create(newUser) {
+        newUser.id = crypto.randomUUID();
+        let dbNewUser = dbService.create(this.table, data);
+        if (!dbNewUser) {
+            return { create: false, user: {} };
+        }
+        return { create: true, user: newUser };
+    }
+    update(data) {
+        return dbService.update(this.table, data);
+    }
+    delete(data) {
+        return dbService.delete(this.table, data);
+    }
+}
+
 let users = [];
 export function getAllUsersService() {
     return cleanUser(users);

@@ -1,4 +1,29 @@
 let tasks = [];
+export class TaskService {
+    constructor(dbService) {
+        this.table = "tasks";
+    }
+    getAll() {
+        return dbService.getAll(this.table);
+    }
+    getOne(id) {
+        return dbService.getOne(this.table, id);
+    }
+    create(newTask) {
+        newTask.id = crypto.randomUUID();
+        let dbNewTask = dbService.create(this.table, data);
+        if (!dbNewTask) {
+            return { create: false, Task: {} };
+        }
+        return { create: true, Task: newTask };
+    }
+    update(data) {
+        return dbService.update(this.table, data);
+    }
+    delete(data) {
+        return dbService.delete(this.table, data);
+    }
+}
 export function getAllTasksService() {
     return tasks;
 }

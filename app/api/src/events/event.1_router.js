@@ -1,18 +1,17 @@
 import { Router } from "express";
-import {
-    createEventController,
-    deleteEventController,
-    getAllEventsController,
-    getEventByIdController,
-    updateEventController,
-} from "./event.2_controller.js";
 
-const router = Router();
-
-router.get("/", getAllEventsController);
-router.get("/:id", getEventByIdController);
-router.post("/", createEventController);
-router.put("/", updateEventController);
-router.delete("/", deleteEventController);
-
-export default router;
+export class EventRouter {
+    constructor(EventController) {
+        this.eventController = EventController;
+        return this.router();
+    }
+    router() {
+        const router = Router();
+        router.get("/", this.eventController.getAllEventsController);
+        router.get("/:id", this.eventController.getEventByIdController);
+        router.post("/", this.eventController.createEventController);
+        router.put("/", this.eventController.updateEventController);
+        router.delete("/", this.eventController.deleteEventController);
+        return router;
+    }
+}
