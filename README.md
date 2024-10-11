@@ -22,3 +22,4 @@ Ein webbasiertes Tool zur Planung von Events und Verwaltung von Aufgaben, das Te
  - React.js
  - Tailwind CSS
  - fullcalendar.io
+   
