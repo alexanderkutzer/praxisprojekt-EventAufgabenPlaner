@@ -7,21 +7,23 @@ export class EventService {
         let data = await this.dbService.getAll(this.table);
         return data;
     }
-    getOne(id) {
-        return this.dbService.getOne(this.table, id);
+    async getOne(id) {
+        return await this.dbService.getOne(this.table, id);
     }
-    create(newEvent) {
-        newEvent.id = crypto.randomUUID();
-        let dbNewEvent = this.dbService.create(this.table, data);
-        if (!dbNewEvent) {
+    async create(newEvent) {
+        let dbnewEvent = newEvent;
+        dbnewEvent.id = crypto.randomUUID();
+        let dbCreate = await this.dbService.create(this.table, dbnewEvent);
+        console.log("dbnewEvent", dbCreate);
+        if (!dbCreate) {
             return { create: false, event: {} };
         }
-        return { create: true, event: newEvent };
+        return { create: true, event: dbnewEvent };
     }
-    update(data) {
-        return this.dbService.update(this.table, data);
+    async update(data) {
+        return await this.dbService.update(this.table, data);
     }
-    delete(data) {
-        return this.dbService.delete(this.table, data);
+    async delete(data) {
+        return await this.dbService.delete(this.table, data);
     }
 }

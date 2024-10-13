@@ -1,51 +1,29 @@
-import {
-    createTaskService,
-    deleteTaskService,
-    getAllTasksService,
-    getTaskByIdService,
-    updateTaskService,
-} from "./task.3_service.js";
-
 export class TaskController {
     constructor(taskService) {
         this.taskService = taskService;
+        this.getAllTasksController = this.getAllTasksController.bind(this);
+        this.getTaskByIdController = this.getTaskByIdController.bind(this);
+        this.createTaskController = this.createTaskController.bind(this);
+        this.updateTaskController = this.updateTaskController.bind(this);
+        this.deleteTaskController = this.deleteTaskController.bind(this);
     }
-    getAllTasksController(req, res) {
-        res.json(this.taskService.getAll() ?? []);
+    async getAllTasksController(req, res) {
+        res.json((await this.taskService.getAll()) ?? []);
     }
-    getTaskByIdController(req, res) {
+    async getTaskByIdController(req, res) {
         const id = req.params.id;
-        res.json(this.taskService.getOne(id) ?? {});
+        res.json((await this.taskService.getOne(id)) ?? {});
     }
-    createTaskController(req, res) {
+    async createTaskController(req, res) {
         let newTask = req.body;
-        res.json(this.taskService.create(newTask) ?? {});
+        res.json((await this.taskService.create(newTask)) ?? {});
     }
-    updateTaskController(req, res) {
+    async updateTaskController(req, res) {
         let updateTask = req.body;
-        res.json(this.taskService.update(updateTask) ?? {});
+        res.json((await this.taskService.update(updateTask)) ?? {});
     }
-    deleteTaskController(req, res) {
+    async deleteTaskController(req, res) {
         let deleteTask = req.body;
-        res.json(this.taskService.delete(deleteTask) ?? {});
+        res.json((await this.taskService.delete(deleteTask)) ?? {});
     }
-}
-export function getAllTasksController(req, res) {
-    res.json(getAllTasksService() ?? []);
-}
-export function getTaskByIdController(req, res) {
-    const id = req.params.id;
-    res.json(getTaskByIdService(id) ?? {});
-}
-export function createTaskController(req, res) {
-    let newTask = req.body;
-    res.json(createTaskService(newTask) ?? {});
-}
-export function updateTaskController(req, res) {
-    let updateTask = req.body;
-    res.json(updateTaskService(updateTask) ?? {});
-}
-export function deleteTaskController(req, res) {
-    let deleteTask = req.body;
-    res.json(deleteTaskService(deleteTask) ?? {});
 }

@@ -16,18 +16,18 @@ export class EventController {
     }
     async getEventByIdController(req, res) {
         const id = req.params.id;
-        res.json(this.eventService.getOne(id) ?? {});
+        res.json((await this.eventService.getOne(id)) ?? {});
     }
     async createEventController(req, res) {
         let newEvent = req.body;
-        res.json(this.eventService.create(newEvent) ?? {});
+        res.json((await this.eventService.create(newEvent)) ?? {});
     }
     async updateEventController(req, res) {
         let updateEvent = req.body;
-        res.json(this.eventService.update(updateEvent) ?? {});
+        res.json((await this.eventService.update(updateEvent)) ?? {});
     }
     async deleteEventController(req, res) {
         let deleteEvent = req.body;
-        res.json(this.eventService.delete(deleteEvent) ?? {});
+        res.json((await this.eventService.delete(deleteEvent)) ?? {});
     }
 }

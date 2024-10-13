@@ -1,59 +1,48 @@
 export class UserService {
     constructor(dbService) {
+        this.dbService = dbService;
         this.table = "users";
     }
-    getAll() {
-        return dbService.getAll(this.table);
+    async getAll() {
+        let data = await this.dbService.getAll(this.table);
+        return data.map((user) => DTOUserFromDBToUser(user));
     }
-    getOne(id) {
-        return dbService.getOne(this.table, id);
+    async getOne(id) {
+        return this.dbService.getOne(this.table, id);
     }
-    create(newUser) {
-        newUser.id = crypto.randomUUID();
-        let dbNewUser = dbService.create(this.table, data);
-        if (!dbNewUser) {
+    async create(newUser) {
+        let dbNewUser = DTOCreateUserToDBUser(newUser);
+        let dbCreate = await this.dbService.create(
+            this.table,
+            DTOCreateUserToDBUser(newUser)
+        );
+        console.log("dbNewUser", dbCreate);
+        if (!dbCreate) {
             return { create: false, user: {} };
         }
-        return { create: true, user: newUser };
+        return { create: true, user: DTOUserFromDBToUser(dbNewUser) };
     }
-    update(data) {
-        return dbService.update(this.table, data);
+    async update(data) {
+        let dbUpdate = this.dbService.update(this.table, data);
+        if (!dbUpdate) {
+            return { update: false, user: {} };
+        }
+        return { update: true, user: DTOUserFromDBToUser(data) };
     }
-    delete(data) {
-        return dbService.delete(this.table, data);
+    async delete(data) {
+        return this.dbService.delete(this.table, data);
     }
 }
-
-let users = [];
-export function getAllUsersService() {
-    return cleanUser(users);
-}
-export function getUserByIdService(id) {
-    return cleanUser(users.find((User) => User.id === id));
-}
-export function createUserService(newUser) {
-    newUser.id = crypto.randomUUID();
-    users.push(newUser);
-    return { create: true, user: cleanUser(newUser) };
-}
-export function updateUserService(updateUser) {
-    const index = users.findIndex((user) => user.id === updateUser.id);
-    users[index] = { ...users[index], ...updateUser };
-    console.log(users);
-    return { update: true, user: cleanUser(updateUser) };
-}
-export function deleteUserService(deleteUser) {
-    users = users.filter((user) => user.id !== deleteUser.id);
-    return { delete: true, user: cleanUser(deleteUser) };
-}
-
-function cleanUser(user) {
-    delete user.password;
-    delete user.passwordHash;
-    delete user.secret;
-    return user;
-}
-function cleanUsers(users) {
-    users.forEach(cleanUser);
-    return users;
-}
+const DTOCreateUserToDBUser = ({ email, password }) => {
+    return {
+        id: crypto.randomUUID(),
+        email,
+        password,
+    };
+};
+const DTOUserFromDBToUser = ({ id, email }) => {
+    return {
+        id,
+        email,
+    };
+};

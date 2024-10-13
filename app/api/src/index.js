@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { DBConnectorSQLite3 } from "./_services/dbSqlite3.js";
+import { DBServiceSqlite3 } from "./_services/dbSqlite3.js";
 import { DBService } from "./_services/dbService.js";
 import { EventService } from "./events/event.3_service.js";
 import { TaskService } from "./tasks/task.3_service.js";
@@ -12,9 +12,9 @@ import { EventRouter } from "./events/event.1_router.js";
 import { UserController } from "./users/user.2_controller.js";
 import { UserRouter } from "./users/user.1_router.js";
 
-const dbConnectorSQLite3 = new DBConnectorSQLite3("./data/db.sqlite3");
+const dbServiceSQLite3 = new DBServiceSqlite3("./data/db.sqlite3");
 
-const dbService = new DBService(dbConnectorSQLite3);
+const dbService = new DBService(dbServiceSQLite3);
 
 const eventService = new EventService(dbService);
 const eventController = new EventController(eventService);

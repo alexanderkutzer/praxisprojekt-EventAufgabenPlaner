@@ -1,16 +1,78 @@
 import sqlite3 from "sqlite3";
-import fs from "fs";
+export class DBServiceSqlite3 {
+    constructor(path) {
+        this.dbConnector = new DBConnectorSQLite3(path);
+        if (!this.dbConnector) {
+            console.error("DBServiceSqlite3: dbConnector is null");
+        }
+        this.dbConnector.connect();
+    }
+    async checkAndCreateTables(sqls) {
+        for (let sql of sqls) {
+            await this.dbConnector.exec(sql);
+        }
+    }
+    async getAll(table) {
+        let sql = `SELECT * FROM ${table}`;
+        let data = await this.dbConnector.query(sql);
+        console.log("table", table, "data: ", data);
+        return data;
+    }
+    async getOne(table, id) {
+        let sql = `SELECT * FROM ${table} WHERE id = ${id}`;
+        return await this.dbConnector.query(sql);
+    }
+    async create(table, data) {
+        console.log("DBService.create", table, data);
+        let keys = Object.keys(data);
+        let values = Object.values(data);
+        let sql = `INSERT INTO ${table} ('${keys.join(
+            "','"
+        )}') VALUES ('${values.join("','")}')`;
+        console.log("sql: ", sql);
+        let result = await this.dbConnector.exec(sql);
 
-export class DBConnectorSQLite3 {
+        return result;
+    }
+    async update(table, data) {
+        console.log("DBService.update", table, data);
+        if (!data.id) {
+            throw new Error("Die 'id' ist im Datenobjekt erforderlich.");
+        }
+        const { id, ...fieldsToUpdate } = data;
+        if (Object.keys(fieldsToUpdate).length === 0) {
+            throw new Error("Keine Felder zum Aktualisieren bereitgestellt.");
+        }
+        const setClause = Object.keys(fieldsToUpdate)
+            .map((key) => `${key} = ?`)
+            .join(", ");
+
+        const values = Object.values(fieldsToUpdate);
+        const sql = `UPDATE ${table} SET ${setClause} WHERE id = ?`;
+        const queryValues = [...values, id];
+
+        console.log("SQL:", sql);
+        console.log("Werte:", queryValues);
+
+        try {
+            return await this.dbConnector.exec(sql, queryValues);
+        } catch (error) {
+            console.error("Fehler beim Aktualisieren der Daten:", error);
+            throw error;
+        }
+    }
+
+    async delete(table, data) {
+        let sql = `DELETE FROM ${table} WHERE id = ${data.id}`;
+        return await this.dbConnector.exec(sql);
+    }
+}
+class DBConnectorSQLite3 {
     constructor(dbPath) {
         this.dbPath = dbPath;
         this.db = null;
     }
     async connect() {
-        if (!fs.existsSync(this.dbPath)) {
-            console.error(`DBConnectorSQLite3: ${this.dbPath} does not exist`);
-            return;
-        }
         this.db = new sqlite3.Database(this.dbPath, (err) => {
             if (err) {
                 console.error(`DBConnectorSQLite3: ${err.message}`);
@@ -18,6 +80,7 @@ export class DBConnectorSQLite3 {
             }
             console.log(`DBConnectorSQLite3: Connected to ${this.dbPath}`);
         });
+        console.log("db: ", this.db);
     }
     async disconnect() {
         if (this.db) {
@@ -43,14 +106,22 @@ export class DBConnectorSQLite3 {
             });
         });
     }
-    async exec(sql) {
+    /**
+     * Führt eine SQL-Anweisung aus.
+     * @param {*} sql
+     * @param {*} params
+     * @returns
+     */
+    async exec(sql, params = []) {
         return new Promise((resolve, reject) => {
-            this.db.exec(sql, (err) => {
+            this.db.run(sql, params, async (err) => {
                 if (err) {
                     console.error(`DBConnectorSQLite3: ${err.message}`);
                     reject(err);
+                } else {
+                    // 'this' bezieht sich auf das Statement-Kontextobjekt
+                    resolve(true);
                 }
-                resolve();
             });
         });
     }
