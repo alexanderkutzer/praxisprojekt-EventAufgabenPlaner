@@ -7,15 +7,13 @@ import Login from "./pages/cores/login/Index.jsx";
 export function App() {
     const [menu, setMenu] = useState("home");
 
-
     const events = [
-        { title: 'Event 1', date: '2024-10-14' },
-        { title: 'Event 2', date: '2024-10-15' },
-        { title: 'Event 3', date: '2024-10-20' },
+        { title: "Event 1", date: "2024-10-14" },
+        { title: "Event 2", date: "2024-10-15" },
+        { title: "Event 3", date: "2024-10-20" },
     ];
 
     return (
-
         <div className="mx-16">
             <div className="flex flex-col items-center mt-4">
                 <div id="nav" className="flex flex-row">
@@ -44,17 +42,7 @@ export function App() {
                     {menu === "login" && <Login></Login>}
                 </div>
             </div>
-
         </div>
-        <div className="flex flex-col items-start w-full mt-8">  
-         <div className="w-full max-w-[50%]">
-            <Calendar
-         events={events}
-        plugins={[dayGridPlugin, multiMonthPlugin]}
-    />
-    </div>
-    </div>
-    </div>
     );
 }
 export default App;
