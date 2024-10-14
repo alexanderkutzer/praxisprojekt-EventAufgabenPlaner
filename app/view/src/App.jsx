@@ -46,15 +46,6 @@ export function App() {
             </div>
 
         </div>
-        <div className="flex flex-col items-start w-full mt-8">  
-         <div className="w-full max-w-[50%]">
-            <Calendar
-         events={events}
-        plugins={[dayGridPlugin, multiMonthPlugin]}
-    />
-    </div>
-    </div>
-    </div>
     );
 }
 export default App;
