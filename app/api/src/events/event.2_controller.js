@@ -1,27 +1,33 @@
-import {
-    createEventService,
-    deleteEventService,
-    getAllEventsService,
-    getEventByIdService,
-    updateEventService,
-} from "./event.3_service.js";
+export class EventController {
+    constructor(EventService) {
+        this.eventService = EventService;
+        if (!this.eventService) {
+            console.error("EventController: eventService is null");
+        }
+        this.getAllEventsController = this.getAllEventsController.bind(this);
+        this.getEventByIdController = this.getEventByIdController.bind(this);
+        this.createEventController = this.createEventController.bind(this);
+        this.updateEventController = this.updateEventController.bind(this);
+        this.deleteEventController = this.deleteEventController.bind(this);
+    }
 
-export function getAllEventsController(req, res) {
-    res.json(getAllEventsService() ?? []);
-}
-export function getEventByIdController(req, res) {
-    const id = req.params.id;
-    res.json(getEventByIdService(id) ?? {});
-}
-export function createEventController(req, res) {
-    let newEvent = req.body;
-    res.json(createEventService(newEvent) ?? {});
-}
-export function updateEventController(req, res) {
-    let updateEvent = req.body;
-    res.json(updateEventService(updateEvent) ?? {});
-}
-export function deleteEventController(req, res) {
-    let deleteEvent = req.body;
-    res.json(deleteEventService(deleteEvent) ?? {});
+    async getAllEventsController(req, res) {
+        res.json((await this.eventService.getAll()) ?? []);
+    }
+    async getEventByIdController(req, res) {
+        const id = req.params.id;
+        res.json((await this.eventService.getOne(id)) ?? {});
+    }
+    async createEventController(req, res) {
+        let newEvent = req.body;
+        res.json((await this.eventService.create(newEvent)) ?? {});
+    }
+    async updateEventController(req, res) {
+        let updateEvent = req.body;
+        res.json((await this.eventService.update(updateEvent)) ?? {});
+    }
+    async deleteEventController(req, res) {
+        let deleteEvent = req.body;
+        res.json((await this.eventService.delete(deleteEvent)) ?? {});
+    }
 }

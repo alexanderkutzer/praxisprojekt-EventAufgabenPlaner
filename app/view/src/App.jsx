@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import Button from "./components/Button";
-import Calendar from "./Calendar.jsx";
-import dayGridPlugin from '@fullcalendar/daygrid';
-import multiMonthPlugin from '@fullcalendar/multimonth';
+import PageAdmin from "./pages/admin/Index";
+import PageMain from "./pages/main/Index.jsx";
+import Login from "./pages/cores/login/Index.jsx";
 
 export function App() {
-    const [count, setCount] = useState(0);
+    const [menu, setMenu] = useState("home");
+
 
     const events = [
         { title: 'Event 1', date: '2024-10-14' },
@@ -16,18 +15,36 @@ export function App() {
     ];
 
     return (
-        <div className="mx-16 ..."><div className="flex flex-col items-center mt-8">
-            <h1 className="text-2xl font-bold mb-8">
-                viteReactEmptyTest Project
-            </h1>
-            <img src={viteLogo} alt="Vite logo" />
 
-            <img src={reactLogo} alt="React logo" />
+        <div className="mx-16">
+            <div className="flex flex-col items-center mt-4">
+                <div id="nav" className="flex flex-row">
+                    <Button
+                        active={menu === "home" ? "true" : "false"}
+                        onClick={() => setMenu("home")}
+                    >
+                        Home
+                    </Button>
+                    <Button
+                        active={menu == "admin" ? "true" : "false"}
+                        onClick={() => setMenu("admin")}
+                    >
+                        Admin
+                    </Button>
+                    <Button
+                        active={menu == "login" ? "true" : "false"}
+                        onClick={() => setMenu("login")}
+                    >
+                        Login
+                    </Button>
+                </div>
+                <div id="main" className="w-full flex flex-col items-center">
+                    {menu === "home" && <PageMain></PageMain>}
+                    {menu === "admin" && <PageAdmin></PageAdmin>}
+                    {menu === "login" && <Login></Login>}
+                </div>
+            </div>
 
-            <Button onClick={() => setCount((count) => count + 1)}>
-                count is {count}
-            </Button>
-           
         </div>
         <div className="flex flex-col items-start w-full mt-8">  
          <div className="w-full max-w-[50%]">
