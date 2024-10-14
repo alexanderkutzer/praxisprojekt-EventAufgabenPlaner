@@ -21,3 +21,5 @@ Ein webbasiertes Tool zur Planung von Events und Verwaltung von Aufgaben, das Te
 ### Frontend: 
  - React.js
  - Tailwind CSS
+ - fullcalendar.io
+   
