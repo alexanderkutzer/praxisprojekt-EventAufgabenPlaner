@@ -23,14 +23,23 @@ export class UserController {
             });
             return;
         }
-        if (newUser.email === "" || newUser.password === "") {
+        console.log("newUser", newUser);
+        if (
+            newUser.email.trim() === "" ||
+            newUser.password.trim() === "" ||
+            newUser.email.trim().includes(" ") ||
+            newUser.password.trim().includes(" ")
+        ) {
             res.status(400).json({
                 create: false,
-                error: "email and password are required",
+                error: "email and password has spaces",
             });
             return;
         }
-        if (newUser.email.length < 4 || newUser.password.length < 4) {
+        if (
+            newUser.email.trim().length < 4 ||
+            newUser.password.trim().length < 4
+        ) {
             res.status(400).json({
                 create: false,
                 error: "email and password must be at least 4 characters long",
@@ -46,7 +55,12 @@ export class UserController {
     }
     async deleteUserController(req, res) {
         const id = req.params.id;
-        const result = { delete: await this.userService.delete(id), id: id };
-        res.json(result);
+        const result = await this.userService.delete(id);
+        console.log("delete result", result);
+        if (!result) {
+            res.status(404).json({ delete: false, id });
+            return;
+        }
+        res.json({ delete: true, id });
     }
 }

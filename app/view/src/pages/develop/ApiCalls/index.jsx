@@ -13,7 +13,7 @@ function DevelopApiCalls() {
     const [response2, setResponse2] = React.useState("");
     const [id, setId] = React.useState("");
     const [email, setEmail] = React.useState("email@test");
-    const [password, setPassword] = React.useState("passwordtest");
+    const [password, setPassword] = React.useState("");
     const [isActive, setIsActive] = React.useState(false);
     const [isAdmin, setIsAdmin] = React.useState(false);
     function recogniceResponse(res) {
