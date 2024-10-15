@@ -26,8 +26,8 @@ export class UserService {
         let date = Date.now().toString();
         dbNewUser.passwordHash = createPasswordHash(newUser.password, date);
         dbNewUser.dateCreated = date;
-        dbNewUser.isActive = 1;
-        dbNewUser.isAdmin = 0;
+        dbNewUser.isActive = newUser.isActive ? 1 : 1;
+        dbNewUser.isAdmin = newUser.isAdmin ? 1 : 0;
         dbNewUser.token = "";
         let dbCreate = await this.dbService.create(this.table, dbNewUser);
         console.log("dbNewUser", dbCreate);
@@ -52,11 +52,14 @@ export class UserService {
         return { update: true, user: DTOUserFromDBToUser(data) };
     }
     async delete(id) {
+        console.log("delete id", id);
         const user = await this.getOne(id);
-        if (!user) {
-            return { delete: false, id: id };
+        console.log("delete user", user);
+        if (user.id !== id) {
+            return false;
         }
-        return this.dbService.delete(this.table, id);
+        let dbDelete = await this.dbService.delete(this.table, id);
+        return true;
     }
     async createInitUsers() {
         let users = await this.getAll();
