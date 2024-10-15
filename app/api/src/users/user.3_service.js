@@ -10,7 +10,11 @@ export class UserService {
         return data.map((user) => DTOUserFromDBToUser(user));
     }
     async getOne(id) {
-        return this.dbService.getOne(this.table, id);
+        let data = await this.dbService.getOne(this.table, id);
+        if (!data) {
+            return {};
+        }
+        return DTOUserFromDBToUser(data);
     }
     async getUserByEmail(email) {
         let data = await this.dbService.getAll(this.table);
@@ -19,25 +23,40 @@ export class UserService {
     }
     async create(newUser) {
         let dbNewUser = DTOCreateUserToDBUser(newUser);
-        let dbCreate = await this.dbService.create(
-            this.table,
-            DTOCreateUserToDBUser(newUser)
-        );
+        let date = Date.now().toString();
+        dbNewUser.passwordHash = createPasswordHash(newUser.password, date);
+        dbNewUser.dateCreated = date;
+        dbNewUser.isActive = 1;
+        dbNewUser.isAdmin = 0;
+        dbNewUser.token = "";
+        let dbCreate = await this.dbService.create(this.table, dbNewUser);
         console.log("dbNewUser", dbCreate);
         if (!dbCreate) {
-            return { create: false, user: {} };
+            return { create: false, error: "User not created" };
         }
         return { create: true, user: DTOUserFromDBToUser(dbNewUser) };
     }
-    async update(data) {
-        let dbUpdate = this.dbService.update(this.table, data);
+    async update(id, data) {
+        let dbUser = await this.dbService.getOne(this.table, id);
+        if (data.password && data.password !== "") {
+            data.passwordHash = createPasswordHash(
+                data.password,
+                dbUser.dateCreated
+            );
+        }
+        delete data.password;
+        let dbUpdate = await this.dbService.update(this.table, id, data);
         if (!dbUpdate) {
             return { update: false, user: {} };
         }
         return { update: true, user: DTOUserFromDBToUser(data) };
     }
-    async delete(data) {
-        return this.dbService.delete(this.table, data);
+    async delete(id) {
+        const user = await this.getOne(id);
+        if (!user) {
+            return { delete: false, id: id };
+        }
+        return this.dbService.delete(this.table, id);
     }
     async createInitUsers() {
         let users = await this.getAll();
@@ -47,6 +66,8 @@ export class UserService {
                 email: "admin@localhost",
                 dateCreated: date,
                 passwordHash: createPasswordHash("admin", date),
+                isActive: 1,
+                isAdmin: 1,
                 token: "",
             };
             console.log(
@@ -81,18 +102,29 @@ const checkPasswords = (password, passwordHash, secret) => {
     return createPasswordHash(password, secret) === passwordHash;
 };
 
-const DTOCreateUserToDBUser = ({ email, passwordHash, dateCreated, token }) => {
+const DTOCreateUserToDBUser = ({
+    email,
+    passwordHash,
+    dateCreated,
+    isActive,
+    isAdmin,
+    token,
+}) => {
     return {
         id: crypto.randomUUID(),
         email,
         passwordHash,
         dateCreated,
+        isActive,
+        isAdmin,
         token,
     };
 };
-const DTOUserFromDBToUser = ({ id, email }) => {
+const DTOUserFromDBToUser = ({ id, email, isActive, isAdmin }) => {
     return {
         id,
         email,
+        isActive,
+        isAdmin,
     };
 };

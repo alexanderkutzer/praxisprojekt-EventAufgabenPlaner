@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import Button from "./components/Button";
 import PageAdmin from "./pages/admin/Index";
 import PageMain from "./pages/main/Index.jsx";
 import Login from "./pages/cores/login/Index.jsx";
+import Button from "./components/Button.jsx";
+import PageDevelop from "./pages/develop/index.jsx";
 
 export function App() {
     const [menu, setMenu] = useState("home");
@@ -28,6 +29,12 @@ export function App() {
                         onClick={() => setMenu("admin")}
                     >
                         Admin
+                    </Button>{" "}
+                    <Button
+                        active={menu == "develop" ? "true" : "false"}
+                        onClick={() => setMenu("develop")}
+                    >
+                        Develop
                     </Button>
                     <Button
                         active={menu == "login" ? "true" : "false"}
@@ -39,6 +46,7 @@ export function App() {
                 <div id="main" className="w-full flex flex-col items-center">
                     {menu === "home" && <PageMain></PageMain>}
                     {menu === "admin" && <PageAdmin></PageAdmin>}
+                    {menu === "develop" && <PageDevelop></PageDevelop>}
                     {menu === "login" && <Login></Login>}
                 </div>
             </div>

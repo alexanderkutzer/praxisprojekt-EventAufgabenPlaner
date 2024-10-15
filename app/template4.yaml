@@ -5,7 +5,7 @@ Parameters:
   KeyName:
     Description: Name eines vorhandenen EC2-Schluesselpaares fuer den SSH-Zugriff
     Type: AWS::EC2::KeyPair::KeyName
-    Default: EventAufgabenPlaner  #Fallback-Wert, falls keiner in der env Datei übergeben wurde
+    Default: EventAufgabenPlaner
     ConstraintDescription: Muss der Name eines bestehenden EC2-Schluesselpaares sein.
   InstanceType:
     Description: EC2-Instanztyp
@@ -21,10 +21,6 @@ Parameters:
     Type: String
     Default: 0.0.0.0/0
     ConstraintDescription: Muss eine gueltige CIDR-Notation sein.
-  AmiParameter:
-    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
-    Default: "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"   #holt hier immer die aktuelle AMI-ID, für die Amazon Linux 2023 AMI
-
 
 Resources:
   EC2Instance:
@@ -32,7 +28,7 @@ Resources:
     Properties:
       InstanceType: !Ref InstanceType
       KeyName: !Ref KeyName
-      ImageId: !Ref AmiParameter  # Verweis auf den Parameter für die neueste Amazon Linux 2023 AMI-ID
+      ImageId: ami-0e6a13e7a5b66ff4d  # Amazon Linux 2 AMI-ID fuer eu-central-1
       SecurityGroupIds:
         - !Ref InstanceSecurityGroup
       SubnetId: !Ref PublicSubnet
@@ -50,71 +46,39 @@ Resources:
           systemctl start httpd
           systemctl enable httpd
 
-          
-  
           # NVM installieren
-          echo "NVM wird installiert..." >> /var/log/user-data.log
-          su ec2-user -l -c "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash" >> /var/log/user-data.log 2>&1
-          
-          # NVM in die Shell laden und Node.js installieren
-          su ec2-user -l -c "export NVM_DIR=\"/home/ec2-user/.nvm\" && [ -s \"\$NVM_DIR/nvm.sh\" ] && . \"\$NVM_DIR/nvm.sh\" && nvm install --lts" >> /var/log/user-data.log 2>&1
+          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+          sleep 2
+          export NVM_DIR="$HOME/.nvm"
+          sleep 2
+          [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # NVM laden
 
-          # Testen, ob NVM installiert wurde
-          su ec2-user -l -c "export NVM_DIR=\"/home/ec2-user/.nvm\" && [ -s \"\$NVM_DIR/nvm.sh\" ] && . \"\$NVM_DIR/nvm.sh\" && nvm --version" >> /var/log/user-data.log 2>&1
-
-          
+          sleep 2
           # Node.js installieren mit NVM
-          su ec2-user -l -c "nvm install --lts"
+          su ec2-user -l -c "nvm install 16"
 
           # Git-Repository klonen
           su ec2-user -l -c "git clone https://github.com/alexanderkutzer/praxisprojekt-EventAufgabenPlaner.git ~/praxisprojekt-EventAufgabenPlaner"
 
-          # Überprüfen, ob das Klonen erfolgreich war
-          if [ -d "/home/ec2-user/praxisprojekt-EventAufgabenPlaner" ]; then
-            echo "Repository wurde erfolgreich geklont."
-          else
-            echo "Fehler: Repository konnte nicht geklont werden." >> /var/log/user-data.log
-          fi
-
-          # In das Projektverzeichnis navigieren, Überprüfung und Anwendung starten
-          su ec2-user -l -c "
-
-            cd /home/ec2-user/praxisprojekt-EventAufgabenPlaner/app/view && 
-            if [ \"\$(pwd)\" == \"/home/ec2-user/praxisprojekt-EventAufgabenPlaner/app/view\" ]; then
-              echo 'Erfolg: Erfolgreich in das Verzeichnis vier gewechselt.' >> /var/log/user-data.log
-              sleep 5
-              npm install
-              sleep 5
-              npm run build:server
-            else
-              echo 'Fehler: Konnte nicht in das Verzeichnis wechseln.' >> /var/log/user-data.log
-            fi
-
-            # Wechsle ins dist-Verzeichnis und überprüfe es
-            cd /home/ec2-user/praxisprojekt-EventAufgabenPlaner/app/view/dist
-            if [ \"\$(pwd)\" == \"/home/ec2-user/praxisprojekt-EventAufgabenPlaner/app/view/dist\" ]; then
-              echo 'Erfolg: Erfolgreich in das dist-Verzeichnis gewechselt.' >> /var/log/user-data.log
-              sudo cp -r * /var/www/html
-            else
-              echo 'Fehler: Konnte nicht in das dist-Verzeichnis wechseln.' >> /var/log/user-data.log
-              exit 1
-            fi
+          # In das Projektverzeichnis navigieren und die Anwendung starten
+          cd /home/ec2-user/praxisprojekt-EventAufgabenPlaner/app/view     
+          sleep 1   
+          npm install
+          sleep 5
+          npm run build
 
 
-            # API starten
-            cd /home/ec2-user/praxisprojekt-EventAufgabenPlaner/app/api
-            sleep5
+          # Inhalt aus dist-Ordner in Apache Webverzeichnis kopieren
+          cd /home/ec2-user/praxisprojekt-EventAufgabenPlaner/app/view/dist/
+          sleep 1
+          sudo cp -r * /var/www/html
 
-            npm install
-            sleep5
-            npm run start
-
-            curl http://localhost:3000 -X POST 
-            if[$? -ne 0]; then 
-              echo "Api läuft nicht"
-            fi
-
-          "
+          # API starten
+          cd /home/ec2-user/praxisprojekt-EventAufgabenPlaner/app/api
+          sleep 1
+          npm install
+          sleep 5
+          npm run start
 
 
 
@@ -133,11 +97,6 @@ Resources:
           FromPort: 80
           ToPort: 80
           CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 3000
-          ToPort: 3000
-          CidrIp: 0.0.0.0/0
-
       Tags:
         - Key: Name
           Value: EventAufgabenPlaner-SG
