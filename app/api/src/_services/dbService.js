@@ -28,6 +28,8 @@ const sqls = [
         email TEXT,
         passwordHash TEXT,
         dateCreated TEXT,
+        isActive BOOLEAN,
+        isAdmin BOOLEAN, 
         token TEXT
     )`,
 ];

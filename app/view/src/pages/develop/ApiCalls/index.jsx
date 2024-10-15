@@ -14,7 +14,8 @@ function DevelopApiCalls() {
     const [id, setId] = React.useState("");
     const [email, setEmail] = React.useState("email@test");
     const [password, setPassword] = React.useState("passwordtest");
-    const [object, setObject] = React.useState({});
+    const [isActive, setIsActive] = React.useState(false);
+    const [isAdmin, setIsAdmin] = React.useState(false);
     function recogniceResponse(res) {
         console.log(res);
         setResponse(res);
@@ -27,7 +28,10 @@ function DevelopApiCalls() {
 
     // Funktion zur Rekursiven Darstellung des JSON mit Buttons für IDs
     function renderJSONWithButtons(obj, indent = 0) {
-        const indentStyle = { paddingLeft: `${indent * 20}px` };
+        const indentStyle = {
+            lineHeight: 1,
+            paddingLeft: `${indent * 20}px`,
+        };
 
         if (Array.isArray(obj)) {
             return (
@@ -54,11 +58,12 @@ function DevelopApiCalls() {
                             {key === "id" ? (
                                 <>
                                     {obj[key]}{" "}
-                                    <Button
+                                    <button
+                                        className="border border-black rounded-sm bg-orange-300 hover:bg-orange-500 px-1 py-0.5"
                                         onClick={() => handleClick(obj[key])}
                                     >
-                                        Klick mich
-                                    </Button>
+                                        Id Übergeben
+                                    </button>
                                 </>
                             ) : (
                                 renderJSONWithButtons(obj[key], indent + 1)
@@ -110,8 +115,12 @@ function DevelopApiCalls() {
                                 >
                                     GetOne
                                 </Button>
-                                ID:
+                                <br />
+                                <lable className="inline-flex w-24 mx-2">
+                                    ID:
+                                </lable>
                                 <input
+                                    className="p-1 m-1"
                                     value={id}
                                     onChange={(e) => setId(e.target.value)}
                                     id="getUserId"
@@ -133,14 +142,21 @@ function DevelopApiCalls() {
                                     Create
                                 </Button>
                                 <br />
-                                <label>email </label>
+                                <label className="inline-flex w-24 mx-2">
+                                    Email:
+                                </label>
                                 <input
+                                    className="p-1 m-1"
                                     type="text"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
-                                <label>password </label>
+                                <br />
+                                <label className="inline-flex w-24 mx-2">
+                                    Password:
+                                </label>
                                 <input
+                                    className="p-1 m-1"
                                     type="text"
                                     value={password}
                                     onChange={(e) =>
@@ -154,6 +170,9 @@ function DevelopApiCalls() {
                                         recogniceResponse(
                                             await apiUpdateUser(id, {
                                                 email: email,
+                                                password: password,
+                                                isActive: isActive ? 1 : 0,
+                                                isAdmin: isAdmin ? 1 : 0,
                                             })
                                         )
                                     }
@@ -161,17 +180,57 @@ function DevelopApiCalls() {
                                     Update
                                 </Button>
                                 <br />
-                                <label>id </label>
+                                <label className="inline-flex w-24 mx-2">
+                                    ID:
+                                </label>
                                 <input
+                                    className="p-1 m-1"
                                     type="text"
                                     value={id}
                                     onChange={(e) => setId(e.target.value)}
                                 />
-                                <label>Email</label>
+                                <Button onClick={() => setId("")}>DEL</Button>
+                                <br />
+                                <label className="inline-flex w-24 mx-2">
+                                    Email
+                                </label>
                                 <input
+                                    className="p-1 m-1"
                                     type="text"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
+                                />
+                                <br />
+                                <label className="inline-flex w-24 mx-2">
+                                    Password{" "}
+                                </label>
+                                <input
+                                    className="p-1 m-1"
+                                    type="text"
+                                    value={password}
+                                    onChange={(e) =>
+                                        setPassword(e.target.value)
+                                    }
+                                />
+                                <br />
+                                <label className="inline-flex w-24 mx-2">
+                                    Active
+                                </label>
+                                <input
+                                    className="p-1 m-1"
+                                    type="checkbox"
+                                    checked={isActive}
+                                    onClick={() => setIsActive(!isActive)}
+                                />
+                                <br />
+                                <label className="inline-flex w-24 mx-2">
+                                    Admin
+                                </label>
+                                <input
+                                    className="p-1 m-1"
+                                    type="checkbox"
+                                    checked={isAdmin}
+                                    onChange={() => setIsAdmin(!isAdmin)}
                                 />
                             </div>
                             <div>
@@ -184,8 +243,12 @@ function DevelopApiCalls() {
                                 >
                                     Delete
                                 </Button>
-                                ID:
+                                <br />
+                                <label className="inline-flex w-24 mx-2">
+                                    ID:
+                                </label>
                                 <input
+                                    className="p-1 m-1"
                                     value={id}
                                     onChange={(e) => setId(e.target.value)}
                                     id="getUserId"
@@ -213,7 +276,11 @@ function DevelopApiCalls() {
                         )}
                     </div>
                     <div className="border border-black rounded-sm">
-                        {response2}
+                        {response2 === "" ? (
+                            <p>No response yet</p>
+                        ) : (
+                            <pre>{response2}</pre>
+                        )}
                     </div>
                 </div>
             </div>
