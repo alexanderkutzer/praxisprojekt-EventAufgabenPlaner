@@ -53,10 +53,10 @@ export class DBService {
     async create(table, data) {
         return await this.dbServiceSystem.create(table, data);
     }
-    async update(table, data) {
-        return await this.dbServiceSystem.update(table, data);
+    async update(table, id, data) {
+        return await this.dbServiceSystem.update(table, id, data);
     }
-    async delete(table, data) {
-        return await this.dbServiceSystem.delete(table, data);
+    async delete(table, id) {
+        return await this.dbServiceSystem.delete(table, id);
     }
 }

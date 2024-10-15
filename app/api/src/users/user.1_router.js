@@ -10,8 +10,8 @@ export class UserRouter {
         router.get("/", this.userController.getAllUsersController);
         router.get("/:id", this.userController.getUserByIdController);
         router.post("/", this.userController.createUserController);
-        router.put("/", this.userController.updateUserController);
-        router.delete("/", this.userController.deleteUserController);
+        router.put("/:id", this.userController.updateUserController);
+        router.delete("/:id", this.userController.deleteUserController);
         return router;
     }
 }

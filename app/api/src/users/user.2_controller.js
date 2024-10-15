@@ -20,11 +20,13 @@ export class UserController {
         res.json((await this.userService.create(newUser)) ?? {});
     }
     async updateUserController(req, res) {
-        let updateUser = req.body;
-        res.json((await this.userService.update(updateUser)) ?? {});
+        const id = req.params.id;
+        const updateUser = req.body;
+        res.json((await this.userService.update(id, updateUser)) ?? {});
     }
     async deleteUserController(req, res) {
-        let deleteUser = req.body;
-        res.json((await this.userService.delete(deleteUser)) ?? {});
+        const id = req.params.id;
+        const result = { delete: await this.userService.delete(id), id: id };
+        res.json(result);
     }
 }

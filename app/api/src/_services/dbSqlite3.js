@@ -18,8 +18,8 @@ export class DBServiceSqlite3 {
         return data;
     }
     async getOne(table, id) {
-        let sql = `SELECT * FROM ${table} WHERE id = ${id}`;
-        return await this.dbConnector.query(sql);
+        let sql = `SELECT * FROM ${table} WHERE id = '${id}'`;
+        return (await this.dbConnector.query(sql))[0];
     }
     async create(table, data) {
         console.log("DBService.create", table, data);
@@ -33,12 +33,12 @@ export class DBServiceSqlite3 {
 
         return result;
     }
-    async update(table, data) {
-        console.log("DBService.update", table, data);
-        if (!data.id) {
-            throw new Error("Die 'id' ist im Datenobjekt erforderlich.");
+    async update(table, id, data) {
+        console.log("DBService.update", table, id, data);
+        if (!id) {
+            throw new Error("Die 'id' ist erforderlich.");
         }
-        const { id, ...fieldsToUpdate } = data;
+        const { ...fieldsToUpdate } = data;
         if (Object.keys(fieldsToUpdate).length === 0) {
             throw new Error("Keine Felder zum Aktualisieren bereitgestellt.");
         }
@@ -47,8 +47,8 @@ export class DBServiceSqlite3 {
             .join(", ");
 
         const values = Object.values(fieldsToUpdate);
-        const sql = `UPDATE ${table} SET ${setClause} WHERE id = ?`;
-        const queryValues = [...values, id];
+        const sql = `UPDATE ${table} SET ${setClause} WHERE id = '${id}'`;
+        const queryValues = [...values];
 
         console.log("SQL:", sql);
         console.log("Werte:", queryValues);
@@ -61,8 +61,8 @@ export class DBServiceSqlite3 {
         }
     }
 
-    async delete(table, data) {
-        let sql = `DELETE FROM ${table} WHERE id = ${data.id}`;
+    async delete(table, id) {
+        let sql = `DELETE FROM ${table} WHERE id = '${id}'`;
         return await this.dbConnector.exec(sql);
     }
 }
