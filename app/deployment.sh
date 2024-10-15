@@ -10,34 +10,32 @@ fi
 
 # Festlegen von SSHLocation je nach Modus
 if [ "$MODE" == "dev" ]; then
-  SSH_LOCATION="0.0.0.0/0"  # Offen für alle
+  SSH_LOCATION="0.0.0.0/0" # Offen für alle
 else
-  SSH_LOCATION="127.0.0.1/32"  # Geschlossen (nur Loopback)
+  SSH_LOCATION="127.0.0.1/32" # Geschlossen (nur Loopback)
 fi
 
 # Stack-spezifische Variablen
 STACK_NAME="EventAufgabenPlaner-Stack"
 TEMPLATE_FILE="template.yaml"
-PROFILE="student"
 REGION="eu-central-1"
 
 echo "Deployment von $TEMPLATE_FILE zu CloudFormation Stack: $STACK_NAME in Region: $REGION..."
 
 # Login sicherstellen
-aws sso login --profile $PROFILE
+aws sso login
 
 # Überprüfung des AWS-Identitätstokens
-aws sts get-caller-identity --profile $PROFILE
+aws sts get-caller-identity
 
 # Stack erstellen oder aktualisieren
 aws cloudformation deploy \
   --stack-name $STACK_NAME \
   --template-file $TEMPLATE_FILE \
   --parameter-overrides KeyName="$KEY_PAIR_NAME" \
-                       SSHLocation="$SSH_LOCATION" \
+  SSHLocation="$SSH_LOCATION" \
   --capabilities CAPABILITY_NAMED_IAM \
-  --region $REGION \
-  --profile $PROFILE
+  --region $REGION
 
 # Ergebnisprüfung
 if [ $? -eq 0 ]; then
