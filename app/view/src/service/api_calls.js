@@ -1,6 +1,9 @@
-const apiUrl = "http://localhost:3000/api/v1/";
+const public_ip = "";
+const apiUrl =
+    "http://" + (public_ip === "" ? "localhost" : public_ip) + ":3000/api/v1/";
 
 export async function apiGetUsers() {
+    console.log(apiUrl);
     const response = await fetchApi("users", "GET");
     return response.json();
 }

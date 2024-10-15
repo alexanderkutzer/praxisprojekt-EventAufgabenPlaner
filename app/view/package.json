@@ -6,10 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:server": "npm run setip && npm run build",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "NODE_NO_WARNINGS=1 jest",
-    "test:watch": "NODE_NO_WARNINGS=1 jest --watch"
+    "test:watch": "NODE_NO_WARNINGS=1 jest --watch",
+    "setip": "PUBLIC_IP=$(curl http://checkip.amazonaws.com/ 2> /dev/null) && echo $PUBLIC_IP && export PUBLIC_IP && node environment.js"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.15",
