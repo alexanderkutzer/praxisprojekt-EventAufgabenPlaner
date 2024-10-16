@@ -908,8 +908,8 @@ function DevelopApiCalls() {
                         </div>
                     </div>
                 </div>
-                <div className="flex p-2 w-1/2">
-                    <div className="w-1/2 flex flex-col gap-2 fixed left-1/2 ">
+                <div className="w-1/2 flex flex-col gap-2">
+                    <div className="flex flex-col gap-2">
                         <div>Responses:</div>
 
                         <div className="border border-black rounded-sm">
