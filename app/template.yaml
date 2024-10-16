@@ -8,7 +8,7 @@ Parameters:
     Default: EventAufgabenPlaner  #Fallback-Wert, falls keiner in der env Datei übergeben wurde
     ConstraintDescription: Muss der Name eines bestehenden EC2-Schluesselpaares sein.
   InstanceType:
-    Description: EC2-Instanztyp
+    Description: EC2-Instanztypa
     Type: String
     Default: t2.micro
     AllowedValues:
@@ -24,7 +24,10 @@ Parameters:
   AmiParameter:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Default: "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"   #holt hier immer die aktuelle AMI-ID, für die Amazon Linux 2023 AMI
-
+  InstanceName:  # Parameter für den Instanznamen
+    Description: Name der EC2-Instanz
+    Type: String
+    Default: EventAufgabenPlaner-Default
 
 Resources:
   EC2Instance:
@@ -38,7 +41,7 @@ Resources:
       SubnetId: !Ref PublicSubnet
       Tags:
         - Key: Name
-          Value: EventAufgabenPlaner-Instance-Test2
+          Value: !Ref InstanceName  # Dynamischer Verweis auf den Parameter `InstanceName`
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash

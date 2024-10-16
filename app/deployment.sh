@@ -33,6 +33,7 @@ aws cloudformation deploy \
   --stack-name $STACK_NAME \
   --template-file $TEMPLATE_FILE \
   --parameter-overrides KeyName="$KEY_PAIR_NAME" \
+  InstanceName="$AWS_EC2_INSTANCE_NAME" \
   SSHLocation="$SSH_LOCATION" \
   --capabilities CAPABILITY_NAMED_IAM \
   --region $REGION
@@ -54,4 +55,18 @@ if [ "$MODE" == "dev" ]; then
   echo "Achtung: Port 22 ist im Modus 'dev' für alle offen!"
 else
   echo "Modus 'prod': Port 22 ist standardmäßig geschlossen."
+fi
+
+# Öffentliche IP-Adresse abrufen
+INSTANCE_PUBLIC_IP=$(aws cloudformation describe-stacks \
+  --stack-name $STACK_NAME \
+  --query "Stacks[0].Outputs[?OutputKey=='InstancePublicIP'].OutputValue" \
+  --output text \
+  --region $REGION)
+
+if [ -n "$INSTANCE_PUBLIC_IP" ]; then
+  echo "Die Anwendung ist unter der folgenden IP-Adresse erreichbar:"
+  echo "http://$INSTANCE_PUBLIC_IP"
+else
+  echo "Fehler: Die öffentliche IP-Adresse konnte nicht abgerufen werden."
 fi

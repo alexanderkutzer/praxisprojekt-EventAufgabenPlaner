@@ -16,13 +16,13 @@ fi
 
 # Instanz-ID der EC2-Instanz ermitteln
 INSTANCE_ID=$(aws ec2 describe-instances \
-    --filters "Name=tag:Name,Values=EventAufgabenPlaner-Instance-Test2" \
+    --filters "Name=tag:Name,Values=$AWS_EC2_INSTANCE_NAME" \
     --query "Reservations[0].Instances[0].InstanceId" \
     --output text)
 
 # Überprüfen, ob die Instanz gefunden wurde
 if [ "$INSTANCE_ID" == "None" ]; then
-    echo "Fehler: Keine Instanz mit dem Namen 'EventAufgabenPlaner-Instance-Test2' gefunden."
+    echo "Fehler: Keine Instanz mit dem Namen '$AWS_EC2_INSTANCE_NAME' gefunden."
     exit 1
 fi
 

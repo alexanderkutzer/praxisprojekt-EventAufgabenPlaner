@@ -9,6 +9,11 @@ export AWS_SESSION_TOKEN=
 # Name muss exakt stimmen
 KEY_PAIR_NAME= 
 
+
+# Hier den Namen eingeben, wie deine EC2 Instanz heißen soll: 
+
+AWS_EC2_INSTANCE_NAME= 
+
 # Bitte zum UPDATEN hier den lokalen Pfad zu deiner .pem Datei einfügen, der zu deinem KeyPair-Schlüssel der EC2-Instanz gehört.
 # wichtig: .pem-Datei muss im Mode "chmod 400 dateiname.pem" sein. 
 PEM_FILE_PATH="$HOME/Hier den vollständigen Pfad zu deiner .pem Datei einfügen"
