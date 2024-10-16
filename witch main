@@ -1,0 +1,328 @@
+[33mcommit 78d3fb85294b03e00d9e79dfd05819f2721b4943[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdevelop_mode[m[33m, [m[1;31morigin/develop_mode[m[33m)[m
+Author: fchristian1 <fchristian1@gmx.net>
+Date:   Wed Oct 16 12:23:45 2024 +0200
+
+    add: devmode+cors+tasks
+
+[33mcommit ef0b99240ee3268f74424fefe383966364895a73[m
+Merge: 575ee7e c59f639
+Author: Christian Fröchtenicht <67558157+fchristian1@users.noreply.github.com>
+Date:   Tue Oct 15 23:09:07 2024 +0200
+
+    Merge branch 'alexanderkutzer:main' into develop_mode
+
+[33mcommit 575ee7ed819ad22bf30488ad5344f75f85948c25[m
+Author: fchristian1 <fchristian1@gmx.net>
+Date:   Tue Oct 15 23:08:05 2024 +0200
+
+    fix: api user delete and create
+
+[33mcommit c59f639675be71ff419c5de453d4eb749b6f09d3[m[33m ([m[1;32mmain[m[33m)[m
+Merge: 6f9e3d4 cf87092
+Author: Christian Fröchtenicht <67558157+fchristian1@users.noreply.github.com>
+Date:   Tue Oct 15 22:46:09 2024 +0200
+
+    Merge pull request #10 from fchristian1/develop_mode
+    
+    Develop mode and awstemplate
+
+[33mcommit cf87092c831ae8705eb44474a72076c9ba5b4482[m
+Author: fchristian1 <fchristian1@gmx.net>
+Date:   Tue Oct 15 22:45:21 2024 +0200
+
+    add: developmode to call api and add alexander his awstemplatefiles
+
+[33mcommit 2597695113e5c87e9e3a4d5f2baa7c4a731ea95b[m
+Author: fchristian1 <fchristian1@gmx.net>
+Date:   Tue Oct 15 22:37:43 2024 +0200
+
+    20241015-223743
+
+[33mcommit f06dcda3ddf8285f4c81f643d976d5277eb598c2[m
+Author: fchristian1 <fchristian1@gmx.net>
+Date:   Tue Oct 15 22:35:18 2024 +0200
+
+    20241015-223518
+
+[33mcommit 31276bb07d2cec50a9a2d0a5f4e290c398a9009e[m
+Merge: c223155 6f9e3d4
+Author: fchristian1 <fchristian1@gmx.net>
+Date:   Tue Oct 15 22:32:11 2024 +0200
+
+    Merge branch 'main' into develop_mode
+
+[33mcommit c223155e76e050f7d24cfc53fad0aae157d6b584[m
+Author: fchristian1 <fchristian1@gmx.net>
+Date:   Tue Oct 15 22:30:37 2024 +0200
+
+    20241015-223037
+
+[33mcommit cb48b7f306d2184afd73d83807f625b10d6e817b[m
+Author: fchristian1 <fchristian1@gmx.net>
+Date:   Tue Oct 15 19:15:44 2024 +0200
+
+    20241015-191544
+
+[33mcommit 6f9e3d4e882268429293872500ed3cfe9d66f422[m
+Merge: ff93140 c819e70
+Author: Christian Fröchtenicht <67558157+fchristian1@users.noreply.github.com>
+Date:   Tue Oct 15 14:26:50 2024 +0200
+
+    Merge pull request #9 from fchristian1/main
+    
+    add a new command 'npm run build:server' to start the build on the public server to manage the ip address for api calls
+
+[33mcommit c819e703ac7e0a243f5ea4e117e834ae4141e532[m
+Author: fchristian1 <fchristian1@gmx.net>
+Date:   Tue Oct 15 14:25:25 2024 +0200
+
+    add: environment and new 'npm run build:server' command to add the public ip on the api calls
+
+[33mcommit f5a3dccffa0f40ff0a16ff6b4aa85bb4d13ded4a[m
+Merge: 6e7c1c0 ff93140
+Author: Christian Fröchtenicht <67558157+fchristian1@users.noreply.github.com>
+Date:   Mon Oct 14 20:06:31 2024 +0200
+
+    Merge branch 'alexanderkutzer:main' into main
+
+[33mcommit 6e7c1c0d09c6d824e29d66a60d2d0d3e373734b9[m
+Merge: 5d94c4a 0c2a2fd
+Author: fchristian1 <fchristian1@gmx.net>
+Date:   Mon Oct 14 20:03:26 2024 +0200
+
+    Merge branch 'main' of https://github.com/fchristian1/praxisprojekt-EventAufgabenPlaner
+
+[33mcommit 5d94c4acd57d695f4e0feb848f185daa2bd325a5[m
+Author: fchristian1 <fchristian1@gmx.net>
+Date:   Mon Oct 14 20:00:38 2024 +0200
+
+    202410142003
+
+[33mcommit ff931408dbd5d80989bf38082c49646dc1700fbd[m
+Author: Alexander <kutzeralexander@web.de>
+Date:   Mon Oct 14 19:55:46 2024 +0200
+
+    Template
+
+[33mcommit 4d6b65eeb4466409439382c0d90a5f029c43a51b[m
+Merge: d427a4c 0c2a2fd
+Author: alexanderkutzer <kutzeralexander@web.de>
+Date:   Mon Oct 14 19:50:32 2024 +0200
+
+    Merge branch 'main' of github.com:alexanderkutzer/praxisprojekt-EventAufgabenPlaner into main
+
+[33mcommit d427a4cb513f62123ee82a1a7124c95634556427[m
+Author: alexanderkutzer <kutzeralexander@web.de>
+Date:   Mon Oct 14 19:50:17 2024 +0200
+
+    Tambplate
+
+[33mcommit 0c2a2fd68b20ecc7e3531620d6dd2aa3a6a5264b[m
+Author: Christian Fröchtenicht <67558157+fchristian1@users.noreply.github.com>
+Date:   Mon Oct 14 19:47:53 2024 +0200
+
+    Update App.jsx
+
+[33mcommit 3d1ad8d0b8779e29e25d158a23cbc07e7a272d7d[m
+Merge: fa3692a 3fd2bba
+Author: Christian Fröchtenicht <67558157+fchristian1@users.noreply.github.com>
+Date:   Mon Oct 14 17:57:36 2024 +0200
+
+    Merge pull request #7 from fchristian1/feature-sqlite
+    
+    Feature sqlite and login route
+
+[33mcommit 3fd2bbaf1071bd1d8575e82f15d8416cdfcbac74[m[33m ([m[1;31morigin/feature-sqlite[m[33m)[m
+Merge: 6404f8c fa3692a
+Author: Christian Fröchtenicht <67558157+fchristian1@users.noreply.github.com>
+Date:   Mon Oct 14 17:56:03 2024 +0200
+
+    Merge branch 'main' into feature-sqlite
+
+[33mcommit 6404f8c5104481056c683b51049ad48958d7b4ec[m[33m ([m[1;32mfeature-sqlite[m[33m)[m
+Merge: 0459fd3 1636560
+Author: fchristian1 <fchristian1@gmx.net>
+Date:   Mon Oct 14 17:51:51 2024 +0200
+
+    Merge branch 'feature-sqlite' of https://github.com/fchristian1/praxisprojekt-EventAufgabenPlaner into feature-sqlite
+
+[33mcommit 0459fd3a8b2b2ffd3056356a6d0fc189bdf9c7cd[m
+Author: fchristian1 <fchristian1@gmx.net>
+Date:   Mon Oct 14 17:48:48 2024 +0200
+
+    20241014-170603
+
+[33mcommit fa3692a6bed0d880622f96b079e52b66ff23d202[m
+Merge: 24be77e 12436bd
+Author: Christian Fröchtenicht <67558157+fchristian1@users.noreply.github.com>
+Date:   Mon Oct 14 16:40:02 2024 +0200
+
+    Merge pull request #6 from LucaTaSa/template
+    
+    update
+
+[33mcommit 12436bde659ad86fad9ed71544bcc348872064aa[m
+Author: Luca :) <lucasaafani@gmail.com>
+Date:   Mon Oct 14 16:37:24 2024 +0200
+
+    update
+
+[33mcommit 163656060bf233cc76c0ee45fd9d26f4bd674be6[m
+Author: fchristian1 <fchristian1@gmx.net>
+Date:   Sun Oct 13 22:36:25 2024 +0200
+
+    20241013-223625
+
+[33mcommit ea06f6fa0e60c648b397d92d3a8d328278f944c0[m
+Author: fchristian1 <fchristian1@gmx.net>
+Date:   Fri Oct 11 19:14:21 2024 +0200
+
+    chore:sqlite einabauen
+
+[33mcommit 24be77e84ed608b08c003dddf11d5b39b4bca8d9[m
+Merge: 85f7dbb ba38256
+Author: Christian Fröchtenicht <67558157+fchristian1@users.noreply.github.com>
+Date:   Fri Oct 11 15:14:09 2024 +0200
+
+    Merge pull request #5 from LucaTaSa/main
+    
+    add: html template
+
+[33mcommit ba38256d7a36642815104a65b54b48d535df6ddb[m
+Author: luca <luca@ThonkBrett>
+Date:   Fri Oct 11 15:09:08 2024 +0200
+
+    add: template
+
+[33mcommit 85f7dbbcb71110a309d1a11ba9d3b68ee4b615c9[m
+Author: Christian Fröchtenicht <67558157+fchristian1@users.noreply.github.com>
+Date:   Fri Oct 11 14:37:22 2024 +0200
+
+    Update README.md
+
+[33mcommit 088a9b628e7088ae623fccb623e1553844220281[m[33m ([m[1;32mtest[m[33m)[m
+Author: Christian Fröchtenicht <67558157+fchristian1@users.noreply.github.com>
+Date:   Fri Oct 11 13:58:29 2024 +0200
+
+    Update README.md
+
+[33mcommit 621c79f84e5392e9d6b0daf3312e0ec059e9a0b6[m
+Author: Christian Fröchtenicht <67558157+fchristian1@users.noreply.github.com>
+Date:   Fri Oct 11 10:47:13 2024 +0200
+
+    Update README.md
+
+[33mcommit 1880d39ff524abc84454b8d6cbe510ce608ec57c[m
+Author: Christian Fröchtenicht <67558157+fchristian1@users.noreply.github.com>
+Date:   Fri Oct 11 10:46:06 2024 +0200
+
+    Update README.md
+
+[33mcommit e064b6f21faead9aed0c1ff77ed881e861f629ad[m
+Merge: adb737d 96ab1be
+Author: Christian Fröchtenicht <67558157+fchristian1@users.noreply.github.com>
+Date:   Fri Oct 11 10:45:04 2024 +0200
+
+    Merge pull request #4 from fchristian1/main
+    
+    edit readme.md
+
+[33mcommit 96ab1be61260bc10559fe1e24ec4dcc54eb37906[m
+Author: Christian Fröchtenicht <67558157+fchristian1@users.noreply.github.com>
+Date:   Fri Oct 11 10:44:35 2024 +0200
+
+    Update README.md
+
+[33mcommit 287c20a63455f720c54fd85c33c17b65fa2676c4[m
+Author: fchristian1 <fchristian1@gmx.net>
+Date:   Fri Oct 11 10:43:57 2024 +0200
+
+    edit: README.md
+
+[33mcommit adb737d94883f694faf083dabd3e9a0ef2b8c834[m[33m ([m[1;31morigin/project-structure[m[33m, [m[1;32mproject-structure[m[33m)[m
+Merge: 8338271 2cdc7f1
+Author: Alexander Kutzer <kutzeralexander@web.de>
+Date:   Fri Oct 11 09:09:58 2024 +0200
+
+    Merge pull request #3 from fchristian1/project-structure
+    
+    Project structure
+
+[33mcommit 2cdc7f14593a69085a021b73822a852810d46328[m
+Merge: d25a3a7 8338271
+Author: Christian Fröchtenicht <67558157+fchristian1@users.noreply.github.com>
+Date:   Fri Oct 11 09:07:59 2024 +0200
+
+    Merge branch 'alexanderkutzer:main' into project-structure
+
+[33mcommit d25a3a78e19539a84795cb989251dcd752573513[m
+Author: Christian Fröchtenicht <67558157+fchristian1@users.noreply.github.com>
+Date:   Thu Oct 10 21:16:53 2024 +0200
+
+    Update README.md
+
+[33mcommit 4d37c320256c9cc4a4837265b768195392587e98[m
+Author: Christian Fröchtenicht <67558157+fchristian1@users.noreply.github.com>
+Date:   Thu Oct 10 21:15:34 2024 +0200
+
+    Update README.md
+
+[33mcommit 9475004f1d3ab6201be27366cdba3243dbbeef2a[m
+Author: Christian Fröchtenicht <67558157+fchristian1@users.noreply.github.com>
+Date:   Thu Oct 10 21:14:01 2024 +0200
+
+    Update README.md
+
+[33mcommit b6d64e911b24e5b3a994f3b57d45f87623c2fe7a[m
+Author: fchristian1 <fchristian1@gmx.net>
+Date:   Thu Oct 10 21:13:10 2024 +0200
+
+    chore: add README.md file for the api and view
+
+[33mcommit 8562e6d83d21c31b16abbb3548817e552e6cb4f8[m
+Author: fchristian1 <fchristian1@gmx.net>
+Date:   Thu Oct 10 20:40:04 2024 +0200
+
+    chore: add a first app structure wite a first api and view implementaion
+
+[33mcommit 833827105dd6a7a9c772069960a3b7b599898fac[m
+Merge: 4e965e1 2156b98
+Author: Alexander Kutzer <kutzeralexander@web.de>
+Date:   Thu Oct 10 19:47:33 2024 +0200
+
+    Merge pull request #2 from fchristian1/main
+    
+    Delete christian
+
+[33mcommit 2156b989acb0cc322167d5254852cd131fbaea38[m
+Author: Christian Fröchtenicht <67558157+fchristian1@users.noreply.github.com>
+Date:   Thu Oct 10 15:19:10 2024 +0200
+
+    Delete christian
+
+[33mcommit 4e965e1e9c5ad0fd9f6f38a56a8605232b8cba72[m
+Merge: 961fb11 1109ae1
+Author: Christian Fröchtenicht <67558157+fchristian1@users.noreply.github.com>
+Date:   Thu Oct 10 15:06:13 2024 +0200
+
+    Merge pull request #1 from fchristian1/feature1
+    
+    add: testfile
+
+[33mcommit 1109ae1cb128776694aae2a0d1e4b20b8a5a35bc[m[33m ([m[1;31morigin/feature1[m[33m)[m
+Author: fchristian1 <fchristian1@gmx.net>
+Date:   Thu Oct 10 15:03:59 2024 +0200
+
+    add: testfile
+
+[33mcommit 961fb11dff38f48d9b3756728e109cc8e941060e[m
+Author: Alexander Kutzer <kutzeralexander@web.de>
+Date:   Thu Oct 10 15:00:16 2024 +0200
+
+    Update README.md
+
+[33mcommit 608b4994886ed706231232e70433895ebc567b1e[m
+Author: Alexander Kutzer <kutzeralexander@web.de>
+Date:   Thu Oct 10 14:52:24 2024 +0200
+
+    Create README.md
