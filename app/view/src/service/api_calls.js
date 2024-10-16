@@ -2,6 +2,25 @@ const public_ip = "";
 const apiUrl =
     "http://" + (public_ip === "" ? "localhost" : public_ip) + ":3000/api/v1/";
 
+export async function apiUserLogin(email, password) {
+    const response = await fetchApi("auth/login", "POST", { email, password });
+    return response.json();
+}
+
+export async function apiUserLogout(token) {
+    token = token == "" ? "no_token" : token;
+    const response = await fetchApi(`auth/logout/${token}`, "GET");
+    return response.json();
+}
+
+export async function apiUserRegister(email, password) {
+    const response = await fetchApi("auth/register", "POST", {
+        email,
+        password,
+    });
+    return response.json();
+}
+
 export async function apiGetUsers() {
     console.log(apiUrl);
     const response = await fetchApi("users", "GET");
