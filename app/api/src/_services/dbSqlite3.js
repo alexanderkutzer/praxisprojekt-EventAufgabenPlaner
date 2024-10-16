@@ -1,4 +1,5 @@
 import sqlite3 from "sqlite3";
+import fs from "fs";
 export class DBServiceSqlite3 {
     constructor(path) {
         this.dbConnector = new DBConnectorSQLite3(path);
@@ -71,7 +72,14 @@ class DBConnectorSQLite3 {
         this.dbPath = dbPath;
         this.db = null;
     }
+    checkDirPath(path) {
+        const pathDir = path.split("/").slice(0, -1).join("/");
+        if (!fs.existsSync(pathDir)) {
+            fs.mkdirSync(pathDir, { recursive: true });
+        }
+    }
     async connect() {
+        this.checkDirPath(this.dbPath);
         this.db = new sqlite3.Database(this.dbPath, (err) => {
             if (err) {
                 console.error(`DBConnectorSQLite3: ${err.message}`);
