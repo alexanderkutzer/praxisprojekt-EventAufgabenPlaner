@@ -22,6 +22,11 @@ export class UserService {
         return user;
     }
     async create(newUser) {
+        const users = await this.getAll();
+        const user = users.find((user) => user.email === newUser.email);
+        if (user) {
+            return { create: false, error: "User already exists" };
+        }
         let dbNewUser = DTOCreateUserToDBUser(newUser);
         let date = Date.now().toString();
         dbNewUser.passwordHash = createPasswordHash(newUser.password, date);
@@ -68,7 +73,7 @@ export class UserService {
             let user = {
                 email: "admin@localhost",
                 dateCreated: date,
-                passwordHash: createPasswordHash("admin", date),
+                password: "admin",
                 isActive: 1,
                 isAdmin: 1,
                 token: "",
@@ -82,26 +87,41 @@ export class UserService {
     }
     async checkPassword(email, password) {
         let user = await this.getUserByEmail(email);
-        if (user) {
+        if (!user) {
+            return { check: false, token: "" };
+        }
+
+        let check = checkPasswords(
+            password,
+            user.passwordHash,
+            user.dateCreated
+        );
+
+        if (check) {
+            user.token === "" &&
+                (user.token = checkPasswords ? crypto.randomUUID() : "");
+            await this.dbService.update(this.table, user.id, user);
             return {
-                check: checkPasswords(
-                    password,
-                    user.passwordHash,
-                    user.dateCreated
-                ),
+                check: check,
                 token: user.token,
             };
         }
-        return { check: false, token: "" };
+        return { check: check, token: "" };
     }
 }
 
 const createPasswordHash = (password, secret) => {
-    let hmac = crypto.createHmac("sha256", secret);
+    let hmac = crypto.createHmac("sha256", "eventPlaner");
     hmac.update(password + secret);
     return hmac.digest("hex");
 };
 const checkPasswords = (password, passwordHash, secret) => {
+    console.log("check password", password, passwordHash, secret);
+    console.log(
+        "check password",
+        createPasswordHash(password, secret),
+        passwordHash
+    );
     return createPasswordHash(password, secret) === passwordHash;
 };
 
@@ -123,11 +143,12 @@ const DTOCreateUserToDBUser = ({
         token,
     };
 };
-const DTOUserFromDBToUser = ({ id, email, isActive, isAdmin }) => {
+const DTOUserFromDBToUser = ({ id, email, isActive, isAdmin, token }) => {
     return {
         id,
         email,
         isActive,
         isAdmin,
+        token,
     };
 };
