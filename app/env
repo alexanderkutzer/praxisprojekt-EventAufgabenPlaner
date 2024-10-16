@@ -6,7 +6,11 @@ export AWS_SECRET_ACCESS_KEY=
 export AWS_SESSION_TOKEN=
 
 # Hier deinen eigenen Key-Pair-Namen eingeben, den du in einem AWS-Konto erstellt hast:
-KEY_PAIR_NAME= # Name muss exakt stimmen
+# Name muss exakt stimmen
+KEY_PAIR_NAME= 
+
+# Bitte zum UPDATEN hier den lokalen Pfad zu deiner .pem Datei einfügen, der zu deinem KeyPair-Schlüssel der EC2-Instanz gehört.
+PEM_FILE_PATH="$HOME/Hier den vollständigen Pfad zu deiner .pem Datei einfügen"
 
 # Mode: "dev" = port 22 ist für alle offen "prod" = port 22 ist für alle geschlossen
 
