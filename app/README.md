@@ -1,6 +1,20 @@
 View: React app struktur 
 Api: Node.js api struktur
 
+**werden über die**
+
+```sh
+start-dev.sh
+```
+**zusammen installiert und gestartet.**
+ausgabe ist in einen terminal
+
+diese variante wird bevorzugt da ggf über das script etwas vorbereitet wird.
+
+
+wenn es einzelnd gestartet werden soll
+
+
 die über jeweils in dem ordnern mit
 
 ```sh
