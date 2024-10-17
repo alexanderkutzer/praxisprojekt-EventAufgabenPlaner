@@ -62,13 +62,13 @@ export async function apiCreateEvent(data) {
     return response.json();
 }
 
-export async function apiUpdateEvent(data) {
-    const response = await fetchApi(`events`, "PUT", data);
+export async function apiUpdateEvent(id, data) {
+    const response = await fetchApi(`events/${id}`, "PUT", data);
     return response.json();
 }
 
-export async function apiDeleteEvent(data) {
-    const response = await fetchApi(`events`, "DELETE", data);
+export async function apiDeleteEvent(id) {
+    const response = await fetchApi(`events/${id}`, "DELETE");
     return response.json();
 }
 

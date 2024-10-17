@@ -7,6 +7,7 @@ export class UserRouter {
     }
     router() {
         const router = Router();
+
         router.get("/", this.userController.getAllUsersController);
         router.get("/:id", this.userController.getUserByIdController);
         router.post("/", this.userController.createUserController);

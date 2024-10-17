@@ -4,7 +4,9 @@ export class DBServiceSqlite3 {
     constructor(path) {
         this.dbConnector = new DBConnectorSQLite3(path);
         if (!this.dbConnector) {
-            console.error("DBServiceSqlite3: dbConnector is null");
+            console.error(
+                "50a31dae-aa8c-4a38-b703-d80de75e43e1: DBServiceSqlite3: dbConnector is null"
+            );
         }
         this.dbConnector.connect();
     }
@@ -23,19 +25,16 @@ export class DBServiceSqlite3 {
         return (await this.dbConnector.query(sql))[0];
     }
     async create(table, data) {
-        console.log("DBService.create", table, data);
         let keys = Object.keys(data);
         let values = Object.values(data);
         let sql = `INSERT INTO ${table} ('${keys.join(
             "','"
         )}') VALUES ('${values.join("','")}')`;
-        console.log("sql: ", sql);
         let result = await this.dbConnector.exec(sql);
 
         return result;
     }
     async update(table, id, data) {
-        console.log("DBService.update", table, id, data);
         if (!id) {
             throw new Error("Die 'id' ist erforderlich.");
         }
@@ -51,13 +50,13 @@ export class DBServiceSqlite3 {
         const sql = `UPDATE ${table} SET ${setClause} WHERE id = '${id}'`;
         const queryValues = [...values];
 
-        console.log("SQL:", sql);
-        console.log("Werte:", queryValues);
-
         try {
             return await this.dbConnector.exec(sql, queryValues);
         } catch (error) {
-            console.error("Fehler beim Aktualisieren der Daten:", error);
+            console.error(
+                "5f599c48-3c14-49c1-a0db-0c4da0028800: Fehler beim Aktualisieren der Daten:",
+                error
+            );
             throw error;
         }
     }
@@ -82,21 +81,24 @@ class DBConnectorSQLite3 {
         this.checkDirPath(this.dbPath);
         this.db = new sqlite3.Database(this.dbPath, (err) => {
             if (err) {
-                console.error(`DBConnectorSQLite3: ${err.message}`);
+                console.error(
+                    `05951a1e-7ab3-4c80-8a3d-953518b64314: DBConnectorSQLite3: ${err.message}`
+                );
                 return;
             }
-            console.log(`DBConnectorSQLite3: Connected to ${this.dbPath}`);
+            console.info(`DBConnectorSQLite3: Connected to ${this.dbPath}`);
         });
-        console.log("db: ", this.db);
     }
     async disconnect() {
         if (this.db) {
             this.db.close((err) => {
                 if (err) {
-                    console.error(`DBConnectorSQLite3: ${err.message}`);
+                    console.error(
+                        `1ad24b10-e347-4227-ab55-42effd89e211: DBConnectorSQLite3: ${err.message}`
+                    );
                     return;
                 }
-                console.log(
+                console.info(
                     `DBConnectorSQLite3: Disconnected from ${this.dbPath}`
                 );
             });
@@ -106,7 +108,9 @@ class DBConnectorSQLite3 {
         return new Promise((resolve, reject) => {
             this.db.all(sql, [], (err, rows) => {
                 if (err) {
-                    console.error(`DBConnectorSQLite3: ${err.message}`);
+                    console.error(
+                        `6d3ed014-9355-4a75-adfd-ba1c70515ebe: DBConnectorSQLite3: ${err.message}`
+                    );
                     reject(err);
                 }
                 resolve(rows);
@@ -123,7 +127,9 @@ class DBConnectorSQLite3 {
         return new Promise((resolve, reject) => {
             this.db.run(sql, params, async (err) => {
                 if (err) {
-                    console.error(`DBConnectorSQLite3: ${err.message}`);
+                    console.error(
+                        `f60592b8-90c1-4b7d-ad13-a510451a8184: DBConnectorSQLite3: ${err.message}`
+                    );
                     reject(err);
                 } else {
                     // 'this' bezieht sich auf das Statement-Kontextobjekt

@@ -7,17 +7,26 @@ export AWS_SESSION_TOKEN=
 
 # Hier deinen eigenen Key-Pair-Namen eingeben, den du in einem AWS-Konto erstellt hast:
 # Name muss exakt stimmen
-KEY_PAIR_NAME= 
+KEY_PAIR_NAME=
 
+# Hier den Namen eingeben, wie deine EC2 Instanz heißen soll:
 
-# Hier den Namen eingeben, wie deine EC2 Instanz heißen soll: 
-
-AWS_EC2_INSTANCE_NAME= 
+AWS_EC2_INSTANCE_NAME=
 
 # Bitte zum UPDATEN hier den lokalen Pfad zu deiner .pem Datei einfügen, der zu deinem KeyPair-Schlüssel der EC2-Instanz gehört.
-# wichtig: .pem-Datei muss im Mode "chmod 400 dateiname.pem" sein. 
+# wichtig: .pem-Datei muss im Mode "chmod 400 dateiname.pem" sein.
 PEM_FILE_PATH="$HOME/Hier den vollständigen Pfad zu deiner .pem Datei einfügen"
 
 # Mode: "dev" = port 22 ist für alle offen "prod" = port 22 ist für alle geschlossen
 
 MODE= # dev oder prod
+
+#### zum kopieren ####
+export AWS_ACCESS_KEY_ID=
+export AWS_SECRET_ACCESS_KEY=
+export AWS_SESSION_TOKEN=
+
+KEY_PAIR_NAME=
+AWS_EC2_INSTANCE_NAME=
+PEM_FILE_PATH=
+MODE=

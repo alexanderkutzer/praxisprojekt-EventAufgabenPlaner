@@ -14,16 +14,15 @@ export class EventService {
         let dbnewEvent = newEvent;
         dbnewEvent.id = crypto.randomUUID();
         let dbCreate = await this.dbService.create(this.table, dbnewEvent);
-        console.log("dbnewEvent", dbCreate);
         if (!dbCreate) {
             return { create: false, event: {} };
         }
         return { create: true, event: dbnewEvent };
     }
-    async update(data) {
-        return await this.dbService.update(this.table, data);
+    async update(id, data) {
+        return await this.dbService.update(this.table, id, data);
     }
-    async delete(data) {
-        return await this.dbService.delete(this.table, data);
+    async delete(id) {
+        return await this.dbService.delete(this.table, id);
     }
 }

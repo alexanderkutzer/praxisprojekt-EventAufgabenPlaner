@@ -4,8 +4,10 @@ import PageMain from "./pages/main/Index.jsx";
 import Login from "./pages/cores/login/Index.jsx";
 import Button from "./components/Button.jsx";
 import PageDevelop from "./pages/develop/index.jsx";
+import { useAuth } from "./service/authStatus.jsx";
 
 export function App() {
+    const { isLoggedIn_AuthService, setToken_AuthService } = useAuth();
     const [menu, setMenu] = useState("home");
 
     const events = [
@@ -36,13 +38,21 @@ export function App() {
                     >
                         Develop
                     </Button>
-                    <Button
-                        active={menu == "login" ? "true" : "false"}
-                        onClick={() => setMenu("login")}
-                    >
-                        Login
-                    </Button>
+                    {!isLoggedIn_AuthService && (
+                        <Button
+                            active={menu == "login" ? "true" : "false"}
+                            onClick={() => setMenu("login")}
+                        >
+                            Login
+                        </Button>
+                    )}
+                    {isLoggedIn_AuthService && (
+                        <Button onClick={() => setToken_AuthService("")}>
+                            Logoff
+                        </Button>
+                    )}
                 </div>
+
                 <div id="main" className="w-full flex flex-col items-center">
                     {menu === "home" && <PageMain></PageMain>}
                     {menu === "admin" && <PageAdmin></PageAdmin>}

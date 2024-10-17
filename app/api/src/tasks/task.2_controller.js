@@ -8,22 +8,63 @@ export class TaskController {
         this.deleteTaskController = this.deleteTaskController.bind(this);
     }
     async getAllTasksController(req, res) {
-        res.json((await this.taskService.getAll()) ?? []);
+        try {
+            res.json((await this.taskService.getAll()) ?? []);
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({
+                error: "Internal Server Error - f64386ca-fb06-4ae4-8aac-ce940d34dea9",
+            });
+        }
     }
     async getTaskByIdController(req, res) {
-        const id = req.params.id;
-        res.json((await this.taskService.getOne(id)) ?? {});
+        try {
+            const id = req.params.id;
+            res.json((await this.taskService.getOne(id)) ?? {});
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({
+                error: "Internal Server Error - 0f12a2aa-763e-425d-a484-ee7a12c794e8",
+            });
+        }
     }
     async createTaskController(req, res) {
-        let newTask = req.body;
-        res.json((await this.taskService.create(newTask)) ?? {});
+        try {
+            let newTask = req.body;
+            res.json((await this.taskService.create(newTask)) ?? {});
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({
+                error: "Internal Server Error - 957031ff-aafe-423f-aa43-723d16d84da4",
+            });
+        }
     }
     async updateTaskController(req, res) {
-        let updateTask = req.body;
-        res.json((await this.taskService.update(updateTask)) ?? {});
+        try {
+            const id = req.params.id;
+            const updateTask = req.body;
+            res.json((await this.taskService.update(updateTask)) ?? {});
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({
+                error: "Internal Server Error - 1acb096b-5bc9-4156-a4ff-c25051002fa3",
+            });
+        }
     }
     async deleteTaskController(req, res) {
-        let deleteTask = req.body;
-        res.json((await this.taskService.delete(deleteTask)) ?? {});
+        try {
+            let id = req.params.id;
+            const result = await this.taskService.delete(id);
+            if (!result) {
+                res.status(404).json({ delete: false, id: id });
+                return;
+            }
+            res.json({ delete: true, id: id });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({
+                error: "Internal Server Error - e9d4df66-29df-4e8a-a02c-8f9cf1ed354c",
+            });
+        }
     }
 }
