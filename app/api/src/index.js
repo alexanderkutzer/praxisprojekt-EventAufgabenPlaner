@@ -42,11 +42,13 @@ app.use("/api/v1/events", eventRouter);
 app.use("/api/v1/tasks", taskRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/auth", authRouter);
-
+app.get("/api/ping", (req, res) => {
+    res.send(Date.now().toString());
+});
 app.post("/", (req, res) => {
     res.send("Hello World");
 });
 
 app.listen(3000, () => {
-    console.log("Server is running on port 3000");
+    console.info("Server is running on port 3000");
 });
