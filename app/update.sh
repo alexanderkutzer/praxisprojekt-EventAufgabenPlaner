@@ -16,7 +16,7 @@ fi
 
 # Instanz-ID der EC2-Instanz ermitteln
 INSTANCE_ID=$(aws ec2 describe-instances \
-    --filters "Name=tag:Name,Values=$AWS_EC2_INSTANCE_NAME" \
+    --filters "Name=tag:Name,Values=$AWS_EC2_INSTANCE_NAME    " \
     --query "Reservations[0].Instances[0].InstanceId" \
     --output text)
 
@@ -38,6 +38,27 @@ if [ -z "$INSTANCE_IP" ]; then
 fi
 
 echo "Verbindung zu Instanz $INSTANCE_ID (IP: $INSTANCE_IP) wird hergestellt und Update wird durchgeführt..."
+
+
+# Erstellen eines lokalen Backup-Verzeichnisses, falls es noch nicht existiert
+mkdir -p "$LOCAL_BACKUP_DIR"
+
+# DB-Backup erstellen und auf den lokalen Rechner übertragen
+ssh -i "$PEM_FILE_PATH" ec2-user@$INSTANCE_IP << EOF
+  # Wechsle ins DB-Verzeichnis und kopiere die Datenbank als Backup-Datei
+  cd $DB_PATH
+  cp * "/tmp/$BACKUP_NAME"
+EOF
+
+# Backup-Datei herunterladen
+scp -i "$PEM_FILE_PATH" ec2-user@$INSTANCE_IP:/tmp/$BACKUP_NAME "$LOCAL_BACKUP_DIR"
+
+# Erfolgsmeldung ausgeben
+if [ $? -eq 0 ]; then
+  echo "Backup erfolgreich auf $LOCAL_BACKUP_DIR/$BACKUP_NAME gespeichert."
+else
+  echo "Fehler beim Erstellen des Backups."
+fi
 
 # Führe die Befehle direkt auf der EC2-Instanz aus
 ssh -i "$PEM_FILE_PATH" -o "StrictHostKeyChecking=no" ec2-user@$INSTANCE_IP << EOF
