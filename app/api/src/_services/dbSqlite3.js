@@ -36,11 +36,15 @@ export class DBServiceSqlite3 {
     }
     async update(table, id, data) {
         if (!id) {
-            throw new Error("Die 'id' ist erforderlich.");
+            console.error(new Error("Die 'id' ist erforderlich."));
+            return null;
         }
         const { ...fieldsToUpdate } = data;
         if (Object.keys(fieldsToUpdate).length === 0) {
-            throw new Error("Keine Felder zum Aktualisieren bereitgestellt.");
+            console.error(
+                new Error("Keine Felder zum Aktualisieren bereitgestellt.")
+            );
+            return null;
         }
         const setClause = Object.keys(fieldsToUpdate)
             .map((key) => `${key} = ?`)
@@ -57,7 +61,7 @@ export class DBServiceSqlite3 {
                 "5f599c48-3c14-49c1-a0db-0c4da0028800: Fehler beim Aktualisieren der Daten:",
                 error
             );
-            throw error;
+            return null;
         }
     }
 

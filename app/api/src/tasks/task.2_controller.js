@@ -11,7 +11,7 @@ export class TaskController {
         try {
             res.json((await this.taskService.getAll()) ?? []);
         } catch (err) {
-            console.error(err);
+            console.error("f64386ca-fb06-4ae4-8aac-ce940d34dea9", err);
             res.status(500).json({
                 error: "Internal Server Error - f64386ca-fb06-4ae4-8aac-ce940d34dea9",
             });
@@ -22,7 +22,7 @@ export class TaskController {
             const id = req.params.id;
             res.json((await this.taskService.getOne(id)) ?? {});
         } catch (err) {
-            console.error(err);
+            console.error("0f12a2aa-763e-425d-a484-ee7a12c794e8", err);
             res.status(500).json({
                 error: "Internal Server Error - 0f12a2aa-763e-425d-a484-ee7a12c794e8",
             });
@@ -33,7 +33,7 @@ export class TaskController {
             let newTask = req.body;
             res.json((await this.taskService.create(newTask)) ?? {});
         } catch (err) {
-            console.error(err);
+            console.error("957031ff-aafe-423f-aa43-723d16d84da4", err);
             res.status(500).json({
                 error: "Internal Server Error - 957031ff-aafe-423f-aa43-723d16d84da4",
             });
@@ -45,7 +45,7 @@ export class TaskController {
             const updateTask = req.body;
             res.json((await this.taskService.update(updateTask)) ?? {});
         } catch (err) {
-            console.error(err);
+            console.error("1acb096b-5bc9-4156-a4ff-c25051002fa3", err);
             res.status(500).json({
                 error: "Internal Server Error - 1acb096b-5bc9-4156-a4ff-c25051002fa3",
             });
@@ -54,6 +54,7 @@ export class TaskController {
     async deleteTaskController(req, res) {
         try {
             let id = req.params.id;
+            console.log("id", id);
             const result = await this.taskService.delete(id);
             if (!result) {
                 res.status(404).json({ delete: false, id: id });
@@ -61,7 +62,7 @@ export class TaskController {
             }
             res.json({ delete: true, id: id });
         } catch (err) {
-            console.error(err);
+            console.error("e9d4df66-29df-4e8a-a02c-8f9cf1ed354c", err);
             res.status(500).json({
                 error: "Internal Server Error - e9d4df66-29df-4e8a-a02c-8f9cf1ed354c",
             });

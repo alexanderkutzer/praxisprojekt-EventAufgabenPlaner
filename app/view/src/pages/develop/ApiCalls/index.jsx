@@ -1045,56 +1045,107 @@ function DevelopApiCalls() {
                                     </label>
                                     <input
                                         className="p-1 m-1"
-                                        type="text"
                                         value={id}
                                         onChange={(e) => setId(e.target.value)}
+                                        id="getUserId"
+                                        type="text"
                                     />
                                     <Button onClick={() => setId("")}>
                                         DEL
                                     </Button>
                                     <br />
                                     <label className="inline-flex w-24 mx-2">
-                                        Email
+                                        Id_Event:
                                     </label>
                                     <input
                                         className="p-1 m-1"
                                         type="text"
-                                        value={email}
+                                        value={idEvent}
                                         onChange={(e) =>
-                                            setEmail(e.target.value)
+                                            setIdEvent(e.target.value)
                                         }
                                     />
+                                    <Button onClick={() => setIdEvent("")}>
+                                        DEL
+                                    </Button>
                                     <br />
                                     <label className="inline-flex w-24 mx-2">
-                                        Password{" "}
+                                        Id_User:
                                     </label>
                                     <input
                                         className="p-1 m-1"
                                         type="text"
-                                        value={password}
+                                        value={userIdList}
                                         onChange={(e) =>
-                                            setPassword(e.target.value)
+                                            setUserIdList(e.target.value)
+                                        }
+                                    />
+                                    <Button onClick={() => setUserIdList("")}>
+                                        DEL
+                                    </Button>
+                                    <br />
+                                    <label className="inline-flex w-24 mx-2">
+                                        Title:
+                                    </label>
+                                    <input
+                                        className="p-1 m-1"
+                                        type="text"
+                                        value={titleTask}
+                                        onChange={(e) =>
+                                            setTitleTask(e.target.value)
+                                        }
+                                    />
+                                    <Button onClick={() => setTitleTask("")}>
+                                        DEL
+                                    </Button>
+                                    <br />
+                                    <label className="inline-flex w-24 mx-2">
+                                        Description:
+                                    </label>
+                                    <input
+                                        className="p-1 m-1"
+                                        type="text"
+                                        value={descriptionTask}
+                                        onChange={(e) =>
+                                            setDescriptionTask(e.target.value)
+                                        }
+                                    />
+                                    <Button
+                                        onClick={() => setDescriptionTask("")}
+                                    >
+                                        DEL
+                                    </Button>
+                                    <br />
+                                    <label className="inline-flex w-24 mx-2">
+                                        ToDo:
+                                    </label>
+                                    <input
+                                        className="p-1 m-1"
+                                        type="checkbox"
+                                        checked={todo}
+                                        onChange={(e) => setTodo(!todo)}
+                                    />
+                                    <br />
+                                    <label className="inline-flex w-24 mx-2">
+                                        inProgress:
+                                    </label>
+                                    <input
+                                        className="p-1 m-1"
+                                        type="checkbox"
+                                        checked={inProgress}
+                                        onChange={(e) =>
+                                            setInProgress(!inProgress)
                                         }
                                     />
                                     <br />
                                     <label className="inline-flex w-24 mx-2">
-                                        Active
+                                        Done:
                                     </label>
                                     <input
                                         className="p-1 m-1"
                                         type="checkbox"
-                                        checked={isActive}
-                                        onChange={() => setIsActive(!isActive)}
-                                    />
-                                    <br />
-                                    <label className="inline-flex w-24 mx-2">
-                                        Admin
-                                    </label>
-                                    <input
-                                        className="p-1 m-1"
-                                        type="checkbox"
-                                        checked={isAdmin}
-                                        onChange={() => setIsAdmin(!isAdmin)}
+                                        checked={done}
+                                        onChange={(e) => setDone(!done)}
                                     />
                                 </div>
                                 <div>
