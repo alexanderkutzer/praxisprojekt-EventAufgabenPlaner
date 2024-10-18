@@ -16,7 +16,7 @@ fi
 
 # Instanz-ID der EC2-Instanz ermitteln
 INSTANCE_ID=$(aws ec2 describe-instances \
-  --filters "Name=tag:Name,Values=$AWS_EC2_INSTANCE_NAME" \
+  --filters "Name=tag:Name,Values=$AWS_EC2_INSTANCE_NAME    " \
   --query "Reservations[0].Instances[0].InstanceId" \
   --output text)
 
