@@ -35,7 +35,6 @@ export class UserService {
         dbNewUser.isAdmin = newUser.isAdmin ? 1 : 0;
         dbNewUser.token = "";
         let dbCreate = await this.dbService.create(this.table, dbNewUser);
-        console.log("dbNewUser", dbCreate);
         if (!dbCreate) {
             return { create: false, error: "User not created" };
         }
@@ -44,10 +43,7 @@ export class UserService {
     async update(id, data) {
         let dbUser = await this.dbService.getOne(this.table, id);
         if (data.password && data.password !== "") {
-            data.passwordHash = createPasswordHash(
-                data.password,
-                dbUser.dateCreated
-            );
+            data.passwordHash = createPasswordHash(data.password, dbUser.dateCreated);
         }
         delete data.password;
         let dbUpdate = await this.dbService.update(this.table, id, data);
@@ -57,14 +53,11 @@ export class UserService {
         return { update: true, user: DTOUserFromDBToUser(data) };
     }
     async delete(id) {
-        console.log("delete id", id);
         const user = await this.getOne(id);
-        console.log("delete user", user);
         if (user.id !== id) {
             return false;
         }
-        let dbDelete = await this.dbService.delete(this.table, id);
-        return true;
+        return await this.dbService.delete(this.table, id);
     }
     async createInitUsers() {
         let users = await this.getAll();
@@ -78,10 +71,16 @@ export class UserService {
                 isAdmin: 1,
                 token: "",
             };
-            console.log(
-                "checkinitPassword OK?",
-                checkPasswords("admin", user.passwordHash, date)
-            );
+            await this.create(user);
+            date = Date.now().toString();
+            user = {
+                email: "jane@doe.com",
+                dateCreated: date,
+                password: "password12345",
+                isActive: 1,
+                isAdmin: 0,
+                token: "",
+            };
             await this.create(user);
         }
     }
@@ -91,15 +90,10 @@ export class UserService {
             return { check: false, token: "" };
         }
 
-        let check = checkPasswords(
-            password,
-            user.passwordHash,
-            user.dateCreated
-        );
+        let check = checkPasswords(password, user.passwordHash, user.dateCreated);
 
         if (check) {
-            user.token === "" &&
-                (user.token = checkPasswords ? crypto.randomUUID() : "");
+            user.token === "" && (user.token = checkPasswords ? crypto.randomUUID() : "");
             await this.dbService.update(this.table, user.id, user);
             return {
                 check: check,
@@ -119,14 +113,7 @@ const checkPasswords = (password, passwordHash, secret) => {
     return createPasswordHash(password, secret) === passwordHash;
 };
 
-const DTOCreateUserToDBUser = ({
-    email,
-    passwordHash,
-    dateCreated,
-    isActive,
-    isAdmin,
-    token,
-}) => {
+const DTOCreateUserToDBUser = ({ email, passwordHash, dateCreated, isActive, isAdmin, token }) => {
     return {
         id: crypto.randomUUID(),
         email,

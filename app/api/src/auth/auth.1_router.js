@@ -10,6 +10,7 @@ export class AuthRouter {
         router.post("/login", this.authController.loginController);
         router.get("/logout/:token", this.authController.logoutController);
         router.post("/register", this.authController.registerController);
+        router.get("/:token", this.authController.userByTokenController);
 
         return router;
     }

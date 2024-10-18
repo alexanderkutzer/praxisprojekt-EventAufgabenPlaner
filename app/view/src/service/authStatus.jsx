@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const token = localStorage.getItem("token");
-        if (token) {
+        if (token && token.trim() !== "") {
             setToken_AuthService(token);
             setIsLoggedIn_AuthService(true);
         }

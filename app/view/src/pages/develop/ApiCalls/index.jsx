@@ -17,6 +17,7 @@ import {
     apiUpdateEvent,
     apiUpdateTask,
     apiUpdateUser,
+    apiUserByToken,
     apiUserLogin,
     apiUserLogout,
     apiUserRegister,
@@ -230,6 +231,19 @@ function DevelopApiCalls() {
                                     <label className="inline-flex w-24 mx-2">Password: </label>
                                     <input className="p-1 m-1" type="text" value={password} onChange={(e) => setPassword(e.target.value)} />
                                     <Button onClick={() => setPassword("")}>DEL</Button>
+                                    <br />
+                                    <label className="inline-flex w-24 mx-2">Token: </label>"{token}"<Button onClick={() => setToken("")}>DEL</Button>
+                                </div>
+                                <hr />
+                                <div>
+                                    <Button
+                                        onClick={async () => {
+                                            let response = await apiUserByToken(token);
+                                            recogniceResponse(response);
+                                        }}
+                                    >
+                                        UserByToken
+                                    </Button>
                                     <br />
                                     <label className="inline-flex w-24 mx-2">Token: </label>"{token}"<Button onClick={() => setToken("")}>DEL</Button>
                                 </div>
