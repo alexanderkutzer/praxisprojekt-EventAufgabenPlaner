@@ -107,7 +107,7 @@ function PageMain() {
         if (calendarRef.current) {
             const calendarApi = calendarRef.current.getApi();
             calendarApi.removeAllEvents();
-            calendarApi.addEventSource(events);
+            calendarApi.addEventSource(events); // Füge die aktualisierte Eventliste hinzu
         }
     }, [events]);
 
