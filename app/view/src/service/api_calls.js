@@ -1,6 +1,5 @@
 const public_ip = "";
-const apiUrl =
-    "http://" + (public_ip === "" ? "localhost" : public_ip) + ":3000/api/v1/";
+const apiUrl = "http://" + (public_ip === "" ? "localhost" : public_ip) + ":3000/api/v1/";
 
 export async function apiUserLogin(email, password) {
     const response = await fetchApi("auth/login", "POST", { email, password });
@@ -28,7 +27,7 @@ export async function apiGetUsers() {
 }
 
 export async function apiGetUser(id) {
-    const response = await fetchApi(`users/${id}`, "GET");
+    const response = await fetchApi(`users/${id == "" ? "noId" : id}`, "GET");
     return response.json();
 }
 
@@ -38,12 +37,12 @@ export async function apiCreateUser(data) {
 }
 
 export async function apiUpdateUser(id, data) {
-    const response = await fetchApi(`users/${id}`, "PUT", data);
+    const response = await fetchApi(`users/${id == "" ? "noId" : id}`, "PUT", data);
     return response.json();
 }
 
 export async function apiDeleteUser(id) {
-    const response = await fetchApi(`users/${id}`, "DELETE");
+    const response = await fetchApi(`users/${id == "" ? "noId" : id}`, "DELETE");
     return response.json();
 }
 
@@ -53,7 +52,7 @@ export async function apiGetEvents() {
 }
 
 export async function apiGetEvent(id) {
-    const response = await fetchApi(`events/${id}`, "GET");
+    const response = await fetchApi(`events/${id == "" ? "noId" : id}`, "GET");
     return response.json();
 }
 
@@ -63,12 +62,12 @@ export async function apiCreateEvent(data) {
 }
 
 export async function apiUpdateEvent(id, data) {
-    const response = await fetchApi(`events/${id}`, "PUT", data);
+    const response = await fetchApi(`events/${id == "" ? "noId" : id}`, "PUT", data);
     return response.json();
 }
 
 export async function apiDeleteEvent(id) {
-    const response = await fetchApi(`events/${id}`, "DELETE");
+    const response = await fetchApi(`events/${id == "" ? "noId" : id}`, "DELETE");
     return response.json();
 }
 
@@ -78,7 +77,7 @@ export async function apiGetTasks() {
 }
 
 export async function apiGetTask(id) {
-    const response = await fetchApi(`tasks/${id}`, "GET");
+    const response = await fetchApi(`tasks/${id == "" ? "noId" : id}`, "GET");
     return response.json();
 }
 
