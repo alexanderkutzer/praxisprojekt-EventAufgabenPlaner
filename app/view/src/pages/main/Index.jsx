@@ -76,8 +76,8 @@ function PageMain() {
 
         if (selectedEvent) {
             const updatedEvents = events.map((event) => {
-                if (event.id === selectedEvent.id) {
-                    return {
+                if (event.id == selectedEvent.id) {
+                    event = {
                         ...event,
                         title: inputValues.title,
                         start: inputValues.startDate,
