@@ -34,7 +34,7 @@ export default function Calendar({ events, onEventClick }) {
       firstDay={1} // 1 = Montag
       headerToolbar={{
         left: 'prev,next today', // Buttons für vorherige, nächste und heute
-       // center: 'title', // MOnat Jahr
+       // center: 'KalenderWoche',
         right: 'title', //ansicht 'dayGridMonth,timeGridWeek,timeGridDay'
       }}
       
