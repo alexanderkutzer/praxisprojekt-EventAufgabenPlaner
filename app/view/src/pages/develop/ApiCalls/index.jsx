@@ -611,8 +611,12 @@ function DevelopApiCalls() {
                             </Button>
                         </div>
 
-                        <div className="border border-black rounded-sm">{response ? renderJSONWithButtons(response) : <p>No response yet</p>}</div>
-                        <div className="border border-black rounded-sm">{response2 === "" ? <p>No response yet</p> : <pre>{response2}</pre>}</div>
+                        <div className="border border-black rounded-sm  text-[0.6rem]">
+                            {response ? renderJSONWithButtons(response) : <p>No response yet</p>}
+                        </div>
+                        <div className="border border-black rounded-sm  text-[0.6rem]">
+                            {response2 === "" ? <p>No response yet</p> : <pre>{response2}</pre>}
+                        </div>
                     </div>
                 </div>
             </div>
