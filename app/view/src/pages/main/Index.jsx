@@ -3,9 +3,10 @@ import Calendar from "../../Calendar.jsx";
 import Button from "../../components/Button.jsx";
 
 function PageMain() {
+    const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [events, setEvents] = useState([
-        { id: 1, title: "Event 1", start: "2024-10-25", end: "2024-10-28", extendedProps: { description: "Description for Event 1" } },
+        { id: 1, title: "Event 1", start: "2024-10-25", end: "2024-10-28T12:00:00", extendedProps: { description: "Description for Event 1" } },
         { id: 2, title: "Event 2", start: "2024-10-15", extendedProps: { description: "Description for Event 2" } },
         { id: 3, title: "Event 3", start: "2024-10-20", extendedProps: { description: "Description for Event 3" } },
     ]);
@@ -19,7 +20,13 @@ function PageMain() {
 
     const [errorMessage, setErrorMessage] = useState("");
     const calendarRef = useRef(null);
-
+    const onDateClick = (date) => {
+        console.log(date);
+        setSelectedDate(date);
+    };
+    const onDateSelect = ({ start, end }) => {
+        console.log(start, end);
+    };
     const handleEventClick = (info) => {
         setSelectedEvent({
             id: info.event.id,
@@ -111,6 +118,12 @@ function PageMain() {
         }
     }, [events]);
 
+    useEffect(() => {
+        inputValues.startDate = selectedDate + "T00:00:00";
+        inputValues.endDate = selectedDate + "T00:00:00";
+        setInputValues({ ...inputValues });
+    }, [selectedDate]);
+
     return (
         <>
             <div>
@@ -123,7 +136,9 @@ function PageMain() {
                     <Calendar
                         key={JSON.stringify(events)} // Neurendering bei Änderung
                         events={events}
+                        onDateClick={onDateClick}
                         onEventClick={handleEventClick}
+                        onDateSelect={onDateSelect}
                         ref={calendarRef}
                     />
                 </div>
@@ -149,9 +164,21 @@ function PageMain() {
                                 className="p-2 border rounded"
                             />
                             <p className="mt-3">Eventbeginn</p>
-                            <input type="date" name="startDate" value={inputValues.startDate} onChange={handleInputChange} className="p-2 border rounded" />
+                            <input
+                                type="datetime-local"
+                                name="startDate"
+                                value={inputValues.startDate}
+                                onChange={handleInputChange}
+                                className="p-2 border rounded"
+                            />
                             <p className="mt-3">Event Ende (Angabe nur notwendig, wenn das Event mehrtägig ist)</p>
-                            <input type="date" name="endDate" value={inputValues.endDate} onChange={handleInputChange} className="p-2 border rounded" />
+                            <input
+                                type="datetime-local"
+                                name="endDate"
+                                value={inputValues.endDate}
+                                onChange={handleInputChange}
+                                className="p-2 border rounded"
+                            />
                             <p className="mt-3">Details zu deinem Event</p>
                             <input
                                 type="text"
@@ -176,9 +203,21 @@ function PageMain() {
                                 className="p-2 border rounded"
                             />
                             <p className="mt-3">Eventbeginn</p>
-                            <input type="date" name="startDate" value={inputValues.startDate} onChange={handleInputChange} className="p-2 border rounded" />
+                            <input
+                                type="datetime-local"
+                                name="startDate"
+                                value={inputValues.startDate}
+                                onChange={handleInputChange}
+                                className="p-2 border rounded"
+                            />
                             <p className="mt-3">Event Ende (Angabe nur notwendig, wenn das Event mehrtägig ist)</p>
-                            <input type="date" name="endDate" value={inputValues.endDate} onChange={handleInputChange} className="p-2 border rounded" />
+                            <input
+                                type="datetime-local"
+                                name="endDate"
+                                value={inputValues.endDate}
+                                onChange={handleInputChange}
+                                className="p-2 border rounded"
+                            />
                             <p className="mt-3">Details zu deinem Event</p>
                             <input
                                 type="text"
