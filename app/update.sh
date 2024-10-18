@@ -1,5 +1,7 @@
 #!/bin/bash
 
+./backup_download.sh
+
 # .env-Datei laden und Anmeldedaten setzen
 if [ -f .env ]; then
   source .env
@@ -71,25 +73,21 @@ ssh -i "$PEM_FILE_PATH" -o "StrictHostKeyChecking=no" ec2-user@$INSTANCE_IP <<EO
 
   echo "Installiere NPM-Pakete..."
   cd /home/ec2-user/praxisprojekt-EventAufgabenPlaner/app/view/
-  sleep 2
-  npm install
-  sleep 2
-
+  
   echo "Erstelle Build..."
-  npm run build:server
-  sleep 2
-
+  npm install && npm run build:server
+  
   # Verzeichnisinhalt löschen und neuen Build kopieren
   sudo rm -rf /var/www/html/*
   cd /home/ec2-user/praxisprojekt-EventAufgabenPlaner/app/view/dist
   sudo cp -r * /var/www/html
-  sleep 2
+  
 
   # API neu starten
   cd /home/ec2-user/praxisprojekt-EventAufgabenPlaner/app/api
-  sleep 2
+  
   npm install
-  sleep 2
+  
   nohup npm run start > api.log 2>&1 &
 
   # Kurze Wartezeit, um sicherzustellen, dass der Server Zeit zum Starten hat
@@ -107,6 +105,8 @@ ssh -i "$PEM_FILE_PATH" -o "StrictHostKeyChecking=no" ec2-user@$INSTANCE_IP <<EO
   echo -e "\nUpdate und Neustart abgeschlossen."
   exit
 EOF
-
+./backup_upload.sh
 echo "Instance ID: $INSTANCE_ID"
 echo "Public IP: $INSTANCE_IP"
+echo "http://$INSTANCE_IP/"
+echo "Update erfolgreich durchgeführt."
