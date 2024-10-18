@@ -1,21 +1,32 @@
 # View: React app struktur Api: Node.js api struktur
  - die strukturen werden in den jeweiligen README.md dateien beschrieben in den ordnern.
 
+## App starten und verwalten über die data start script datei
+
+```sh
+./start
+```
+
 ## App start zum localen testen und developen
-### Variante 1: bevorzugt
+### Variante 1:
+
+**über das oben genannte start script:**
+
+### Variante 2: bevorzugt
 
 **alle zusammen über die data start-dev.sh:**
 
 ```sh
-start-dev.sh
+./start-dev.sh
 ```
 
 **zusammen installiert und gestartet.**
+
 ausgabe ist in einen terminal
 
 diese variante wird bevorzugt da ggf über das script etwas vorbereitet wird.
 
-### Variante 2
+### Variante 3
 
 wenn es einzelnd gestartet werden soll
 
