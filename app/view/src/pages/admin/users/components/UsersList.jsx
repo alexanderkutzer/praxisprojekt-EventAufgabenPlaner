@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { apiGetUsers } from '../../../../service/api_calls';
 import Button from '../../../../components/Button';
 
-function UsersList({ selectedUser , setSelectedUser }) {
-  const [users, setUsers] = useState([]);
+function UsersList({ selectedUser , setSelectedUser, users, setUsers  }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,6 +17,18 @@ function UsersList({ selectedUser , setSelectedUser }) {
         setLoading(false);
       });
   }, []);
+
+  useEffect( ()=>{
+    if(selectedUser){
+      let newUsers = users.map(user => {
+        if(user.id === selectedUser.id){
+          user = selectedUser;
+        }
+        return user;
+      });
+      setUsers(newUsers);
+    }
+  },[selectedUser])
 
   if (loading) {
     return <p className="text-gray-600">Lade Benutzer...</p>;
