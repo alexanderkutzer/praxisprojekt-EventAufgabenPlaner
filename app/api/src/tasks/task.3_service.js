@@ -1,6 +1,7 @@
 let tasks = [];
 export class TaskService {
     constructor(dbService) {
+        this.dbService = dbService;
         this.table = "tasks";
     }
     async getAll() {
@@ -11,16 +12,16 @@ export class TaskService {
     }
     async create(newTask) {
         newTask.id = crypto.randomUUID();
-        let dbNewTask = this.dbService.create(this.table, data);
+        let dbNewTask = this.dbService.create(this.table, newTask);
         if (!dbNewTask) {
             return { create: false, Task: {} };
         }
         return { create: true, Task: newTask };
     }
-    async update(data) {
-        return this.dbService.update(this.table, data);
+    async update(id, data) {
+        return this.dbService.update(this.table, id, data);
     }
-    async delete(data) {
-        return this.dbService.delete(this.table, data);
+    async delete(id) {
+        return this.dbService.delete(this.table, id);
     }
 }

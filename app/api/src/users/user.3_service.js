@@ -116,12 +116,6 @@ const createPasswordHash = (password, secret) => {
     return hmac.digest("hex");
 };
 const checkPasswords = (password, passwordHash, secret) => {
-    console.log("check password", password, passwordHash, secret);
-    console.log(
-        "check password",
-        createPasswordHash(password, secret),
-        passwordHash
-    );
     return createPasswordHash(password, secret) === passwordHash;
 };
 

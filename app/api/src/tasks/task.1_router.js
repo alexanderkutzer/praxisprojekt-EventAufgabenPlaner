@@ -10,8 +10,8 @@ export class TaskRouter {
         router.get("/", this.taskController.getAllTasksController);
         router.get("/:id", this.taskController.getTaskByIdController);
         router.post("/", this.taskController.createTaskController);
-        router.put("/", this.taskController.updateTaskController);
-        router.delete("/", this.taskController.deleteTaskController);
+        router.put("/:id", this.taskController.updateTaskController);
+        router.delete("/:id", this.taskController.deleteTaskController);
         return router;
     }
 }

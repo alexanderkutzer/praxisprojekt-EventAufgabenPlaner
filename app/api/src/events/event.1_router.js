@@ -10,8 +10,8 @@ export class EventRouter {
         router.get("/", this.eventController.getAllEventsController);
         router.get("/:id", this.eventController.getEventByIdController);
         router.post("/", this.eventController.createEventController);
-        router.put("/", this.eventController.updateEventController);
-        router.delete("/", this.eventController.deleteEventController);
+        router.put("/:id", this.eventController.updateEventController);
+        router.delete("/:id", this.eventController.deleteEventController);
         return router;
     }
 }
