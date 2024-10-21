@@ -9,6 +9,7 @@ import { useAuth } from "./service/authStatus.jsx";
 export function App() {
     const { isLoggedIn_AuthService, setToken_AuthService } = useAuth();
     const [menu, setMenu] = useState("home");
+    const [darkMode, setDarkMode] = useState(false);
 
     const events = [
         { title: "Event 1", date: "2024-10-14" },
@@ -16,21 +17,33 @@ export function App() {
         { title: "Event 3", date: "2024-10-20" },
     ];
 
+    const toggleDarkMode = () => {
+        setDarkMode(prev => {
+            const newMode = !prev;
+            if (newMode) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+            return newMode;
+        });
+    };
+
     return (
-        <div className="mx-16">
+        <div className="mx-16 dark:text-gray-200">
             <div className="flex flex-col items-center mt-4">
                 <div id="nav" className="flex flex-row">
-                    <Button active={menu === "home" ? "true" : "false"} onClick={() => setMenu("home")}>
+                    <Button active={menu === "home"} onClick={() => setMenu("home")}>
                         Home
                     </Button>
-                    <Button active={menu == "admin" ? "true" : "false"} onClick={() => setMenu("admin")}>
+                    <Button active={menu === "admin"} onClick={() => setMenu("admin")}>
                         Admin
-                    </Button>{" "}
-                    <Button active={menu == "develop" ? "true" : "false"} onClick={() => setMenu("develop")}>
+                    </Button>
+                    <Button active={menu === "develop"} onClick={() => setMenu("develop")}>
                         Develop
                     </Button>
                     {!isLoggedIn_AuthService && (
-                        <Button active={menu == "login" ? "true" : "false"} onClick={() => setMenu("login")}>
+                        <Button active={menu === "login"} onClick={() => setMenu("login")}>
                             Login
                         </Button>
                     )}
@@ -44,16 +57,20 @@ export function App() {
                             Logoff
                         </Button>
                     )}
+                    <Button onClick={toggleDarkMode}>
+                        Toggle Dark Mode
+                    </Button>
                 </div>
 
                 <div id="main" className="w-full flex flex-col items-center">
-                    {menu === "home" && <PageMain></PageMain>}
-                    {menu === "admin" && <PageAdmin></PageAdmin>}
-                    {menu === "develop" && <PageDevelop></PageDevelop>}
-                    {menu === "login" && <Login setMenu={setMenu}></Login>}
+                    {menu === "home" && <PageMain />}
+                    {menu === "admin" && <PageAdmin />}
+                    {menu === "develop" && <PageDevelop />}
+                    {menu === "login" && <Login setMenu={setMenu} />}
                 </div>
             </div>
         </div>
     );
 }
+
 export default App;

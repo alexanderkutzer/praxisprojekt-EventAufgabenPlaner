@@ -6,7 +6,7 @@ function PageMain() {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [events, setEvents] = useState([
-        { id: 1, title: "Event 1", start: "2024-10-25", end: "2024-10-28T12:00:00", extendedProps: { description: "Description for Event 1" } },
+        { id: 1, title: "Team Meeting", start: "2024-10-25", end: "2024-10-28T12:00:00", extendedProps: { description: "Description for Event 1" } },
         { id: 2, title: "Event 2", start: "2024-10-15", extendedProps: { description: "Description for Event 2" } },
         { id: 3, title: "Event 3", start: "2024-10-20", extendedProps: { description: "Description for Event 3" } },
     ]);
@@ -83,8 +83,8 @@ function PageMain() {
 
         if (selectedEvent) {
             const updatedEvents = events.map((event) => {
-                if (event.id == selectedEvent.id) {
-                    event = {
+                if (event.id === selectedEvent.id) {
+                    return {
                         ...event,
                         title: inputValues.title,
                         start: inputValues.startDate,
@@ -131,127 +131,138 @@ function PageMain() {
                 <Button onClick={() => switchContent("AddEvent")}>Neues Event</Button>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-start w-full mt-8">
-                <div className="w-full sm:w-1/2 max-w-[50%]">
-                    <Calendar
-                        key={JSON.stringify(events)} // Neurendering bei Änderung
-                        events={events}
-                        onDateClick={onDateClick}
-                        onEventClick={handleEventClick}
-                        onDateSelect={onDateSelect}
-                        ref={calendarRef}
-                    />
-                </div>
+            <div className="flex flex-col sm:flex-row items-center sm:items-start w-full mt-8">
+    <div className="w-full sm:w-1/2 max-w-[50%] min-w-96">
+        <Calendar
+            key={JSON.stringify(events)} // Neurendering bei Änderung
+            events={events}
+            onDateClick={onDateClick}
+            onEventClick={handleEventClick}
+            onDateSelect={onDateSelect}
+            ref={calendarRef}
+        />
+    </div>
 
-                <div className="w-full sm:w-1/2 max-w-[50%] p-4">
-                    {selectedEvent && activeContent === "Details" ? (
-                        <div>
-                            <h3 className="text-xl font-bold">{selectedEvent.title}</h3>
-                            <p>Start Datum: {selectedEvent.start}</p>
-                            <p>End Datum: {selectedEvent.end}</p>
-                            <p>{selectedEvent.description}</p>
-                            <Button onClick={startEditing}>Bearbeiten</Button>
-                        </div>
-                    ) : activeContent === "AddEvent" ? (
-                        <div className="flex flex-col space-y-4">
-                            <h1 className="text-2xl font-semibold">Neues Event hinzufügen</h1>
-                            <input
-                                type="text"
-                                name="title"
-                                value={inputValues.title}
-                                onChange={handleInputChange}
-                                placeholder="Event-Titel eingeben"
-                                className="p-2 border rounded"
-                            />
-                            <p className="mt-3">Eventbeginn</p>
-                            <input
-                                type="datetime-local"
-                                name="startDate"
-                                value={inputValues.startDate}
-                                onChange={handleInputChange}
-                                className="p-2 border rounded"
-                            />
-                            <p className="mt-3">Event Ende (Angabe nur notwendig, wenn das Event mehrtägig ist)</p>
-                            <input
-                                type="datetime-local"
-                                name="endDate"
-                                value={inputValues.endDate}
-                                onChange={handleInputChange}
-                                className="p-2 border rounded"
-                            />
-                            <p className="mt-3">Details zu deinem Event</p>
-                            <input
-                                type="text"
-                                name="description"
-                                value={inputValues.description}
-                                onChange={handleInputChange}
-                                placeholder="Details"
-                                className="p-2 border rounded"
-                            />
-                            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-                            <Button onClick={saveEvent}>Event erstellen</Button>
-                        </div>
-                    ) : activeContent === "Bearbeiten" ? (
-                        <div>
-                            <h1>Event bearbeiten</h1>
-                            <input
-                                type="text"
-                                name="title"
-                                value={inputValues.title}
-                                onChange={handleInputChange}
-                                placeholder="Event-Titel eingeben"
-                                className="p-2 border rounded"
-                            />
-                            <p className="mt-3">Eventbeginn</p>
-                            <input
-                                type="datetime-local"
-                                name="startDate"
-                                value={inputValues.startDate}
-                                onChange={handleInputChange}
-                                className="p-2 border rounded"
-                            />
-                            <p className="mt-3">Event Ende (Angabe nur notwendig, wenn das Event mehrtägig ist)</p>
-                            <input
-                                type="datetime-local"
-                                name="endDate"
-                                value={inputValues.endDate}
-                                onChange={handleInputChange}
-                                className="p-2 border rounded"
-                            />
-                            <p className="mt-3">Details zu deinem Event</p>
-                            <input
-                                type="text"
-                                name="description"
-                                value={inputValues.description}
-                                onChange={handleInputChange}
-                                placeholder="Details"
-                                className="p-2 border rounded"
-                            />
-                            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-                            <Button onClick={saveEvent}>Änderungen speichern</Button>
-                        </div>
-                    ) : (
-                        <p>Event auswählen, um Details anzuzeigen.</p>
-                    )}
-
-                    {activeContent === "EventOverview" && (
-                        <div>
-                            <h1>Anstehende Events</h1>
-                            <p>Demnächst:</p>
-                            <ul className="space-y-4">
-                                {events.map((event) => (
-                                    <li key={event.id}>
-                                        {event.title}
-                                        {event.start} {event.end && ` bis ${event.end}`}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
-                </div>
+    <div className="w-full sm:w-1/2 max-w-[50%] p-4">
+        {selectedEvent && activeContent === "Details" ? (
+            <div>
+                <h3 className="text-xl font-bold">{selectedEvent.title}</h3>
+                <p>Start Datum: {selectedEvent.start}</p>
+                <p>End Datum: {selectedEvent.end}</p>
+                <p>{selectedEvent.description}</p>
+                <Button onClick={startEditing}>Bearbeiten</Button>
             </div>
+        ) : activeContent === "AddEvent" ? (
+            <div className="flex flex-col space-y-4">
+                <h1 className="text-2xl font-semibold">Neues Event hinzufügen</h1>
+                <input
+                    type="text"
+                    name="title"
+                    value={inputValues.title}
+                    onChange={handleInputChange}
+                    placeholder="Event-Titel eingeben"
+                    className="p-2 border rounded"
+                />
+                <p className="mt-3">Eventbeginn</p>
+                <input
+                    type="datetime-local"
+                    name="startDate"
+                    value={inputValues.startDate}
+                    onChange={handleInputChange}
+                    className="p-2 border rounded"
+                />
+                <p className="mt-3">Event Ende (Angabe nur notwendig, wenn das Event mehrtägig ist)</p>
+                <input
+                    type="datetime-local"
+                    name="endDate"
+                    value={inputValues.endDate}
+                    onChange={handleInputChange}
+                    className="p-2 border rounded"
+                />
+                <p className="mt-3">Details zu deinem Event</p>
+                <input 
+                    type="text"
+                    name="description"
+                    value={inputValues.description}
+                    onChange={handleInputChange}
+                    placeholder="Details"
+                    className="p-2 border rounded "
+                />
+                {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+                <Button onClick={saveEvent}>Event erstellen</Button>
+                <Button onClick={() => switchContent("EventOverview")}>Abbrechen</Button>
+            </div>
+        ) : activeContent === "Bearbeiten" ? (
+            <div>
+                <h1>Event bearbeiten</h1>
+                <input
+                    type="text"
+                    name="title"
+                    value={inputValues.title}
+                    onChange={handleInputChange}
+                    placeholder="Event-Titel eingeben"
+                    className="p-2 border rounded"
+                />
+                <p className="mt-3">Eventbeginn</p>
+                <input
+                    type="datetime-local"
+                    name="startDate"
+                    value={inputValues.startDate}
+                    onChange={handleInputChange}
+                    className="p-2 border rounded"
+                />
+                <p className="mt-3">Event Ende (Angabe nur notwendig, wenn das Event mehrtägig ist)</p>
+                <input
+                    type="datetime-local"
+                    name="endDate"
+                    value={inputValues.endDate}
+                    onChange={handleInputChange}
+                    className="p-2 border rounded"
+                />
+                <p className="mt-3">Details zu deinem Event</p>
+                <input
+                    type="text"
+                    name="description"
+                    value={inputValues.description}
+                    onChange={handleInputChange}
+                    placeholder="Details"
+                    className="p-2 border rounded"
+                />
+                {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+                <Button onClick={saveEvent}>Änderungen speichern</Button>
+            </div>
+        ) : (
+            <div>
+                <h1 className="text-xl flex-col font-bold"></h1>
+                <p></p>
+            </div>
+        )}
+        
+        {activeContent === "EventOverview" && (
+            <div>
+                <h1 className="text-xl flex-col font-bold">Eventübersicht</h1>
+                <p className="text-sm">Event auswählen, um Details anzuzeigen.</p>
+                <p className="text-lg underline underline-offset-2">Demnächst:</p>
+                <ul className="space-y-6">
+                    {events.map((event) => (
+                        <li key={event.id} className="flex flex-col">
+                            <span 
+                                className="font-semibold text-lg cursor-pointer" 
+                                onClick={() => handleEventClick({ event })}
+                            >
+                                {event.title}
+                            </span>
+                            <span className="text-gray-600">{event.start} {event.end && `bis ${event.end}`}</span>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        )}
+    </div>
+</div> 
         </>
     );
 }
 
 export default PageMain;
+
