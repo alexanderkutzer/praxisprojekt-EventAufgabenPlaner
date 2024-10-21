@@ -5,10 +5,13 @@ export async function apiUserLogin(email, password) {
     const response = await fetchApi("auth/login", "POST", { email, password });
     return response.json();
 }
-
+export async function apiUserByToken(token) {
+    const response = await fetchApi(`auth/${token == "" ? "no_token" : token}`, "GET");
+    return response.json();
+}
 export async function apiUserLogout(token) {
     token = token == "" ? "no_token" : token;
-    const response = await fetchApi(`auth/logout/${token}`, "GET");
+    const response = await fetchApi(`auth/logout/${token == "" ? "no_token" : token}`, "GET");
     return response.json();
 }
 

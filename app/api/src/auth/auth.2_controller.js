@@ -4,14 +4,12 @@ export class AuthController {
         this.loginController = this.loginController.bind(this);
         this.logoutController = this.logoutController.bind(this);
         this.registerController = this.registerController.bind(this);
+        this.userByTokenController = this.userByTokenController.bind(this);
     }
     async loginController(req, res) {
         try {
             const { email, password } = req.body;
-            let { check, token } = await this.userService.checkPassword(
-                email,
-                password
-            );
+            let { check, token } = await this.userService.checkPassword(email, password);
             if (check) {
                 res.status(200).json({ login: true, token });
             } else {
@@ -34,10 +32,7 @@ export class AuthController {
                 return;
             }
             userToLogout.token = "";
-            let { update, _ } = await this.userService.update(
-                userToLogout.id,
-                userToLogout
-            );
+            let { update, _ } = await this.userService.update(userToLogout.id, userToLogout);
             if (!update) {
                 res.status(401).json({ logout: false });
             }
@@ -67,6 +62,23 @@ export class AuthController {
             console.error(err);
             res.status(500).json({
                 error: "Internal Server Error - 1987ed26-8292-483e-91c7-2cd87af7346c",
+            });
+        }
+    }
+    async userByTokenController(req, res) {
+        try {
+            const { token } = req.params;
+            const users = await this.userService.getAll();
+            const user = users.find((user) => user.token === token);
+            if (!user) {
+                res.status(401).json({});
+                return;
+            }
+            res.status(200).json(user);
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({
+                error: "Internal Server Error - 04526c30-28fa-40da-93d3-cc01787c9f12",
             });
         }
     }

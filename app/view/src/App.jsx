@@ -20,34 +20,27 @@ export function App() {
         <div className="mx-16">
             <div className="flex flex-col items-center mt-4">
                 <div id="nav" className="flex flex-row">
-                    <Button
-                        active={menu === "home" ? "true" : "false"}
-                        onClick={() => setMenu("home")}
-                    >
+                    <Button active={menu === "home" ? "true" : "false"} onClick={() => setMenu("home")}>
                         Home
                     </Button>
-                    <Button
-                        active={menu == "admin" ? "true" : "false"}
-                        onClick={() => setMenu("admin")}
-                    >
+                    <Button active={menu == "admin" ? "true" : "false"} onClick={() => setMenu("admin")}>
                         Admin
                     </Button>{" "}
-                    <Button
-                        active={menu == "develop" ? "true" : "false"}
-                        onClick={() => setMenu("develop")}
-                    >
+                    <Button active={menu == "develop" ? "true" : "false"} onClick={() => setMenu("develop")}>
                         Develop
                     </Button>
                     {!isLoggedIn_AuthService && (
-                        <Button
-                            active={menu == "login" ? "true" : "false"}
-                            onClick={() => setMenu("login")}
-                        >
+                        <Button active={menu == "login" ? "true" : "false"} onClick={() => setMenu("login")}>
                             Login
                         </Button>
                     )}
                     {isLoggedIn_AuthService && (
-                        <Button onClick={() => setToken_AuthService("")}>
+                        <Button
+                            onClick={() => {
+                                setToken_AuthService("");
+                                setMenu("home");
+                            }}
+                        >
                             Logoff
                         </Button>
                     )}
@@ -57,7 +50,7 @@ export function App() {
                     {menu === "home" && <PageMain></PageMain>}
                     {menu === "admin" && <PageAdmin></PageAdmin>}
                     {menu === "develop" && <PageDevelop></PageDevelop>}
-                    {menu === "login" && <Login></Login>}
+                    {menu === "login" && <Login setMenu={setMenu}></Login>}
                 </div>
             </div>
         </div>
