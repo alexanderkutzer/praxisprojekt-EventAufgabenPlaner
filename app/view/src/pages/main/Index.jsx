@@ -12,6 +12,30 @@ function PageMain() {
         { id: 2, title: "Event 2", start: "2024-10-15", extendedProps: { description: "Description for Event 2" } },
         { id: 3, title: "Event 3", start: "2024-10-20", extendedProps: { description: "Description for Event 3" } },
     ]);
+    const [tasks, setTask] = useState([
+        {id_event:1,user_id:"", title:"TestTask 1", description:"Test Descripten Task 1", todo:0, inProgress:0, done:0},
+        {id_event:1,user_id:"", title:"TestTask 2", description:"Test Descripten Task 2", todo:0, inProgress:0, done:0},
+        {id_event:1,user_id:"", title:"TestTask 3", description:"Test Descripten Task 3", todo:0, inProgress:0, done:0},
+        {id_event:2,user_id:"", title:"TestTask 3", description:"Test Descripten Task 3", todo:0, inProgress:0, done:0},
+    ]);
+
+
+    const [eventTaskShow, setEventTaskShow] = useState([])
+    useEffect(()=>{
+            let list = [];
+            events.forEach((event)=>{
+                let status=
+                {
+                    id: event.id,
+                    show: false
+                }
+                list.push(status);
+            })
+            setEventTaskShow(list);
+         
+        console.log(eventTaskShow)
+    },[])
+
     const [activeContent, setActiveContent] = useState("EventOverview");
     const [inputValues, setInputValues] = useState({
         title: "",
@@ -125,6 +149,7 @@ function PageMain() {
         inputValues.endDate = selectedDate + "T00:00:00";
         setInputValues({ ...inputValues });
     }, [selectedDate]);
+    
 
     return (
         <>
@@ -153,6 +178,8 @@ function PageMain() {
                             <p>End Datum: {selectedEvent.end}</p>
                             <p>{selectedEvent.description}</p>
                             <Button onClick={startEditing}>Bearbeiten</Button>
+                            <Button onClick={()=> switchContent("EventOverview")}>Abbrechen</Button>
+
                         </div>
                     ) : activeContent === "AddEvent" ? (
                         <div className="flex flex-col space-y-4">
@@ -192,6 +219,8 @@ function PageMain() {
                             />
                             {errorMessage && <p className="text-red-500">{errorMessage}</p>}
                             <Button onClick={saveEvent}>Event erstellen</Button>
+                            <Button onClick={() => switchContent("EventOverview")}>Abbrechen</Button>
+
                         </div>
                     ) : activeContent === "Bearbeiten" ? (
                         <div>
@@ -243,13 +272,35 @@ function PageMain() {
                             <ul className="space-y-4">
                                 {events.map((event) => (
                                     <li key={event.id}>
+                                    <button
+                                        onClick={() => handleEventClick({ event })} // Klickbares Element
+                                        className="underline"
+                                    >
                                         {event.title}
-                                        {event.start} {event.end && ` bis ${event.end}`}
-                                    </li>
+                                    </button>
+                                    <p>{event.start} {event.end && ` bis ${event.end}`}</p>
+                                    <button onClick={()=> {
+                                        let newShow = eventTaskShow.map((e)=>{
+                                            if(e.id === event.id){
+                                                e.show = !e.show;
+                                            }
+                                            return e;
+                                        })
+                                        setEventTaskShow(newShow);
+                                    }}>{eventTaskShow.filter((e)=>e.id === event.id)[0].show?"-":"+"}</button>
+                                    <div className={eventTaskShow.filter((e)=>e.id === event.id)[0].show?" ":" hidden "}>
+                                        {
+                                        tasks
+                                        .filter((t)=>t.id_event === event.id)
+                                        .map((t)=>(<div>{t.title}</div>))}
+                                    </div>
+                                </li>
                                 ))}
                             </ul>
+                            
                         </div>
                     )}
+
                 </div>
             </div>
         </>
