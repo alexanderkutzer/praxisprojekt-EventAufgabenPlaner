@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { apiGetUsers } from "../../../../service/api_calls";
-import Button from "../../../../components/Button";
+import React, { useEffect, useState } from 'react';
+import { apiGetUsers } from '../../../../service/api_calls';
+import Button from '../../../../components/Button';
+
 
 function UsersList({ selectedUser, setSelectedUser, users, setUsers }) {
     const [loading, setLoading] = useState(true);
@@ -53,6 +54,7 @@ function UsersList({ selectedUser, setSelectedUser, users, setUsers }) {
             )}
         </div>
     );
+
 }
 
 export default UsersList;
