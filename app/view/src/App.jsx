@@ -40,7 +40,16 @@ export function App() {
                             </Button>
                         </>
                     )}
-                    {isLoggedIn_AuthService && <Button onClick={() => setToken_AuthService("")}>Logoff</Button>}
+                    {isLoggedIn_AuthService && (
+                        <Button
+                            onClick={() => {
+                                setToken_AuthService("");
+                                setMenu("home");
+                            }}
+                        >
+                            Logoff
+                        </Button>
+                    )}
                 </div>
 
                 <div id="main" className="w-full flex flex-col items-center">

@@ -35,8 +35,10 @@ function UsersList({ selectedUser, setSelectedUser, users, setUsers }) {
     }
 
     return (
+
         <div className="users-container flex flex-col p-4">
             {users.length === 0 ? (
+
                 <p className="text-gray-600">Keine Benutzer verfügbar</p>
             ) : (
                 users.map((user) => (
@@ -45,6 +47,7 @@ function UsersList({ selectedUser, setSelectedUser, users, setUsers }) {
                         onClick={() => {
                             setSelectedUser(user);
                         }}
+
                     >
                         {user.email}
                     </Button>

@@ -24,7 +24,7 @@ import {
 } from "../../../service/api_calls";
 import { useAuth } from "../../../service/authStatus";
 function DevelopApiCalls() {
-    const { isLoggedIn_AuthService, setToken_AuthService } = useAuth();
+    const { isLoggedIn_AuthService, token_AuthService, setToken_AuthService } = useAuth();
     const [showUsers, setShowUsers] = React.useState(false);
     const [showEvents, setShowEvents] = React.useState(false);
     const [showTasks, setShowTasks] = React.useState(false);
@@ -214,6 +214,7 @@ function DevelopApiCalls() {
                             <div className="flex flex-col">
                                 <div>
                                     <Button
+                                        className="bg-green-300"
                                         onClick={async () => {
                                             const response = await apiUserLogin(email, password);
 
@@ -238,6 +239,7 @@ function DevelopApiCalls() {
                                 <hr />
                                 <div>
                                     <Button
+                                        className="bg-green-300"
                                         onClick={async () => {
                                             let response = await apiUserByToken(token);
                                             recogniceResponse(response);
@@ -246,11 +248,14 @@ function DevelopApiCalls() {
                                         UserByToken
                                     </Button>
                                     <br />
-                                    <label className="inline-flex w-24 mx-2">Token: </label>"{token}"<Button onClick={() => setToken("")}>DEL</Button>
+                                    <label className="inline-flex w-24 mx-2">Token: </label>"{token}"
+                                    <Button onClick={() => setToken(token_AuthService)}>Get Local Saved Token</Button>
+                                    <Button onClick={() => setToken("")}>DEL</Button>
                                 </div>
                                 <hr />
                                 <div>
                                     <Button
+                                        className="bg-green-300"
                                         onClick={async () => {
                                             let response = await apiUserLogout(token);
                                             setToken_AuthService("");
@@ -265,8 +270,10 @@ function DevelopApiCalls() {
                                 </div>
                                 <hr />
                                 <div>
+
                                     <Button onClick={async () => recogniceResponse(await apiUserRegister(email, username, password))}>Register</Button>
                                     await apiUserRegister( email, username, password )
+
                                     <br />
                                     <label className="inline-flex w-24 mx-2">Email:</label>
                                     <input className="p-1 m-1" type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -293,12 +300,16 @@ function DevelopApiCalls() {
                         <div className={showUsers ? "  " : " hidden "}>
                             <div className="flex flex-col">
                                 <div>
-                                    <Button onClick={async () => recogniceResponse(await apiGetUsers())}>GetAll</Button>
+                                    <Button className="bg-green-300" onClick={async () => recogniceResponse(await apiGetUsers())}>
+                                        GetAll
+                                    </Button>
                                     await apiGetUsers()
                                 </div>
                                 <hr />
                                 <div>
-                                    <Button onClick={async () => recogniceResponse(await apiGetUser(id))}>GetOne</Button>
+                                    <Button className="bg-green-300" onClick={async () => recogniceResponse(await apiGetUser(id))}>
+                                        GetOne
+                                    </Button>
                                     {"await apiGetUser( id )"}
                                     <br />
                                     <label className="inline-flex w-24 mx-2">ID:</label>
@@ -308,6 +319,7 @@ function DevelopApiCalls() {
                                 <hr />
                                 <div>
                                     <Button
+                                        className="bg-green-300"
                                         onClick={async () =>
                                             recogniceResponse(
                                                 await apiCreateUser({
@@ -337,6 +349,7 @@ function DevelopApiCalls() {
                                 <hr />
                                 <div>
                                     <Button
+                                        className="bg-green-300"
                                         onClick={async () =>
                                             recogniceResponse(
                                                 await apiUpdateUser(id, {
@@ -376,7 +389,9 @@ function DevelopApiCalls() {
                                 </div>
                                 <hr />
                                 <div>
-                                    <Button onClick={async () => recogniceResponse(await apiDeleteUser(id))}>Delete</Button>
+                                    <Button className="bg-green-300" onClick={async () => recogniceResponse(await apiDeleteUser(id))}>
+                                        Delete
+                                    </Button>
                                     {"await apiDeleteUser( id )"}
                                     <br />
                                     <label className="inline-flex w-24 mx-2">ID:</label>
@@ -396,10 +411,14 @@ function DevelopApiCalls() {
                         <div className={showEvents ? "" : " hidden "}>
                             <div className="flex flex-col">
                                 <div>
-                                    <Button onClick={async () => recogniceResponse(await apiGetEvents())}>GetAll</Button>
+                                    <Button className="bg-green-300" onClick={async () => recogniceResponse(await apiGetEvents())}>
+                                        GetAll
+                                    </Button>
                                 </div>
                                 <div>
-                                    <Button onClick={async () => recogniceResponse(await apiGetEvent(id))}>GetOne</Button>
+                                    <Button className="bg-green-300" onClick={async () => recogniceResponse(await apiGetEvent(id))}>
+                                        GetOne
+                                    </Button>
                                     <br />
                                     <label className="inline-flex w-24 mx-2">ID:</label>
                                     <input className="p-1 m-1" value={id} onChange={(e) => setId(e.target.value)} id="getUserId" type="text" />
@@ -407,6 +426,7 @@ function DevelopApiCalls() {
                                 </div>
                                 <div>
                                     <Button
+                                        className="bg-green-300"
                                         onClick={async () =>
                                             recogniceResponse(
                                                 await apiCreateEvent({
@@ -451,6 +471,7 @@ function DevelopApiCalls() {
                                 </div>
                                 <div>
                                     <Button
+                                        className="bg-green-300"
                                         onClick={async () =>
                                             recogniceResponse(
                                                 await apiUpdateEvent(id, {
@@ -497,7 +518,9 @@ function DevelopApiCalls() {
                                     <Button onClick={() => setEndDateEvent("")}>DEL</Button>
                                 </div>
                                 <div>
-                                    <Button onClick={async () => recogniceResponse(await apiDeleteEvent(id))}>Delete</Button>
+                                    <Button className="bg-green-300" onClick={async () => recogniceResponse(await apiDeleteEvent(id))}>
+                                        Delete
+                                    </Button>
                                     <br />
                                     <label className="inline-flex w-24 mx-2">ID:</label>
                                     <input className="p-1 m-1" value={id} onChange={(e) => setId(e.target.value)} id="getUserId" type="text" />
@@ -516,10 +539,14 @@ function DevelopApiCalls() {
                         <div className={showTasks ? "" : " hidden "}>
                             <div className="flex flex-col">
                                 <div>
-                                    <Button onClick={async () => recogniceResponse(await apiGetTasks())}>GetAll</Button>
+                                    <Button className="bg-green-300" onClick={async () => recogniceResponse(await apiGetTasks())}>
+                                        GetAll
+                                    </Button>
                                 </div>
                                 <div>
-                                    <Button onClick={async () => recogniceResponse(await apiGetTask(id))}>GetOne</Button>
+                                    <Button className="bg-green-300" onClick={async () => recogniceResponse(await apiGetTask(id))}>
+                                        GetOne
+                                    </Button>
                                     <br />
                                     <label className="inline-flex w-24 mx-2">ID:</label>
                                     <input className="p-1 m-1" value={id} onChange={(e) => setId(e.target.value)} id="getUserId" type="text" />
@@ -527,6 +554,7 @@ function DevelopApiCalls() {
                                 </div>
                                 <div>
                                     <Button
+                                        className="bg-green-300"
                                         onClick={async () =>
                                             recogniceResponse(
                                                 await apiCreateTask({
@@ -571,6 +599,7 @@ function DevelopApiCalls() {
                                 </div>
                                 <div>
                                     <Button
+                                        className="bg-green-300"
                                         onClick={async () =>
                                             recogniceResponse(
                                                 await apiUpdateTask(id, {
@@ -615,7 +644,9 @@ function DevelopApiCalls() {
                                     <input className="p-1 m-1" type="checkbox" checked={done} onChange={(e) => setDone(!done)} />
                                 </div>
                                 <div>
-                                    <Button onClick={async () => recogniceResponse(await apiDeleteTask(id))}>Delete</Button>
+                                    <Button className="bg-green-300" onClick={async () => recogniceResponse(await apiDeleteTask(id))}>
+                                        Delete
+                                    </Button>
                                     <br />
                                     <label className="inline-flex w-24 mx-2">ID:</label>
                                     <input className="p-1 m-1" value={id} onChange={(e) => setId(e.target.value)} id="getUserId" type="text" />
