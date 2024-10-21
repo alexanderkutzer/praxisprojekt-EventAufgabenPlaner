@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import Calendar from "../../Calendar.jsx";
 import Button from "../../components/Button.jsx";
+import { useAuth } from "../../service/authStatus.jsx";
 
 function PageMain() {
+    const { isLoggedIn_AuthService, token_AuthService, setToken_AuthService } = useAuth();
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [events, setEvents] = useState([

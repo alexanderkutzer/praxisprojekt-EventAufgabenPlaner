@@ -34,6 +34,7 @@ function DevelopApiCalls() {
     const [response2, setResponse2] = React.useState("");
     const [id, setId] = React.useState("");
     const [email, setEmail] = React.useState("email@test");
+    const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [isActive, setIsActive] = React.useState(false);
     const [isAdmin, setIsAdmin] = React.useState(false);
@@ -264,12 +265,16 @@ function DevelopApiCalls() {
                                 </div>
                                 <hr />
                                 <div>
-                                    <Button onClick={async () => recogniceResponse(await apiUserRegister(email, password))}>Register</Button>
-                                    await apiUserRegister( email, password )
+                                    <Button onClick={async () => recogniceResponse(await apiUserRegister(email, username, password))}>Register</Button>
+                                    await apiUserRegister( email, username, password )
                                     <br />
                                     <label className="inline-flex w-24 mx-2">Email:</label>
                                     <input className="p-1 m-1" type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
                                     <Button onClick={() => setEmail("")}>DEL</Button>
+                                    <br />
+                                    <label className="inline-flex w-24 mx-2">Username:</label>
+                                    <input className="p-1 m-1" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+                                    <Button onClick={() => setUsername("")}>DEL</Button>
                                     <br />
                                     <label className="inline-flex w-24 mx-2">Password:</label>
                                     <input className="p-1 m-1" type="text" value={password} onChange={(e) => setPassword(e.target.value)} />
@@ -307,6 +312,7 @@ function DevelopApiCalls() {
                                             recogniceResponse(
                                                 await apiCreateUser({
                                                     email,
+                                                    username,
                                                     password,
                                                 })
                                             )
@@ -319,6 +325,10 @@ function DevelopApiCalls() {
                                     <label className="inline-flex w-24 mx-2">Email:</label>
                                     <input className="p-1 m-1" type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
                                     <Button onClick={() => setEmail("")}>DEL</Button>
+                                    <br />
+                                    <label className="inline-flex w-24 mx-2">Username:</label>
+                                    <input className="p-1 m-1" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+                                    <Button onClick={() => setUsername("")}>DEL</Button>
                                     <br />
                                     <label className="inline-flex w-24 mx-2">Password:</label>
                                     <input className="p-1 m-1" type="text" value={password} onChange={(e) => setPassword(e.target.value)} />
@@ -349,6 +359,10 @@ function DevelopApiCalls() {
                                     <label className="inline-flex w-24 mx-2">Email</label>
                                     <input className="p-1 m-1" type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
                                     <Button onClick={() => setEmail("")}>DEL</Button>
+                                    <br />
+                                    <label className="inline-flex w-24 mx-2">Username:</label>
+                                    <input className="p-1 m-1" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+                                    <Button onClick={() => setUsername("")}>DEL</Button>
                                     <br />
                                     <label className="inline-flex w-24 mx-2">Password </label>
                                     <input className="p-1 m-1" type="text" value={password} onChange={(e) => setPassword(e.target.value)} />
