@@ -29,6 +29,7 @@ export class UserService {
         }
         let dbNewUser = DTOCreateUserToDBUser(newUser);
         let date = Date.now().toString();
+        dbNewUser.username = newUser.username;
         dbNewUser.passwordHash = createPasswordHash(newUser.password, date);
         dbNewUser.dateCreated = date;
         dbNewUser.isActive = newUser.isActive ? 1 : 1;
@@ -65,6 +66,7 @@ export class UserService {
             let date = Date.now().toString();
             let user = {
                 email: "admin@localhost",
+                username: "admin",
                 dateCreated: date,
                 password: "admin",
                 isActive: 1,
@@ -75,6 +77,7 @@ export class UserService {
             date = Date.now().toString();
             user = {
                 email: "jane@doe.com",
+                username: "Jane Doe",
                 dateCreated: date,
                 password: "password12345",
                 isActive: 1,
@@ -113,10 +116,11 @@ const checkPasswords = (password, passwordHash, secret) => {
     return createPasswordHash(password, secret) === passwordHash;
 };
 
-const DTOCreateUserToDBUser = ({ email, passwordHash, dateCreated, isActive, isAdmin, token }) => {
+const DTOCreateUserToDBUser = ({ email, username, passwordHash, dateCreated, isActive, isAdmin, token }) => {
     return {
         id: crypto.randomUUID(),
         email,
+        username,
         passwordHash,
         dateCreated,
         isActive,
@@ -124,10 +128,11 @@ const DTOCreateUserToDBUser = ({ email, passwordHash, dateCreated, isActive, isA
         token,
     };
 };
-const DTOUserFromDBToUser = ({ id, email, isActive, isAdmin, token }) => {
+const DTOUserFromDBToUser = ({ id, email, username, isActive, isAdmin, token }) => {
     return {
         id,
         email,
+        username,
         isActive,
         isAdmin,
         token,

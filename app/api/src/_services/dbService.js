@@ -26,6 +26,7 @@ const sqls = [
     `CREATE TABLE IF NOT EXISTS users (
         id TEXT PRIMARY KEY,
         email TEXT,
+        username TEXT,
         passwordHash TEXT,
         dateCreated TEXT,
         isActive BOOLEAN,
@@ -38,9 +39,7 @@ export class DBService {
     constructor(dbServiceSystem) {
         this.dbServiceSystem = dbServiceSystem;
         if (!this.dbServiceSystem) {
-            console.error(
-                "76b5b9ec-89fc-4c63-8a5b-64db2a6259bb: DBService: dbServiceSystem is null"
-            );
+            console.error("76b5b9ec-89fc-4c63-8a5b-64db2a6259bb: DBService: dbServiceSystem is null");
         }
         //wait for the tables to be created
     }
