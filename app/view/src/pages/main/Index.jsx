@@ -309,30 +309,6 @@ function PageMain() {
                     )}
                 </div>
             </div>
-            ) : (
-            <div>
-                <h1 className="text-xl flex-col font-bold"></h1>
-                <p></p>
-            </div>
-            {activeContent === "EventOverview" && (
-                <div>
-                    <h1 className="text-xl flex-col font-bold">Eventübersicht</h1>
-                    <p className="text-sm">Event auswählen, um Details anzuzeigen.</p>
-                    <p className="text-lg underline underline-offset-2">Demnächst:</p>
-                    <ul className="space-y-6">
-                        {events.map((event) => (
-                            <li key={event.id} className="flex flex-col">
-                                <span className="font-semibold text-lg cursor-pointer" onClick={() => handleEventClick({ event })}>
-                                    {event.title}
-                                </span>
-                                <span className="text-gray-600">
-                                    {event.start} {event.end && `bis ${event.end}`}
-                                </span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
         </>
     );
 }
