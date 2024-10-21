@@ -22,19 +22,23 @@ function PageMain() {
 
     const [eventTaskShow, setEventTaskShow] = useState([])
     useEffect(()=>{
-            let list = [];
-            events.forEach((event)=>{
-                let status=
-                {
-                    id: event.id,
-                    show: false
-                }
-                list.push(status);
-            })
-            setEventTaskShow(list);
-         
+        let list = [];
+        console.log(events.length)
+        events.forEach((event)=>{
+            let status=
+            {
+                id: event.id,
+                show: false
+            }
+            list.push(status);
+        })
+        setEventTaskShow(list);
+        
+    },[events])
+
+    useEffect(()=>{
         console.log(eventTaskShow)
-    },[])
+    },[eventTaskShow])
 
     const [activeContent, setActiveContent] = useState("EventOverview");
     const [inputValues, setInputValues] = useState({
@@ -287,8 +291,8 @@ function PageMain() {
                                             return e;
                                         })
                                         setEventTaskShow(newShow);
-                                    }}>{eventTaskShow.filter((e)=>e.id === event.id)[0].show?"-":"+"}</button>
-                                    <div className={eventTaskShow.filter((e)=>e.id === event.id)[0].show?" ":" hidden "}>
+                                    }}>+</button>
+                                    <div className={eventTaskShow.length>0 && eventTaskShow.filter((ets)=>ets.id === event.id)[0].show?" ": " hidden "}>
                                         {
                                         tasks
                                         .filter((t)=>t.id_event === event.id)
