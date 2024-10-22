@@ -43,7 +43,7 @@ export default function Calendar({ events, onDateClick, onEventClick, onDateSele
             eventClick={handleEventClick}
             select={handleSelect}
             selectable={true}
-            themeSystem="Flatly"
+            themeSystem="standart"
         />
     );
 }

@@ -6,10 +6,13 @@ import Button from "./components/Button.jsx";
 import PageDevelop from "./pages/develop/index.jsx";
 import { useAuth } from "./service/authStatus.jsx";
 
+
+import { DarkModeSwitch } from 'react-toggle-dark-mode';
+
 export function App() {
     const { isLoggedIn_AuthService, setToken_AuthService } = useAuth();
     const [menu, setMenu] = useState("home");
-    const [darkMode, setDarkMode] = useState(false);
+    const [isDarkMode, setDarkMode] = React.useState(false);
 
     const events = [
         { title: "Event 1", date: "2024-10-14" },
@@ -57,9 +60,13 @@ export function App() {
                             Logoff
                         </Button>
                     )}
-                    <Button onClick={toggleDarkMode}>
-                        Toggle Dark Mode
-                    </Button>
+                        <div className="flex justify-end mb-8">
+                        <DarkModeSwitch
+                        checked={isDarkMode}
+                        onChange={toggleDarkMode}
+                        size={30}
+                        />
+                        </div>
                 </div>
 
                 <div id="main" className="w-full flex flex-col items-center">
