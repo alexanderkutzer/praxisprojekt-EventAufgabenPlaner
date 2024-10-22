@@ -289,7 +289,7 @@ function PageMain() {
                                                 setEventTaskShow(newShow);
                                             }}
                                         >
-                                            +
+                                            {eventTaskShow.find((e) => e.id === event.id)?.show ? "-" : "+"}
                                         </button>
                                         <div
                                             className={
