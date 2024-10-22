@@ -11,12 +11,17 @@ function PageMain() {
         { id: 1, title: "Team Meeting", start: "2024-10-25", end: "2024-10-28T12:00:00", extendedProps: { description: "Description for Event 1" } },
         { id: 2, title: "Event 2", start: "2024-10-15", extendedProps: { description: "Description for Event 2" } },
         { id: 3, title: "Event 3", start: "2024-10-20", extendedProps: { description: "Description for Event 3" } },
+        { id: 4, title: "Event 4", start: "2024-10-20", extendedProps: { description: "Description for Event 4" } },
+
     ]);
     const [tasks, setTask] = useState([
-        { id_event: 1, user_id: "", title: "TestTask 1", description: "Test Descripten Task 1", todo: 0, inProgress: 0, done: 0 },
-        { id_event: 1, user_id: "", title: "TestTask 2", description: "Test Descripten Task 2", todo: 0, inProgress: 0, done: 0 },
-        { id_event: 1, user_id: "", title: "TestTask 3", description: "Test Descripten Task 3", todo: 0, inProgress: 0, done: 0 },
-        { id_event: 2, user_id: "", title: "TestTask 3", description: "Test Descripten Task 3", todo: 0, inProgress: 0, done: 0 },
+        { id: 1, id_event: 1, user_id: "", title: "TestTask 1", description: "Test Descripten Task 1", todo: 0, inProgress: 0, done: 0 },
+        { id: 2, id_event: 1, user_id: "", title: "TestTask 2", description: "Test Descripten Task 2", todo: 0, inProgress: 0, done: 0 },
+        { id: 3, id_event: 1, user_id: "", title: "TestTask 3", description: "Test Descripten Task 3", todo: 0, inProgress: 0, done: 0 },
+        { id: 4, id_event: 2, user_id: "", title: "TestTask 3", description: "Test Descripten Task 3", todo: 0, inProgress: 0, done: 0 },
+        { id: 5, id_event: 3, user_id: "", title: "TestTask 3", description: "Test Descripten Task 3", todo: 0, inProgress: 0, done: 0 },
+        { id: 6, id_event: 3, user_id: "", title: "TestTask 3", description: "Test Descripten Task 3", todo: 0, inProgress: 0, done: 0 },
+        { id: 7, id_event: 4, user_id: "", title: "TestTask 4", description: "Test Descripten Task 3", todo: 0, inProgress: 0, done: 0 },
     ]);
 
     const [eventTaskShow, setEventTaskShow] = useState([]);
@@ -36,6 +41,28 @@ function PageMain() {
     useEffect(() => {
         console.log(eventTaskShow);
     }, [eventTaskShow]);
+
+    const [selectedTasks, setSelectedTasks] = useState([]); 
+
+    const toggleTaskSelection = (task) => {
+
+        if (selectedTasks.includes(task)) {
+            setSelectedTasks(selectedTasks.filter((t) => t.id !== task.id));
+        } else {
+            setSelectedTasks([...selectedTasks, task]);
+        }
+    };
+    
+    const isTaskSelected = (task) => (selectedTasks.filter((t) => t.id == task.id).length == 1)
+    
+    
+    useEffect(() => {
+        console.log("Markierte Tasks:", selectedTasks);
+    }, [selectedTasks]);
+    
+    
+
+
 
     const [activeContent, setActiveContent] = useState("EventOverview");
     const [inputValues, setInputValues] = useState({
@@ -299,8 +326,20 @@ function PageMain() {
                                             {tasks
                                                 .filter((t) => t.id_event === event.id)
                                                 .map((t) => (
-                                                    <div>{t.title}</div>
+                                                    <div 
+                                                        onClick={() => toggleTaskSelection(t)}  // Beim Klick Task umschalten
+                                                        style={{
+                                                            cursor: "pointer",
+                                                            color: isTaskSelected(t) ? "green" : "black",  // Ändere die Farbe, wenn markiert
+                                                        }}
+                                                        onMouseEnter={(e) => (e.target.style.color = "blue")}
+                                                        onMouseLeave={(e) => (e.target.style.color = isTaskSelected(t) ? "green" : "black")}
+                                                    >
+                                                        {t.title}
+                                                    </div>
                                                 ))}
+
+
                                         </div>
                                     </li>
                                 ))}
