@@ -36,7 +36,7 @@ export function App() {
     return (
         <div className="mx-16 dark:text-gray-200">
             <div className="flex w-full justify-end">
-                <Button className="rounded-full w-16 h-16" active={menu === "profile"} onClick={() => setMenu(menu === "home" ? "profile" : "home")}>
+                <Button className=" rounded-full w-16 h-16" active={menu === "profile"} onClick={() => setMenu(menu === "home" ? "profile" : "home")}>
                     <FingerprintIcon className=" w-full h-full fill-gray-200 dark:fill-gray-800 hover:fill-gray-800 dark:hover:fill-gray-200"></FingerprintIcon>
                 </Button>
             </div>
@@ -51,7 +51,6 @@ export function App() {
                     <Button active={menu == "profil" ? "true" : "false"} onClick={() => setMenu("profil")}>
                         Profil
                     </Button>
-                    <Button active={menu == "develop" ? "true" : "false"} onClick={() => setMenu("develop")}></Button>
                     <Button active={menu === "develop"} onClick={() => setMenu("develop")}>
                         Develop
                     </Button>

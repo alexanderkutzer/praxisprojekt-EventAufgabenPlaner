@@ -13,6 +13,10 @@ export class UserRouter {
         router.post("/", this.userController.createUserController);
         router.put("/:id", this.userController.updateUserController);
         router.delete("/:id", this.userController.deleteUserController);
+
+        router.post("/update/email/:token", this.userController.updateEmailController);
+        router.post("/update/password/:token", this.userController.updatePasswordController);
+        router.post("/update/username/:token", this.userController.updateUsernameController);
         return router;
     }
 }
