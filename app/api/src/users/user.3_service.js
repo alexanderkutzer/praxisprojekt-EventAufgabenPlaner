@@ -21,6 +21,11 @@ export class UserService {
         let user = data.find((user) => user.email === email);
         return user;
     }
+    async getUserByToken(token) {
+        let data = await this.dbService.getAll(this.table);
+        let user = data.find((user) => user.token === token);
+        return user;
+    }
     async create(newUser) {
         const users = await this.getAll();
         const user = users.find((user) => user.email === newUser.email);
@@ -107,7 +112,7 @@ export class UserService {
     }
 }
 
-const createPasswordHash = (password, secret) => {
+export const createPasswordHash = (password, secret) => {
     let hmac = crypto.createHmac("sha256", "eventPlaner");
     hmac.update(password + secret);
     return hmac.digest("hex");

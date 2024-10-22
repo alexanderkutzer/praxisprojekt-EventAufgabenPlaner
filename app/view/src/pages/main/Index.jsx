@@ -335,12 +335,14 @@ function PageMain() {
                                         </p>
                                         <button
                                             onClick={() => {
-                                                let newShow = eventTaskShow.map((e) => {
-                                                    if (e.id === event.id) {
-                                                        e.show = !e.show;
-                                                    }
-                                                    return e;
-                                                });
+                                                let newShow =
+                                                    eventTaskShow.length > 0 &&
+                                                    eventTaskShow.map((e) => {
+                                                        if (e.id === event.id) {
+                                                            e.show = !e.show;
+                                                        }
+                                                        return e;
+                                                    });
                                                 setEventTaskShow(newShow);
                                             }}
                                         >
@@ -348,7 +350,7 @@ function PageMain() {
                                         </button>
                                         <div
                                             className={
-                                                eventTaskShow.length > 0 && eventTaskShow.filter((ets) => ets.id === event.id)[0].show ? " " : " hidden "
+                                                eventTaskShow.length > 0 && eventTaskShow.filter((ets) => ets.id === event.id)[0]?.show ? " " : " hidden "
                                             }
                                         >
                                             {tasks
