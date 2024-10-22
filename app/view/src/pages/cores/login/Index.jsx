@@ -21,50 +21,48 @@ function LoginPage({ setMenu }) {
     }, [isLoggedIn_AuthService]);
     return (
         <div className="container" style={{ marginTop: "10vh" }}>
-            <form action="#">
-                <h2>Login</h2>
-                <p>Welcome!</p>
-                <div className="mb-3">
-                    <label htmlFor="email" className="form-label">
-                        Email address:
-                    </label>
-                    <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" className="form-control" id="email" />
-                </div>
+            <h2>Login</h2>
+            <p>Welcome!</p>
+            <div className="mb-3">
+                <label htmlFor="email" className="form-label">
+                    Email address:
+                </label>
+                <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" className="form-control" id="email" />
+            </div>
 
-                <div className="mb-3">
-                    <label htmlFor="password" className="form-label">
-                        Password:
-                    </label>
-                    <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" className="form-control" id="password" />
-                </div>
-                <Button onClick={() => onClickLogin()} className="uppercase">
-                    Login
-                </Button>
-                <Button
-                    className="uppercase"
-                    onClick={() => {
-                        setEmail("");
-                        setPassword("");
-                    }}
-                >
-                    Reset
-                </Button>
-                <p style={{ marginTop: "2vh" }}>No account yet? Create an account</p>
-                <p>
-                    <br />
-                    Demo user: <br />
-                    Email: jane@doe.com <br />
-                    Password: password12345
-                </p>
-                <Button
-                    onClick={() => {
-                        setEmail("jane@doe.com");
-                        setPassword("password12345");
-                    }}
-                >
-                    Demo User to Inputs
-                </Button>
-            </form>
+            <div className="mb-3">
+                <label htmlFor="password" className="form-label">
+                    Password:
+                </label>
+                <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" className="form-control" id="password" />
+            </div>
+            <Button onClick={() => onClickLogin()} className="uppercase">
+                Login
+            </Button>
+            <Button
+                className="uppercase"
+                onClick={() => {
+                    setEmail("");
+                    setPassword("");
+                }}
+            >
+                Reset
+            </Button>
+            <p style={{ marginTop: "2vh" }}>No account yet? Create an account</p>
+            <p>
+                <br />
+                Demo user: <br />
+                Email: jane@doe.com <br />
+                Password: password12345
+            </p>
+            <Button
+                onClick={() => {
+                    setEmail("jane@doe.com");
+                    setPassword("password12345");
+                }}
+            >
+                Demo User to Inputs
+            </Button>
         </div>
     );
 }
