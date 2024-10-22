@@ -6,6 +6,8 @@ import Button from "./components/Button.jsx";
 import PageDevelop from "./pages/develop/index.jsx";
 import { useAuth } from "./service/authStatus.jsx";
 import RegisterPage from "./pages/cores/register/index.jsx";
+import ProfileModal from "./pages/cores/profil/index.jsx";
+
 
 export function App() {
     const { isLoggedIn_AuthService, setToken_AuthService } = useAuth();
@@ -30,6 +32,9 @@ export function App() {
         });
     };
 
+
+
+    
     return (
         <div className="mx-16 dark:text-gray-200">
             <div className="flex flex-col items-center mt-4">
@@ -39,6 +44,11 @@ export function App() {
                     </Button>
                     <Button active={menu === "admin"} onClick={() => setMenu("admin")}>
                         Admin
+                    </Button>{" "}
+                    <Button active={menu == "profil" ? "true" : "false"} onClick={() => setMenu("profil")}>
+                        Profil
+                    </Button>
+                    <Button active={menu == "develop" ? "true" : "false"} onClick={() => setMenu("develop")}>
                     </Button>
                     <Button active={menu === "develop"} onClick={() => setMenu("develop")}>
                         Develop
@@ -76,6 +86,7 @@ export function App() {
                     {menu === "admin" && <PageAdmin></PageAdmin>}
                     {menu === "develop" && <PageDevelop></PageDevelop>}
                     {menu === "login" && <Login setMenu={setMenu}></Login>}
+                    {menu === "profil" && <ProfileModal setMenu={setMenu}></ProfileModal>}
                     {menu === "register" && <RegisterPage setMenu={setMenu}></RegisterPage>}
 
                 </div>
