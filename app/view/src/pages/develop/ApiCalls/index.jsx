@@ -270,10 +270,8 @@ function DevelopApiCalls() {
                                 </div>
                                 <hr />
                                 <div>
-
-                                    <Button onClick={async () => recogniceResponse(await apiUserRegister(email, username, password))}>Register</Button>
-                                    await apiUserRegister( email, username, password )
-
+                                    <Button onClick={async () => recogniceResponse(await apiUserRegister(email, password, username))}>Register</Button>
+                                    await apiUserRegister(email, password, username)
                                     <br />
                                     <label className="inline-flex w-24 mx-2">Email:</label>
                                     <input className="p-1 m-1" type="text" value={email} onChange={(e) => setEmail(e.target.value)} />

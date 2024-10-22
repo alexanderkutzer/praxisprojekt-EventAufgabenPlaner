@@ -15,7 +15,7 @@ export async function apiUserLogout(token) {
     return response.json();
 }
 
-export async function apiUserRegister(email, username, password) {
+export async function apiUserRegister(email, password, username) {
     const response = await fetchApi("auth/register", "POST", {
         email,
         username,
