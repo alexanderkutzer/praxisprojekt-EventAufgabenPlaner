@@ -11,7 +11,7 @@ function RegisterPage({ setMenu }) {
         if (passwordA !== passwordB) {
             return;
         }
-        let response = await apiUserRegister(email, username, passwordA);
+        let response = await apiUserRegister(email, passwordA, username);
         if (response.register) {
             setMenu("login");
         }
