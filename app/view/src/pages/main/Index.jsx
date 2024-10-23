@@ -2,12 +2,17 @@ import React, { useState, useRef, useEffect } from "react";
 import Calendar from "../../Calendar.jsx";
 import Button from "../../components/Button.jsx";
 import { useAuth } from "../../service/authStatus.jsx";
-import {apiGetEvents, apiGetTasks} from "../../service/api_calls.js";
+import {apiGetEvents, apiGetTasks, apiCreateEvent, apiCreateTask, apiUpdateEvent} from "../../service/api_calls.js";
 
 function PageMain() {
     const { isLoggedIn_AuthService, token_AuthService, setToken_AuthService } = useAuth();
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedEvent, setSelectedEvent] = useState(null);
+    const [id_user_maintainer, setIdUserMaintainer] = useState(""); 
+    const [selectedEventForTask, setSelectedEventForTask] = useState(""); // Für das Dropdown der Events
+    
+    
+
     const [events, setEvents] = useState([
         { id: 1, title: "Team Meeting", start: "2024-10-25", end: "2024-10-28T12:00:00", extendedProps: { description: "Description for Event 1" } },
         { id: 2, title: "Event 2", start: "2024-10-15", extendedProps: { description: "Description for Event 2" } },
@@ -30,6 +35,15 @@ function PageMain() {
         const fetchEvents = async () => {
             try {
                 const events = await apiGetEvents();
+                events.forEach((event)=>{
+                    event.start = event.startDateTime;
+                    event.end = event.endDateTime;
+                    event.extendedProps = { description: event.description }
+                    delete event.startDateTime;
+                    delete event.endDateTime;
+                    delete event.description;
+                })
+
                 console.log("Events: ", events);
                 setEvents(events); 
             } catch (error) {
@@ -38,6 +52,8 @@ function PageMain() {
         };
         fetchEvents();
     }, [])
+
+    
 
 
     useEffect(() => {
@@ -56,7 +72,7 @@ function PageMain() {
     const [eventTaskShow, setEventTaskShow] = useState([]);
     useEffect(() => {
         let list = [];
-        console.log(events.length);
+        console.log("n",events.length)
         events.forEach((event) => {
             let status = {
                 id: event.id,
@@ -65,13 +81,19 @@ function PageMain() {
             list.push(status);
         });
         setEventTaskShow(list);
+        console.log(events)
     }, [events]);
-
+    useEffect(()=>{
+        console.log("Tasks", tasks.length)
+    },[tasks])
     useEffect(() => {
-        console.log(eventTaskShow);
+        //console.log(eventTaskShow);
     }, [eventTaskShow]);
 
-
+    const handleEventSelectChange = (event) => {
+        setSelectedEventForTask(event.target.value);
+    };
+    
 
     const [selectedTasks, setSelectedTasks] = useState([]); 
 
@@ -115,7 +137,7 @@ function PageMain() {
             title: info.event.title,
             start: info.event.startStr,
             end: info.event.endStr,
-            description: info.event.extendedProps.description,
+            
         });
         setActiveContent("Details");
     };
@@ -152,45 +174,84 @@ function PageMain() {
         }
     };
 
-    const saveEvent = () => {
+    const saveEvent = async () => {
         if (!inputValues.title || !inputValues.startDate) {
             setErrorMessage("Titel und Startdatum müssen angegeben werden.");
             return;
         }
-
+    
         if (inputValues.endDate && inputValues.endDate < inputValues.startDate) {
             setErrorMessage("Das Enddatum kann nicht vor dem Startdatum liegen.");
             return;
         }
-
-        if (selectedEvent) {
-            const updatedEvents = events.map((event) => {
-                if (event.id === selectedEvent.id) {
-                    return {
-                        ...event,
-                        title: inputValues.title,
-                        start: inputValues.startDate,
-                        end: inputValues.endDate || null,
-                        extendedProps: { description: inputValues.description || "" },
-                    };
-                }
-                return event;
-            });
-            setEvents(updatedEvents);
-        } else {
-            const newEvent = {
-                id: Date.now(),
-                title: inputValues.title,
-                start: inputValues.startDate,
-                end: inputValues.endDate || null,
-                extendedProps: { description: inputValues.description || "" },
-            };
-            setEvents([...events, newEvent]);
+    
+        try {
+            // Falls ein Event ausgewählt wurde, wird es aktualisiert
+            if (selectedEvent) {
+                const updatedEvent = {
+                    id: selectedEvent.id,
+                    title: inputValues.title,
+                    description: inputValues.description,
+                    startDateTime: inputValues.startDate,
+                    endDateTime: inputValues.endDate || null,
+                    id_user_maintainer: id_user_maintainer, // Dieser Wert muss definiert sein
+                };
+                await apiUpdateEvent(updatedEvent.id, updatedEvent); // Sende das aktualisierte Event an die API
+                setEvents(events.map(event => (event.id === selectedEvent.id ? updatedEvent : event)));
+            } else {
+                // Neues Event erstellen und an die API senden
+                
+                const newEvent = {
+                    title: inputValues.title,
+                    description: inputValues.description,
+                    startDateTime: inputValues.startDate,
+                    endDateTime: inputValues.endDate || inputValues.startDate,
+                    id_user_maintainer: id_user_maintainer, // Dieser Wert muss definiert sein
+                };
+                console.log(newEvent.startDateTime)
+                let createdEvent = await apiCreateEvent(newEvent); // API-Call zum Erstellen eines neuen Events
+                console.log("Event erfolgreich erstellt:", createdEvent.event);
+                createdEvent.event.start = createdEvent.event.startDateTime
+                createdEvent.event.end = createdEvent.event.endDateTime
+                console.log("Event-for calender",createdEvent.event)
+                console.log("v",events.length)
+                setEvents([...events, createdEvent.event]); // Das neue Event zur Eventliste hinzufügen
+                
+            }
+    
+            switchContent("EventOverview"); // Zur Eventübersicht wechseln
+        } catch (error) {
+            setErrorMessage("Fehler beim Speichern des Events.");
+            console.error("Fehler beim Speichern des Events:", error);
         }
-
-        switchContent("EventOverview");
     };
 
+    const saveTask = async () => {
+        if (!inputValues.title || !selectedEventForTask) {
+            setErrorMessage("Titel und Event müssen angegeben werden.");
+            return;
+        }
+    
+        try {
+            const newTask = {
+                id_event: selectedEventForTask, // Event-ID aus dem Dropdown
+                title: inputValues.title,
+                description: inputValues.description,
+            };
+    
+            const createdTask = await apiCreateTask(newTask); // API-Call zum Erstellen einer neuen Aufgabe
+            console.log("Aufgabe erfolgreich erstellt:", createdTask.Task);
+    
+            setTask([...tasks, createdTask.Task]); // Die neue Aufgabe zur Aufgabenliste hinzufügen
+            switchContent("EventOverview"); // Zurück zur Eventübersicht
+        } catch (error) {
+            setErrorMessage("Fehler beim Erstellen der Aufgabe.");
+            console.error("Fehler beim Erstellen der Aufgabe:", error);
+        }
+    };
+    
+    
+    
     // Aktualisiere den Kalender, wenn sich die Events ändern
     useEffect(() => {
         if (calendarRef.current) {
@@ -211,17 +272,21 @@ function PageMain() {
             <div>
                 <Button onClick={() => switchContent("EventOverview")}>Event Übersicht</Button>
                 <Button onClick={() => switchContent("AddEvent")}>Neues Event</Button>
+                <Button onClick={() => switchContent("AddTask")}>Neue Aufgabe</Button>
+                <Button onClick={() => {setEvents([...events, {title:"test",start:"2024-10-16T00:10"}])}}>Event</Button>
+
+
             </div>
             <div className="flex flex-col sm:flex-row items-center sm:items-start w-full mt-8">
                 <div className="w-full sm:w-1/2 max-w-[50%] min-w-96">
-                    <Calendar
+                    {events && <Calendar
                         key={JSON.stringify(events)} // Neurendering bei Änderung
                         events={events}
                         onDateClick={onDateClick}
                         onEventClick={handleEventClick}
                         onDateSelect={onDateSelect}
                         ref={calendarRef}
-                    />
+                    />}
                 </div>
 
                 <div className="w-full sm:w-1/2 max-w-[50%] p-4">
@@ -274,7 +339,45 @@ function PageMain() {
                             <Button onClick={saveEvent}>Event erstellen</Button>
                             <Button onClick={() => switchContent("EventOverview")}>Abbrechen</Button>
                         </div>
-                    ) : activeContent === "Bearbeiten" ? (
+                    ) : activeContent === "AddTask" ? (
+                        <div className="flex flex-col space-y-4">
+                            <h1 className="text-2xl font-semibold">Neue Aufgabe hinzufügen</h1>
+                            <select
+                                id="event-select"
+                                value={selectedEventForTask}
+                                onChange={handleEventSelectChange}
+                                className="p-2 border rounded"
+                            >
+                                <option value="" disabled>-- Wähle ein Event --</option>
+                                {events.map((event) => (
+                                    <option key={event.id} value={event.id}>
+                                        {event.title} (Start: {event.start})
+                                    </option>
+                                ))}
+                            </select>
+
+                            <input
+                                type="text"
+                                name="title"
+                                value={inputValues.title}
+                                onChange={handleInputChange}
+                                placeholder="Aufgabe eingeben"
+                                className="p-2 border rounded"
+                            />
+                            <p className="mt-3">Details zur Aufgabe</p>
+                            <input
+                                type="text"
+                                name="description"
+                                value={inputValues.description}
+                                onChange={handleInputChange}
+                                placeholder="Aufgaben Details"
+                                className="p-2 border rounded"
+                            />
+                            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+                            <Button onClick={saveTask}>Aufgabe erstellen</Button>
+                            <Button onClick={() => switchContent("EventOverview")}>Abbrechen</Button>
+                        </div>
+                    ): activeContent === "Bearbeiten" ? (
                         <div>
                             <h1>Event bearbeiten</h1>
                             <input
@@ -357,6 +460,7 @@ function PageMain() {
                                                 .filter((t) => t.id_event === event.id)
                                                 .map((t) => (
                                                     <div 
+                                                        key={t.id}
                                                         onClick={() => toggleTaskSelection(t)}  // Beim Klick Task umschalten
                                                         style={{
                                                             cursor: "pointer",
