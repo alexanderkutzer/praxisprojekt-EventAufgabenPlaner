@@ -8,7 +8,7 @@ import { useAuth } from "./service/authStatus.jsx";
 import RegisterPage from "./pages/cores/register/index.jsx";
 import ProfileModal from "./pages/cores/profil/index.jsx";
 import ButtonFingerprint from "./components/ButtonFingerprint.jsx";
-import { DarkModeSwitch } from 'react-toggle-dark-mode';
+import { DarkModeSwitch } from "react-toggle-dark-mode";
 
 export function App() {
     const { isLoggedIn_AuthService, setToken_AuthService } = useAuth();
@@ -47,11 +47,7 @@ export function App() {
                 {fingerMenu}
             </div>
             <div id="nav" className="fixed right-1 ">
-            <DarkModeSwitch
-                        checked={isDarkMode}
-                        onChange={toggleDarkMode}
-                        size={30}
-                        />
+                <DarkModeSwitch checked={isDarkMode} onChange={toggleDarkMode} size={30} />
             </div>
             <div className="flex flex-col items-center mt-4">
                 <div id="main" className="w-full flex flex-col items-center">

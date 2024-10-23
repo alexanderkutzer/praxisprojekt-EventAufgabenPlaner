@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "@react-spring/web": "^9.7.5",
-    "react-toggle-dark-mode": "^1.1.1"
-  }
-}
