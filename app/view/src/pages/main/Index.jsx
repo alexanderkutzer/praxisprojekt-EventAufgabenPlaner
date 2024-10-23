@@ -421,7 +421,6 @@ function PageMain() {
                         </div>
                     )}
 
-<<<<<<< HEAD
                         {activeContent === "EventOverview" && (
                                     <div>
                                         <h1 className="text-xl flex-col font-bold">Eventübersicht</h1>
