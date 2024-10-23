@@ -7,12 +7,14 @@ import PageDevelop from "./pages/develop/index.jsx";
 import { useAuth } from "./service/authStatus.jsx";
 import RegisterPage from "./pages/cores/register/index.jsx";
 import ProfileModal from "./pages/cores/profil/index.jsx";
-
-import FingerprintIcon from "./components/Fingerprint.jsx";
+import ButtonFingerprint from "./components/ButtonFingerprint.jsx";
+import ButtonLightDark from "./components/ButtonLightDark.jsx";
 
 export function App() {
     const { isLoggedIn_AuthService, setToken_AuthService } = useAuth();
-    const [menu, setMenu] = useState("home");
+    const [fingerMenu, setFingerMenu] = useState("start");
+    const [menu, setMenu] = useState("profile");
+
     const [darkMode, setDarkMode] = useState(false);
 
     const events = [
@@ -35,55 +37,64 @@ export function App() {
 
     return (
         <div className="mx-16 dark:text-gray-200">
-            <div className="flex w-full justify-end">
-                <Button className=" rounded-full w-16 h-16" active={menu === "profile"} onClick={() => setMenu(menu === "home" ? "profile" : "home")}>
-                    <FingerprintIcon className=" w-full h-full fill-gray-200 dark:fill-gray-800 hover:fill-gray-800 dark:hover:fill-gray-200"></FingerprintIcon>
-                </Button>
+            <div className="fixed left-1">
+                <ButtonFingerprint
+                    onClick={() => {
+                        setFingerMenu(fingerMenu == "start" ? "usermenu" : "start");
+                    }}
+                    className=" w-14 h-14 fill-gray-200 dark:fill-gray-800 hover:fill-gray-800 dark:hover:fill-gray-200"
+                ></ButtonFingerprint>
+                {fingerMenu}
+            </div>
+            <div id="nav" className="fixed right-1 ">
+                <ButtonLightDark onClick={toggleDarkMode}>L/D</ButtonLightDark>
             </div>
             <div className="flex flex-col items-center mt-4">
-                <div id="nav" className="flex flex-row">
-                    <Button active={menu === "home"} onClick={() => setMenu("home")}>
-                        Home
-                    </Button>
-                    <Button active={menu === "admin"} onClick={() => setMenu("admin")}>
-                        Admin
-                    </Button>{" "}
-                    <Button active={menu == "profil" ? "true" : "false"} onClick={() => setMenu("profil")}>
-                        Profil
-                    </Button>
-                    <Button active={menu === "develop"} onClick={() => setMenu("develop")}>
-                        Develop
-                    </Button>
-                    {!isLoggedIn_AuthService && (
-                        <>
-                            <Button active={menu == "login" ? "true" : "false"} onClick={() => setMenu("login")}>
-                                Login
-                            </Button>
-                            <Button active={menu == "register" ? "true" : "false"} onClick={() => setMenu("register")}>
-                                Register
-                            </Button>
-                        </>
-                    )}
-                    {isLoggedIn_AuthService && (
-                        <Button
-                            onClick={() => {
-                                setToken_AuthService("");
-                                setMenu("home");
-                            }}
-                        >
-                            Logoff
-                        </Button>
-                    )}
-                    <Button onClick={toggleDarkMode}>Toggle Dark Mode</Button>
-                </div>
-
                 <div id="main" className="w-full flex flex-col items-center">
-                    {menu === "home" && <PageMain></PageMain>}
-                    {menu === "finger" && <PageAdmin></PageAdmin>}
-                    {menu === "develop" && <PageDevelop></PageDevelop>}
-                    {menu === "login" && <Login setMenu={setMenu}></Login>}
-                    {menu === "profil" && <ProfileModal setMenu={setMenu}></ProfileModal>}
-                    {menu === "register" && <RegisterPage setMenu={setMenu}></RegisterPage>}
+                    {fingerMenu == "start" && (!isLoggedIn_AuthService ? <Login setMenu={setMenu}></Login> : <PageMain></PageMain>)}
+                    {fingerMenu == "usermenu" && isLoggedIn_AuthService && (
+                        <div className="flex flex-row items-center">
+                            <Button
+                                onClick={() => {
+                                    setMenu("profile");
+                                }}
+                                active={menu === "profile" ? "true" : "false"}
+                            >
+                                Profile
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    setMenu("admin");
+                                }}
+                                active={menu === "admin" ? "true" : "false"}
+                            >
+                                Admin
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    setMenu("develop");
+                                }}
+                                active={menu === "develop" ? "true" : "false"}
+                            >
+                                Develop
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    setToken_AuthService("");
+                                    setFingerMenu("start");
+                                    setMenu("profile");
+                                }}
+                            >
+                                Logout
+                            </Button>
+                        </div>
+                    )}
+                    {fingerMenu == "usermenu" &&
+                        (!isLoggedIn_AuthService
+                            ? setFingerMenu("start")
+                            : (menu === "profile" && <ProfileModal setMenu={setMenu}></ProfileModal>) ||
+                              (menu === "admin" && <PageAdmin></PageAdmin>) ||
+                              (menu === "develop" && <PageDevelop></PageDevelop>))}
                 </div>
             </div>
         </div>

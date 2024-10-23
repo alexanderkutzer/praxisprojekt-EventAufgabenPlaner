@@ -3,7 +3,7 @@ import { apiUserLogin } from "../../../service/api_calls";
 import Button from "../../../components/Button";
 import { useAuth } from "../../../service/authStatus";
 
-function LoginPage({ setMenu }) {
+function LoginPage({ setMenu, setFingerMenu }) {
     const { isLoggedIn_AuthService, setToken_AuthService } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -16,6 +16,7 @@ function LoginPage({ setMenu }) {
     }
     useEffect(() => {
         if (isLoggedIn_AuthService) {
+            setFingerMenu("start");
             setMenu("home");
         }
     }, [isLoggedIn_AuthService]);
