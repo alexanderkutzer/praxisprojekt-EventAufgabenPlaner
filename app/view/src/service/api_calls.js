@@ -50,19 +50,19 @@ export async function apiDeleteUser(id) {
     return response.json();
 }
 
-export async function apiUpdateUserEmail(token, email){
+export async function apiUpdateUserEmail(token, email) {
     token = token == "" ? "no_token" : token;
-    const response = await fetchApi(`users/update/email/${token == "" ? "no_token" : token}`, "POST", {email});
+    const response = await fetchApi(`users/update/email/${token == "" ? "no_token" : token}`, "POST", { email });
     return response.json();
 }
-export async function apiUpdateUserPassword(token, password){
+export async function apiUpdateUserPassword(token, password) {
     token = token == "" ? "no_token" : token;
-    const response = await fetchApi(`users/update/password/${token == "" ? "no_token" : token}`, "POST", {password});
+    const response = await fetchApi(`users/update/password/${token == "" ? "no_token" : token}`, "POST", { password });
     return response.json();
 }
-export async function apiUpdateUserUsername(token, username){
+export async function apiUpdateUserUsername(token, username) {
     token = token == "" ? "no_token" : token;
-    const response = await fetchApi(`users/update/username/${token == "" ? "no_token" : token}`, "POST", {username});
+    const response = await fetchApi(`users/update/username/${token == "" ? "no_token" : token}`, "POST", { username });
     return response.json();
 }
 
@@ -106,13 +106,13 @@ export async function apiCreateTask(data) {
     return response.json();
 }
 
-export async function apiUpdateTask(data) {
+export async function apiUpdateTask(id, data) {
     const response = await fetchApi(`tasks`, "PUT", data);
     return response.json();
 }
 
-export async function apiDeleteTask(data) {
-    const response = await fetchApi(`tasks`, "DELETE", data);
+export async function apiDeleteTask(id) {
+    const response = await fetchApi(`tasks/${id == "" ? "noId" : id}`, "DELETE");
     return response.json();
 }
 
