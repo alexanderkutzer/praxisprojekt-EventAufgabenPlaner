@@ -121,16 +121,18 @@ function PageMain() {
         endDate: "",
         description: "",
     });
-
     const [errorMessage, setErrorMessage] = useState("");
     const calendarRef = useRef(null);
+
     const onDateClick = (date) => {
         console.log(date);
         setSelectedDate(date);
     };
+    
     const onDateSelect = ({ start, end }) => {
         console.log(start, end);
     };
+
     const handleEventClick = (info) => {
         setSelectedEvent({
             id: info.event.id,
@@ -262,10 +264,20 @@ function PageMain() {
     }, [events]);
 
     useEffect(() => {
-        inputValues.startDate = selectedDate + "T00:00:00";
-        inputValues.endDate = selectedDate + "T00:00:00";
+        inputValues.startDate = selectedDate.toISOString().slice(0, 16);
+        inputValues.endDate = selectedDate.toISOString().slice(0, 16);
         setInputValues({ ...inputValues });
     }, [selectedDate]);
+
+    const formatDate = (dateString) => {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString('de-DE', options);
+    };
+
+    const formatTime = (dateString) => {
+        const options = { hour: '2-digit', minute: '2-digit', hour12: false };
+        return new Date(dateString).toLocaleTimeString('de-DE', options);
+    };
 
     return (
         <>
@@ -277,21 +289,22 @@ function PageMain() {
 
 
             </div>
-            <div className="flex flex-col sm:flex-row items-center sm:items-start w-full mt-8">
-                <div className="w-full sm:w-1/2 max-w-[50%] min-w-96">
-                    {events && <Calendar
+
+            <div className="flex flex-col sm:flex-row items-center sm:items-start w-full mt-8 space-x-5">
+                <div className="w-full sm:w-1/2 max-w-[50%] min-w-96 border border-gray-300 p-4 rounded-lg shadow-lg">
+                    <Calendar
                         key={JSON.stringify(events)} // Neurendering bei Änderung
                         events={events}
                         onDateClick={onDateClick}
                         onEventClick={handleEventClick}
                         onDateSelect={onDateSelect}
                         ref={calendarRef}
-                    />}
+                    />
                 </div>
 
                 <div className="w-full sm:w-1/2 max-w-[50%] p-4">
                     {selectedEvent && activeContent === "Details" ? (
-                        <div>
+                        <div className="p-4 border border-gray-300 rounded-lg shadow-lg">
                             <h3 className="text-xl font-bold">{selectedEvent.title}</h3>
                             <p>Start Datum: {selectedEvent.start}</p>
                             <p>End Datum: {selectedEvent.end}</p>
@@ -300,15 +313,15 @@ function PageMain() {
                             <Button onClick={() => switchContent("EventOverview")}>Abbrechen</Button>
                         </div>
                     ) : activeContent === "AddEvent" ? (
-                        <div className="flex flex-col space-y-4">
+                        <div className="flex flex-col space-y-4 p-4 border border-gray-300 rounded-lg shadow-lg">
                             <h1 className="text-2xl font-semibold">Neues Event hinzufügen</h1>
                             <input
                                 type="text"
                                 name="title"
                                 value={inputValues.title}
                                 onChange={handleInputChange}
-                                placeholder="Event-Titel eingeben"
-                                className="p-2 border rounded"
+                                placeholder="Event Titel"
+                                className="p-2 border rounded resize-none w-1/2"
                             />
                             <p className="mt-3">Eventbeginn</p>
                             <input
@@ -316,7 +329,7 @@ function PageMain() {
                                 name="startDate"
                                 value={inputValues.startDate}
                                 onChange={handleInputChange}
-                                className="p-2 border rounded"
+                                className="p-2 border rounded resize-none w-1/2 text-gray-500"
                             />
                             <p className="mt-3">Event Ende (Angabe nur notwendig, wenn das Event mehrtägig ist)</p>
                             <input
@@ -324,20 +337,19 @@ function PageMain() {
                                 name="endDate"
                                 value={inputValues.endDate}
                                 onChange={handleInputChange}
-                                className="p-2 border rounded"
+                                className="p-2 border rounded resize-none w-1/2 text-gray-500"
                             />
                             <p className="mt-3">Details zu deinem Event</p>
-                            <input
-                                type="text"
+                            <textarea
                                 name="description"
                                 value={inputValues.description}
                                 onChange={handleInputChange}
                                 placeholder="Details"
-                                className="p-2 border rounded"
+                                className="p-2 border rounded h-32"
                             />
                             {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-                            <Button onClick={saveEvent}>Event erstellen</Button>
-                            <Button onClick={() => switchContent("EventOverview")}>Abbrechen</Button>
+                            <Button className="resize-none w-1/2" onClick={saveEvent}>Event erstellen</Button>
+                            <Button className="resize-none w-1/2" onClick={() => switchContent("EventOverview")}>Abbrechen</Button>
                         </div>
                     ) : activeContent === "AddTask" ? (
                         <div className="flex flex-col space-y-4">
@@ -394,7 +406,7 @@ function PageMain() {
                                 name="startDate"
                                 value={inputValues.startDate}
                                 onChange={handleInputChange}
-                                className="p-2 border rounded"
+                                className="p-2 border rounded text-gray-500"
                             />
                             <p className="mt-3">Event Ende (Angabe nur notwendig, wenn das Event mehrtägig ist)</p>
                             <input
@@ -402,22 +414,25 @@ function PageMain() {
                                 name="endDate"
                                 value={inputValues.endDate}
                                 onChange={handleInputChange}
-                                className="p-2 border rounded"
+                                className="p-2 border rounded text-gray-500"
                             />
                             <p className="mt-3">Details zu deinem Event</p>
-                            <input
+                            <textarea
                                 type="text"
                                 name="description"
                                 value={inputValues.description}
                                 onChange={handleInputChange}
                                 placeholder="Details"
-                                className="p-2 border rounded"
+                                className="p-2 border rounded h-32"
                             />
                             {errorMessage && <p className="text-red-500">{errorMessage}</p>}
                             <Button onClick={saveEvent}>Änderungen speichern</Button>
                         </div>
                     ) : (
-                        <p>Event auswählen, um Details anzuzeigen.</p>
+                        <div>
+                            <h1 className="text-xl flex-col font-bold"></h1>
+                            <p></p>
+                        </div>
                     )}
 
                     {activeContent === "EventOverview" && (
@@ -466,22 +481,48 @@ function PageMain() {
                                                             cursor: "pointer",
                                                             color: isTaskSelected(t) ? "green" : "black",  // Ändere die Farbe, wenn markiert
                                                         }}
-                                                        onMouseEnter={(e) => (e.target.style.color = "blue")}
-                                                        onMouseLeave={(e) => (e.target.style.color = isTaskSelected(t) ? "green" : "black")}
+                                                        className="ml-2"
                                                     >
-                                                        {t.title}
+                                                        <svg
+                                                            className={`w-4 h-4 transition-transform duration-200 ${eventTaskShow.find((e) => e.id === event.id)?.show ? 'rotate-180' : 'rotate-0'}`}
+                                                            fill="none"
+                                                            viewBox="0 0 24 24"
+                                                            stroke="currentColor"
+                                                        >
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 10l5 5 5-5" />
+                                                        </svg>
+                                                        
+                                                        <div
+                                                        className={
+                                                            eventTaskShow.length > 0 && eventTaskShow.filter((ets) => ets.id === event.id)[0].show ? " " : " hidden "
+                                                        }
+                                                        >
+                                                        {tasks
+                                                            .filter((t) => t.id_event === event.id)
+                                                            .map((t) => (
+                                                                <div 
+                                                                    key={t.id}
+                                                                    onClick={() => toggleTaskSelection(t)}  // Beim Klick Task umschalten
+                                                                    style={{
+                                                                        cursor: "pointer",
+                                                                        color: isTaskSelected(t) ? "green" : "gray-600 dark:gray-400",  // Ändere die Farbe, wenn markiert
+                                                                    }}
+                                                                    onMouseEnter={(e) => (e.target.style.color = "blue")}
+                                                                    onMouseLeave={(e) => (e.target.style.color = isTaskSelected(t) ? "green" : "gray-600 dark:gray-400")}
+                                                                >
+                                                                    {t.title}
+                                                                </div>
+                                                            ))}
+                                                        </div>
                                                     </div>
-                                                ))}
-
-
+                                            ))}
                                         </div>
-                                    </li>
-                                ))}
+                                    </li>))}
                             </ul>
                         </div>
                     )}
                 </div>
-            </div>
+            </div> 
         </>
     );
 }
