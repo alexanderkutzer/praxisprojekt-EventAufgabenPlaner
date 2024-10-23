@@ -6,6 +6,9 @@ export class UserController {
         this.createUserController = this.createUserController.bind(this);
         this.updateUserController = this.updateUserController.bind(this);
         this.deleteUserController = this.deleteUserController.bind(this);
+        this.updateEmailController = this.updateEmailController.bind(this);
+        this.updatePasswordController = this.updatePasswordController.bind(this);
+        this.updateUsernameController = this.updateUsernameController.bind(this);
     }
     async getAllUsersController(req, res) {
         try {
@@ -87,5 +90,69 @@ export class UserController {
                 error: "Internal Server Error - efb95b1c-b1f9-46d5-adaa-ca52edbe95a6",
             });
         }
+    }
+    async updateEmailController(req, res) {
+        let token = req.params.token;
+        let { email } = req.body;
+        if (!email && email.trim() === "" && email.includes(" ") && email.length < 4) {
+            res.status(400).json({ update: false, error: "email is required" });
+            return;
+        }
+
+        let user = await this.userService.getUserByToken(token);
+        if (!user) {
+            res.status(404).json({ update: false, error: "User not found" });
+            return;
+        }
+        user.email = email;
+        let result = await this.userService.update(user.id, user);
+        if (!result.update) {
+            res.status(500).json({ update: false, error: "Email not updated" });
+            return;
+        }
+        res.json({ update: true });
+    }
+    async updatePasswordController(req, res) {
+        let token = req.params.token;
+        let { password } = req.body;
+
+        if (!password && password.trim() === "" && password.trim().length < 4) {
+            res.status(400).json({ update: false, error: "Password is required" });
+            return;
+        }
+
+        let user = await this.userService.getUserByToken(token);
+        if (!user) {
+            res.status(404).json({ update: false, error: "User not found" });
+            return;
+        }
+        user.password = password;
+        let result = await this.userService.update(user.id, user);
+        if (!result.update) {
+            res.status(500).json({ update: false, error: "Password not updated" });
+            return;
+        }
+        res.json({ update: true });
+    }
+    async updateUsernameController(req, res) {
+        let token = req.params.token;
+        let { username } = req.body;
+        if (!username && username.trim() === "") {
+            res.status(400).json({ update: false, error: "Username is required" });
+            return;
+        }
+
+        let user = await this.userService.getUserByToken(token);
+        if (!user) {
+            res.status(404).json({ update: false, error: "User not found" });
+            return;
+        }
+        user.username = username;
+        let result = await this.userService.update(user.id, user);
+        if (!result.update) {
+            res.status(500).json({ update: false, error: "Password not updated" });
+            return;
+        }
+        res.json({ update: true });
     }
 }

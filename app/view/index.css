@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 html {
+    min-width: 420px;
     @apply bg-gray-200;
     @apply dark:bg-gray-600;
 }

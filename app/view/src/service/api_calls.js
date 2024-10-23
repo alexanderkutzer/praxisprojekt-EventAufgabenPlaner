@@ -15,7 +15,7 @@ export async function apiUserLogout(token) {
     return response.json();
 }
 
-export async function apiUserRegister(email, username, password) {
+export async function apiUserRegister(email, password, username) {
     const response = await fetchApi("auth/register", "POST", {
         email,
         username,
@@ -47,6 +47,22 @@ export async function apiUpdateUser(id, data) {
 
 export async function apiDeleteUser(id) {
     const response = await fetchApi(`users/${id == "" ? "noId" : id}`, "DELETE");
+    return response.json();
+}
+
+export async function apiUpdateUserEmail(token, email){
+    token = token == "" ? "no_token" : token;
+    const response = await fetchApi(`users/update/email/${token == "" ? "no_token" : token}`, "POST", {email});
+    return response.json();
+}
+export async function apiUpdateUserPassword(token, password){
+    token = token == "" ? "no_token" : token;
+    const response = await fetchApi(`users/update/password/${token == "" ? "no_token" : token}`, "POST", {password});
+    return response.json();
+}
+export async function apiUpdateUserUsername(token, username){
+    token = token == "" ? "no_token" : token;
+    const response = await fetchApi(`users/update/username/${token == "" ? "no_token" : token}`, "POST", {username});
     return response.json();
 }
 

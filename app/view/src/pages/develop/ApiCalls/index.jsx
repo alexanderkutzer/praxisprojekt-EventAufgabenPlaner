@@ -17,6 +17,9 @@ import {
     apiUpdateEvent,
     apiUpdateTask,
     apiUpdateUser,
+    apiUpdateUserEmail,
+    apiUpdateUserPassword,
+    apiUpdateUserUsername,
     apiUserByToken,
     apiUserLogin,
     apiUserLogout,
@@ -270,10 +273,8 @@ function DevelopApiCalls() {
                                 </div>
                                 <hr />
                                 <div>
-
-                                    <Button onClick={async () => recogniceResponse(await apiUserRegister(email, username, password))}>Register</Button>
-                                    await apiUserRegister( email, username, password )
-
+                                    <Button onClick={async () => recogniceResponse(await apiUserRegister(email, password, username))}>Register</Button>
+                                    await apiUserRegister(email, password, username)
                                     <br />
                                     <label className="inline-flex w-24 mx-2">Email:</label>
                                     <input className="p-1 m-1" type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -286,6 +287,66 @@ function DevelopApiCalls() {
                                     <label className="inline-flex w-24 mx-2">Password:</label>
                                     <input className="p-1 m-1" type="text" value={password} onChange={(e) => setPassword(e.target.value)} />
                                     <Button onClick={() => setPassword("")}>DEL</Button>
+                                </div>
+                                <hr />
+                                <div>
+                                    <Button
+                                        className="bg-green-300"
+                                        onClick={async () => {
+                                            let response = await apiUpdateUserEmail(token, email);
+                                            setToken_AuthService("");
+                                            recogniceResponse(response);
+                                        }}
+                                    >
+                                        Update Email
+                                    </Button>
+                                    await apiUpdateUserEmail(token, email);
+                                    <br />
+                                    <label className="inline-flex w-24 mx-2">Token: </label>"{token}"<Button onClick={() => setToken("")}>DEL</Button>
+                                    <br />
+                                    <label className="inline-flex w-24 mx-2">Email:</label>
+                                    <input className="p-1 m-1" type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
+                                    <Button onClick={() => setEmail("")}>DEL</Button>
+                                </div>
+                                <hr />
+                                <div>
+                                    <Button
+                                        className="bg-green-300"
+                                        onClick={async () => {
+                                            let response = await apiUpdateUserPassword(token, password);
+                                            setToken_AuthService("");
+                                            recogniceResponse(response);
+                                        }}
+                                    >
+                                        Update Password
+                                    </Button>
+                                    await apiUpdateUserPasssword(token, password);
+                                    <br />
+                                    <label className="inline-flex w-24 mx-2">Token: </label>"{token}"<Button onClick={() => setToken("")}>DEL</Button>
+                                    <br />
+                                    <label className="inline-flex w-24 mx-2">Password:</label>
+                                    <input className="p-1 m-1" type="text" value={password} onChange={(e) => setPassword(e.target.value)} />
+                                    <Button onClick={() => setPassword("")}>DEL</Button>
+                                </div>
+                                <hr />
+                                <div>
+                                    <Button
+                                        className="bg-green-300"
+                                        onClick={async () => {
+                                            let response = await apiUpdateUserUsername(token, username);
+                                            setToken_AuthService("");
+                                            recogniceResponse(response);
+                                        }}
+                                    >
+                                        Update Username
+                                    </Button>
+                                    await apiUpdateUserUsername(token, username);
+                                    <br />
+                                    <label className="inline-flex w-24 mx-2">Token: </label>"{token}"<Button onClick={() => setToken("")}>DEL</Button>
+                                    <br />
+                                    <label className="inline-flex w-24 mx-2">Username:</label>
+                                    <input className="p-1 m-1" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+                                    <Button onClick={() => setUsername("")}>DEL</Button>
                                 </div>
                             </div>
                         </div>

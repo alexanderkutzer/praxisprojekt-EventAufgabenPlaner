@@ -1,5 +1,5 @@
 #!/bin/bash
-
+REGION="eu-central-1"
 ./backup_download.sh
 
 # .env-Datei laden und Anmeldedaten setzen
@@ -20,7 +20,8 @@ fi
 INSTANCE_ID=$(aws ec2 describe-instances \
   --filters "Name=tag:Name,Values=$AWS_EC2_INSTANCE_NAME    " \
   --query "Reservations[0].Instances[0].InstanceId" \
-  --output text)
+  --output text \
+  --region $REGION)
 
 # Überprüfen, ob die Instanz gefunden wurde
 if [ "$INSTANCE_ID" == "None" ]; then
@@ -32,7 +33,8 @@ fi
 INSTANCE_IP=$(aws ec2 describe-instances \
   --instance-ids $INSTANCE_ID \
   --query "Reservations[0].Instances[0].PublicIpAddress" \
-  --output text)
+  --output text \
+  --region $REGION)
 
 if [ -z "$INSTANCE_IP" ]; then
   echo "Fehler: Keine öffentliche IP-Adresse für die Instanz gefunden."

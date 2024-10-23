@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Calendar from "../../Calendar.jsx";
 import Button from "../../components/Button.jsx";
 import { useAuth } from "../../service/authStatus.jsx";
+import {apiGetEvents, apiGetTasks} from "../../service/api_calls.js";
 
 function PageMain() {
     const { isLoggedIn_AuthService, token_AuthService, setToken_AuthService } = useAuth();
@@ -24,6 +25,34 @@ function PageMain() {
         { id: 7, id_event: 4, user_id: "", title: "TestTask 4", description: "Test Descripten Task 3", todo: 0, inProgress: 0, done: 0 },
     ]);
 
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const events = await apiGetEvents();
+                console.log("Events: ", events);
+                setEvents(events); 
+            } catch (error) {
+                console.error("Fehler beim Abrufen der Events", error);
+            }
+        };
+        fetchEvents();
+    }, [])
+
+
+    useEffect(() => {
+        const fetchTasks = async () => {
+            try{
+                const tasks = await apiGetTasks();
+                console.log("Tasks: ", tasks)
+                setTask(tasks);
+            } catch (error) {
+                console.log("Fehler beim Abrufen der Tasks", error);
+            }
+        };
+        fetchTasks();
+    }, [])
+
     const [eventTaskShow, setEventTaskShow] = useState([]);
     useEffect(() => {
         let list = [];
@@ -41,6 +70,8 @@ function PageMain() {
     useEffect(() => {
         console.log(eventTaskShow);
     }, [eventTaskShow]);
+
+
 
     const [selectedTasks, setSelectedTasks] = useState([]); 
 
@@ -61,9 +92,6 @@ function PageMain() {
     }, [selectedTasks]);
     
     
-
-
-
     const [activeContent, setActiveContent] = useState("EventOverview");
     const [inputValues, setInputValues] = useState({
         title: "",
@@ -209,20 +237,19 @@ function PageMain() {
                     />
                 </div>
 
-                <div className="w-full sm:w-1/2 max-w-[50%] ">
+                <div className="w-full sm:w-1/2 max-w-[50%] p-4">
                     {selectedEvent && activeContent === "Details" ? (
                         <div className="p-4 border border-gray-300 rounded-lg shadow-lg">
                             <h3 className="text-xl font-bold">{selectedEvent.title}</h3>
-                            <p>Start Datum: {formatDate(selectedEvent.start)} {formatTime(selectedEvent.start)}</p>
-                            <p>End Datum: {selectedEvent.end && `${formatDate(selectedEvent.end)} ${formatTime(selectedEvent.end)}`}</p>
+                            <p>Start Datum: {selectedEvent.start}</p>
+                            <p>End Datum: {selectedEvent.end}</p>
                             <p>{selectedEvent.description}</p>
                             <Button onClick={startEditing}>Bearbeiten</Button>
-                            <Button onClick={() => switchContent("EventOverview")}>Zurück</Button>
+                            <Button onClick={() => switchContent("EventOverview")}>Abbrechen</Button>
                         </div>
                     ) : activeContent === "AddEvent" ? (
                         <div className="flex flex-col space-y-4 p-4 border border-gray-300 rounded-lg shadow-lg">
                             <h1 className="text-2xl font-semibold">Neues Event hinzufügen</h1>
-                            <p className="mt-3">Event Titel</p>
                             <input
                                 type="text"
                                 name="title"
