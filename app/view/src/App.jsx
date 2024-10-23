@@ -50,7 +50,16 @@ export function App() {
             </div>
             <div className="flex flex-col items-center mt-4">
                 <div id="main" className="w-full flex flex-col items-center">
-                    {fingerMenu == "start" && (!isLoggedIn_AuthService ? <Login setMenu={setMenu}></Login> : <PageMain></PageMain>)}
+                    {fingerMenu == "start" &&
+                        (!isLoggedIn_AuthService ? (
+                            menu != "register" ? (
+                                <Login setMenu={setMenu}></Login>
+                            ) : (
+                                <RegisterPage setMenu={setMenu}></RegisterPage>
+                            )
+                        ) : (
+                            <PageMain></PageMain>
+                        ))}
                     {fingerMenu == "usermenu" && isLoggedIn_AuthService && (
                         <div className="flex flex-row items-center">
                             <Button
