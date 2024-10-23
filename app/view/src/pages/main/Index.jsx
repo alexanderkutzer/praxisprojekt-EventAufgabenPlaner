@@ -24,31 +24,31 @@ function PageMain() {
         { id: 7, id_event: 4, user_id: "", title: "TestTask 4", description: "Test Descripten Task 3", todo: 0, inProgress: 0, done: 0 },
     ]);
 
-    // useEffect(() => {
-    //     const fetchEvents = async () => {
-    //         try {
-    //             const events = await apiGetEvents();
-    //             console.log("Events: ", events);
-    //             setEvents(events);
-    //         } catch (error) {
-    //             console.error("Fehler beim Abrufen der Events", error);
-    //         }
-    //     };
-    //     fetchEvents();
-    // }, []);
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const events = await apiGetEvents();
+                console.log("Events: ", events);
+                setEvents(events);
+            } catch (error) {
+                console.error("Fehler beim Abrufen der Events", error);
+            }
+        };
+        fetchEvents();
+    }, []);
 
-    // useEffect(() => {
-    //     const fetchTasks = async () => {
-    //         try {
-    //             const tasks = await apiGetTasks();
-    //             console.log("Tasks: ", tasks);
-    //             setTask(tasks);
-    //         } catch (error) {
-    //             console.log("Fehler beim Abrufen der Tasks", error);
-    //         }
-    //     };
-    //     fetchTasks();
-    // }, []);
+    useEffect(() => {
+        const fetchTasks = async () => {
+            try {
+                const tasks = await apiGetTasks();
+                console.log("Tasks: ", tasks);
+                setTask(tasks);
+            } catch (error) {
+                console.log("Fehler beim Abrufen der Tasks", error);
+            }
+        };
+        fetchTasks();
+    }, []);
 
     const [eventTaskShow, setEventTaskShow] = useState([]);
     useEffect(() => {

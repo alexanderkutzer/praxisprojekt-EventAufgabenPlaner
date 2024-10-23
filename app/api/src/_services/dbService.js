@@ -48,19 +48,19 @@ export class DBService {
         await this.dbServiceSystem.checkAndCreateTables(sqls);
         return true;
     }
-    async getAll(table) {
-        return await this.dbServiceSystem.getAll(table);
+    async getAll(table, filter) {
+        return await this.dbServiceSystem.getAll(table, filter);
     }
-    async getOne(table, id) {
-        return await this.dbServiceSystem.getOne(table, id);
+    async getOne(table, id, filter) {
+        return await this.dbServiceSystem.getOne(table, id, filter);
     }
-    async create(table, data) {
-        return await this.dbServiceSystem.create(table, data);
+    async create(table, data, filter) {
+        return await this.dbServiceSystem.create(table, data, filter);
     }
-    async update(table, id, data) {
-        return await this.dbServiceSystem.update(table, id, data);
+    async update(table, id, data, filter) {
+        return await this.dbServiceSystem.update(table, id, data, filter);
     }
-    async delete(table, id) {
-        return await this.dbServiceSystem.delete(table, id);
+    async delete(table, id, filter) {
+        return await this.dbServiceSystem.delete(table, id, filter);
     }
 }

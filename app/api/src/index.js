@@ -23,11 +23,11 @@ const usersController = new UserController(userService);
 const userRouter = new UserRouter(usersController, userService);
 
 const eventService = new EventService(dbService);
-const eventController = new EventController(eventService);
+const eventController = new EventController(eventService, userService);
 const eventRouter = new EventRouter(eventController, userService);
 
 const taskService = new TaskService(dbService);
-const taskController = new TaskController(taskService);
+const taskController = new TaskController(taskService, userService);
 const taskRouter = new TaskRouter(taskController, userService);
 
 const authController = new AuthController(userService);

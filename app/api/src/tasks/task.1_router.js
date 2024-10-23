@@ -2,9 +2,9 @@ import { Router } from "express";
 import { authTokenMiddleware } from "../common/authTokenMiddleware.js";
 
 export class TaskRouter {
-    constructor(taskController, userService) {
-        this.taskController = taskController;
-        this.userService = userService;
+    constructor(TaskController, UserService) {
+        this.taskController = TaskController;
+        this.userService = UserService;
         return this.router();
     }
     router() {

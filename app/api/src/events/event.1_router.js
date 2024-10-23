@@ -2,9 +2,9 @@ import { Router } from "express";
 import { authTokenMiddleware } from "../common/authTokenMiddleware.js";
 
 export class EventRouter {
-    constructor(EventController, userService) {
+    constructor(EventController, UserService) {
         this.eventController = EventController;
-        this.userService = userService;
+        this.userService = UserService;
         return this.router();
     }
     router() {

@@ -1,10 +1,9 @@
 export class EventController {
-    constructor(EventService) {
+    constructor(EventService, UserService) {
         this.eventService = EventService;
+        this.userService = UserService;
         if (!this.eventService) {
-            console.error(
-                "b7211244-549b-4c3a-930c-c6f26df4a13b: EventController: eventService is null"
-            );
+            console.error("b7211244-549b-4c3a-930c-c6f26df4a13b: EventController: eventService is null");
         }
         this.getAllEventsController = this.getAllEventsController.bind(this);
         this.getEventByIdController = this.getEventByIdController.bind(this);
@@ -49,10 +48,7 @@ export class EventController {
         try {
             const id = req.params.id;
             const updateEvent = req.body;
-            const updateStatus = await this.eventService.update(
-                id,
-                updateEvent
-            );
+            const updateStatus = await this.eventService.update(id, updateEvent);
             if (!updateStatus) {
                 res.status(404).json({
                     update: false,
