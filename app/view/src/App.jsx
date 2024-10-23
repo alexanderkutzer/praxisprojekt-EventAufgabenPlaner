@@ -8,7 +8,7 @@ import { useAuth } from "./service/authStatus.jsx";
 import RegisterPage from "./pages/cores/register/index.jsx";
 import ProfileModal from "./pages/cores/profil/index.jsx";
 import ButtonFingerprint from "./components/ButtonFingerprint.jsx";
-import { DarkModeSwitch } from 'react-toggle-dark-mode';
+import { DarkModeSwitch } from "react-toggle-dark-mode";
 
 export function App() {
     const { isLoggedIn_AuthService, setToken_AuthService } = useAuth();
@@ -44,18 +44,22 @@ export function App() {
                     }}
                     className=" w-14 h-14 fill-gray-200 dark:fill-gray-800 hover:fill-gray-800 dark:hover:fill-gray-200"
                 ></ButtonFingerprint>
-                {fingerMenu}
             </div>
             <div id="nav" className="fixed right-1 ">
-            <DarkModeSwitch
-                        checked={isDarkMode}
-                        onChange={toggleDarkMode}
-                        size={30}
-                        />
+                <DarkModeSwitch checked={isDarkMode} onChange={toggleDarkMode} size={30} />
             </div>
             <div className="flex flex-col items-center mt-4">
                 <div id="main" className="w-full flex flex-col items-center">
-                    {fingerMenu == "start" && (!isLoggedIn_AuthService ? <Login setMenu={setMenu}></Login> : <PageMain></PageMain>)}
+                    {fingerMenu == "start" &&
+                        (!isLoggedIn_AuthService ? (
+                            menu != "register" ? (
+                                <Login setMenu={setMenu}></Login>
+                            ) : (
+                                <RegisterPage setMenu={setMenu}></RegisterPage>
+                            )
+                        ) : (
+                            <PageMain></PageMain>
+                        ))}
                     {fingerMenu == "usermenu" && isLoggedIn_AuthService && (
                         <div className="flex flex-row items-center">
                             <Button

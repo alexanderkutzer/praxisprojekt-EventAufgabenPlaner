@@ -8,7 +8,7 @@ function ProfileModal({ setMenu }) {
     const [activeSection, setActiveSection] = useState("");
 
     const [currentEmail, setCurrentEmail] = useState("");
-    const [newEmail, setNewEmail] = useState(currentEmail);
+    const [newEmail, setNewEmail] = useState("");
 
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -23,7 +23,7 @@ function ProfileModal({ setMenu }) {
             let response = await apiUserByToken(token_AuthService);
             console.log("email", response.email);
             console.log("username", response.username);
-            setNewEmail(response.email);
+            setCurrentEmail(response.email);
             setNewUsername(response.username);
         };
         fetchData();
@@ -34,10 +34,13 @@ function ProfileModal({ setMenu }) {
             response = apiUpdateUserEmail(token_AuthService, newEmail);
         }
         if (activeSection == "password") {
-            response = apiUpdateUserPassword(token_AuthService, newPassword);
+            response = await apiUpdateUserPassword(token_AuthService, newPassword);
         }
         if (activeSection == "username") {
-            response = apiUpdateUserUsername(token_AuthService, newUsername);
+            response = await apiUpdateUserUsername(token_AuthService, newUsername);
+            setCurrentUsername("");
+            setNewUsername("");
+            setConfirmNewUsername("");
         }
 
         console.log("Profile updated:", response);
@@ -65,13 +68,14 @@ function ProfileModal({ setMenu }) {
             {activeSection === "email" && (
                 <>
                     <h3 className="text-lg font-semibold mb-4">E-mail Address</h3>
+                    <div>{currentEmail}</div>
                     <div className="mb-4">
                         <input
                             type="email"
                             value={newEmail}
                             onChange={(e) => setNewEmail(e.target.value)}
                             className="w-full border px-3 py-2 rounded-md"
-                            placeholder="Current e-mail address"
+                            placeholder="new e-mail address"
                         />
                     </div>
                 </>
