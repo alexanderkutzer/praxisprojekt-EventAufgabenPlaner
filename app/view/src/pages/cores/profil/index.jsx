@@ -8,7 +8,7 @@ function ProfileModal({ setMenu }) {
     const [activeSection, setActiveSection] = useState("");
 
     const [currentEmail, setCurrentEmail] = useState("");
-    const [newEmail, setNewEmail] = useState(currentEmail);
+    const [newEmail, setNewEmail] = useState("");
 
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -24,32 +24,18 @@ function ProfileModal({ setMenu }) {
             console.log("email", response.email);
             console.log("username", response.username);
             setCurrentEmail(response.email);
-            setCurrentUsername(response.username);
+            setNewUsername(response.username);
         };
         fetchData();
     }, [token_AuthService]);
     const handleSaveChanges = async () => {
         let response = false;
-        if (activeSection ==="password") {
-            if (newPassword !== confirmNewPassword) {
-                alert("Passwords do not match!");
-                return;
-            }
+        if (activeSection == "email") {
+            response = apiUpdateUserEmail(token_AuthService, newEmail);
         }
-       
         if (activeSection == "password") {
             response = await apiUpdateUserPassword(token_AuthService, newPassword);
         }
-        setCurrentPassword("");
-        setNewPassword("");
-        setConfirmNewPassword("");
-
-        if (activeSection == "email") {
-          response = await apiUpdateUserEmail(token_AuthService, newEmail);
-          setNewEmail("")
-      }
-      
-
         if (activeSection == "username") {
             response = await apiUpdateUserUsername(token_AuthService, newUsername);
             setCurrentUsername("");
@@ -58,7 +44,6 @@ function ProfileModal({ setMenu }) {
         }
 
         console.log("Profile updated:", response);
-         
         setActiveSection("");
     };
 
@@ -83,13 +68,14 @@ function ProfileModal({ setMenu }) {
             {activeSection === "email" && (
                 <>
                     <h3 className="text-lg font-semibold mb-4">E-mail Address</h3>
+                    <div>{currentEmail}</div>
                     <div className="mb-4">
                         <input
                             type="email"
                             value={newEmail}
                             onChange={(e) => setNewEmail(e.target.value)}
                             className="w-full border px-3 py-2 rounded-md"
-                            placeholder="Current e-mail address"
+                            placeholder="new e-mail address"
                         />
                     </div>
                 </>
