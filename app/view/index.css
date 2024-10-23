@@ -4,5 +4,5 @@
 html {
     min-width: 420px;
     @apply bg-gray-200;
-    @apply dark:bg-gray-700;
+    @apply dark:bg-gray-600;
 }

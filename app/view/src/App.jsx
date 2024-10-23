@@ -8,14 +8,14 @@ import { useAuth } from "./service/authStatus.jsx";
 import RegisterPage from "./pages/cores/register/index.jsx";
 import ProfileModal from "./pages/cores/profil/index.jsx";
 import ButtonFingerprint from "./components/ButtonFingerprint.jsx";
-import ButtonLightDark from "./components/ButtonLightDark.jsx";
+import { DarkModeSwitch } from 'react-toggle-dark-mode';
 
 export function App() {
     const { isLoggedIn_AuthService, setToken_AuthService } = useAuth();
     const [fingerMenu, setFingerMenu] = useState("start");
     const [menu, setMenu] = useState("profile");
 
-    const [darkMode, setDarkMode] = useState(false);
+    const [isDarkMode, setDarkMode] = React.useState(false);
 
     const events = [
         { title: "Event 1", date: "2024-10-14" },
@@ -47,7 +47,11 @@ export function App() {
                 {fingerMenu}
             </div>
             <div id="nav" className="fixed right-1 ">
-                <ButtonLightDark onClick={toggleDarkMode}>L/D</ButtonLightDark>
+            <DarkModeSwitch
+                        checked={isDarkMode}
+                        onChange={toggleDarkMode}
+                        size={30}
+                        />
             </div>
             <div className="flex flex-col items-center mt-4">
                 <div id="main" className="w-full flex flex-col items-center">

@@ -26,23 +26,26 @@ function RegisterPage({ setMenu }) {
         setMenu("login");
     }
     return (
-        <div>
+        <div className="container flex flex-col items-center justify-center space-y-4 p-4 border border-gray-300 rounded-lg shadow-lg max-w-md mx-auto">
             <div className="flex flex-col gap-1">
+                <p className="text-xl flex-col font-bold">Neues Konto Erstellen</p>
                 <label>Email </label>
-                <input onChange={(e) => setEmail(e.target.value)} value={email} type="text" name="" id="" />
+                <input onChange={(e) => setEmail(e.target.value)} value={email} type="text" name="" id="" className="form-control p-1,5 border rounded"/>
                 <label>Username </label>
-                <input onChange={(e) => setUsername(e.target.value)} value={username} type="text" name="" id="" />
+                <input onChange={(e) => setUsername(e.target.value)} value={username} type="text" name="" id="" className="form-control p-1,5 border rounded" />
 
                 <label>Passwort </label>
 
-                <input onChange={(e) => setpasswordA(e.target.value)} value={passwordA} type="password" name="" id="" />
+                <input onChange={(e) => setpasswordA(e.target.value)} value={passwordA} type="password" name="" id="" className="form-control p-1,5 border rounded"/>
                 <label>Wiederholung </label>
 
-                <input onChange={(e) => setpasswordB(e.target.value)} value={passwordB} type="password" name="" id="" />
+                <input onChange={(e) => setpasswordB(e.target.value)} value={passwordB} type="password" name="" id="" className="form-control p-1,5 border rounded"/>
             </div>
-            <Button onClick={() => onClickRegister()}>Register</Button>
+            <div>
+            <Button onClick={() => onClickRegister()}>Registrieren</Button>
             <Button onClick={() => onClickLogin()}>Login</Button>
-            <Button onClick={() => onClickCancel()}>Cancel</Button>
+            <Button onClick={() => onClickCancel()}>Abbruch</Button>
+            </div>
         </div>
     );
 }
