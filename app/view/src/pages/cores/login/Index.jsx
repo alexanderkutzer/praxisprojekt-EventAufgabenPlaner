@@ -32,7 +32,7 @@ function LoginPage({ setMenu, setFingerMenu }) {
                 >
                     <h2>Wilkommen!</h2>
                     <p>Login</p>
-                    <div className="mb-3">
+                    <div className="mb-3 space-x-2">
                         <label htmlFor="email" className="form-label">
                             Email
                         </label>
@@ -45,7 +45,7 @@ function LoginPage({ setMenu, setFingerMenu }) {
                         />
                     </div>
 
-                    <div className="mb-3">
+                    <div className="mb-3 space-x-2">
                         <label htmlFor="password" className="form-label">
                             Passwort
                         </label>
