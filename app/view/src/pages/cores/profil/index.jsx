@@ -23,24 +23,42 @@ function ProfileModal({ setMenu }) {
             let response = await apiUserByToken(token_AuthService);
             console.log("email", response.email);
             console.log("username", response.username);
-            setNewEmail(response.email);
-            setNewUsername(response.username);
+            setCurrentEmail(response.email);
+            setCurrentUsername(response.username);
         };
         fetchData();
     }, [token_AuthService]);
     const handleSaveChanges = async () => {
         let response = false;
-        if (activeSection == "email") {
-            response = apiUpdateUserEmail(token_AuthService, newEmail);
+        if (activeSection ==="password") {
+            if (newPassword !== confirmNewPassword) {
+                alert("Passwords do not match!");
+                return;
+            }
         }
+       
         if (activeSection == "password") {
-            response = apiUpdateUserPassword(token_AuthService, newPassword);
+            response = await apiUpdateUserPassword(token_AuthService, newPassword);
         }
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmNewPassword("");
+
+        if (activeSection == "email") {
+          response = await apiUpdateUserEmail(token_AuthService, newEmail);
+          setNewEmail("")
+      }
+      
+
         if (activeSection == "username") {
-            response = apiUpdateUserUsername(token_AuthService, newUsername);
+            response = await apiUpdateUserUsername(token_AuthService, newUsername);
+            setCurrentUsername("");
+            setNewUsername("");
+            setConfirmNewUsername("");
         }
 
         console.log("Profile updated:", response);
+         
         setActiveSection("");
     };
 
