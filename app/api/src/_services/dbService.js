@@ -1,7 +1,7 @@
 const sqls = [
     `CREATE TABLE IF NOT EXISTS events (
         id TEXT PRIMARY KEY,
-        id_user_maintainer TEXT,
+        id_user TEXT,
         title TEXT,
         description TEXT,
         startDateTime TEXT,
@@ -9,6 +9,7 @@ const sqls = [
     )`,
     `CREATE TABLE IF NOT EXISTS tasks (
         id TEXT PRIMARY KEY,
+        id_user TEXT,
         id_event TEXT,
         id_tasks_parent TEXT,
         title TEXT,

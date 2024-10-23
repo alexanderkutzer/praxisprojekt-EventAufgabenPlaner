@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Calendar from "../../Calendar.jsx";
 import Button from "../../components/Button.jsx";
 import { useAuth } from "../../service/authStatus.jsx";
-import {apiGetEvents, apiGetTasks} from "../../service/api_calls.js";
+import { apiGetEvents, apiGetTasks } from "../../service/api_calls.js";
 
 function PageMain() {
     const { isLoggedIn_AuthService, token_AuthService, setToken_AuthService } = useAuth();
@@ -10,10 +10,9 @@ function PageMain() {
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [events, setEvents] = useState([
         { id: 1, title: "Team Meeting", start: "2024-10-25", end: "2024-10-28T12:00:00", extendedProps: { description: "Description for Event 1" } },
-        { id: 2, title: "Event 2", start: "2024-10-15", extendedProps: { description: "Description for Event 2" } },
+        { id: 2, title: "Event 2", start: "2024-10-15T00:10", extendedProps: { description: "Description for Event 2" } },
         { id: 3, title: "Event 3", start: "2024-10-20", extendedProps: { description: "Description for Event 3" } },
         { id: 4, title: "Event 4", start: "2024-10-20", extendedProps: { description: "Description for Event 4" } },
-
     ]);
     const [tasks, setTask] = useState([
         { id: 1, id_event: 1, user_id: "", title: "TestTask 1", description: "Test Descripten Task 1", todo: 0, inProgress: 0, done: 0 },
@@ -25,33 +24,31 @@ function PageMain() {
         { id: 7, id_event: 4, user_id: "", title: "TestTask 4", description: "Test Descripten Task 3", todo: 0, inProgress: 0, done: 0 },
     ]);
 
+    // useEffect(() => {
+    //     const fetchEvents = async () => {
+    //         try {
+    //             const events = await apiGetEvents();
+    //             console.log("Events: ", events);
+    //             setEvents(events);
+    //         } catch (error) {
+    //             console.error("Fehler beim Abrufen der Events", error);
+    //         }
+    //     };
+    //     fetchEvents();
+    // }, []);
 
-    useEffect(() => {
-        const fetchEvents = async () => {
-            try {
-                const events = await apiGetEvents();
-                console.log("Events: ", events);
-                setEvents(events); 
-            } catch (error) {
-                console.error("Fehler beim Abrufen der Events", error);
-            }
-        };
-        fetchEvents();
-    }, [])
-
-
-    useEffect(() => {
-        const fetchTasks = async () => {
-            try{
-                const tasks = await apiGetTasks();
-                console.log("Tasks: ", tasks)
-                setTask(tasks);
-            } catch (error) {
-                console.log("Fehler beim Abrufen der Tasks", error);
-            }
-        };
-        fetchTasks();
-    }, [])
+    // useEffect(() => {
+    //     const fetchTasks = async () => {
+    //         try {
+    //             const tasks = await apiGetTasks();
+    //             console.log("Tasks: ", tasks);
+    //             setTask(tasks);
+    //         } catch (error) {
+    //             console.log("Fehler beim Abrufen der Tasks", error);
+    //         }
+    //     };
+    //     fetchTasks();
+    // }, []);
 
     const [eventTaskShow, setEventTaskShow] = useState([]);
     useEffect(() => {
@@ -71,27 +68,22 @@ function PageMain() {
         console.log(eventTaskShow);
     }, [eventTaskShow]);
 
-
-
-    const [selectedTasks, setSelectedTasks] = useState([]); 
+    const [selectedTasks, setSelectedTasks] = useState([]);
 
     const toggleTaskSelection = (task) => {
-
         if (selectedTasks.includes(task)) {
             setSelectedTasks(selectedTasks.filter((t) => t.id !== task.id));
         } else {
             setSelectedTasks([...selectedTasks, task]);
         }
     };
-    
-    const isTaskSelected = (task) => (selectedTasks.filter((t) => t.id == task.id).length == 1)
-    
-    
+
+    const isTaskSelected = (task) => selectedTasks.filter((t) => t.id == task.id).length == 1;
+
     useEffect(() => {
         console.log("Markierte Tasks:", selectedTasks);
     }, [selectedTasks]);
-    
-    
+
     const [activeContent, setActiveContent] = useState("EventOverview");
     const [inputValues, setInputValues] = useState({
         title: "",
@@ -356,11 +348,11 @@ function PageMain() {
                                             {tasks
                                                 .filter((t) => t.id_event === event.id)
                                                 .map((t) => (
-                                                    <div 
-                                                        onClick={() => toggleTaskSelection(t)}  // Beim Klick Task umschalten
+                                                    <div
+                                                        onClick={() => toggleTaskSelection(t)} // Beim Klick Task umschalten
                                                         style={{
                                                             cursor: "pointer",
-                                                            color: isTaskSelected(t) ? "green" : "black",  // Ändere die Farbe, wenn markiert
+                                                            color: isTaskSelected(t) ? "green" : "black", // Ändere die Farbe, wenn markiert
                                                         }}
                                                         onMouseEnter={(e) => (e.target.style.color = "blue")}
                                                         onMouseLeave={(e) => (e.target.style.color = isTaskSelected(t) ? "green" : "black")}
@@ -368,8 +360,6 @@ function PageMain() {
                                                         {t.title}
                                                     </div>
                                                 ))}
-
-
                                         </div>
                                     </li>
                                 ))}

@@ -1,6 +1,10 @@
+let token_AuthService = "";
 const public_ip = "";
 const apiUrl = "http://" + (public_ip === "" ? "localhost" : public_ip) + ":3000/api/v1/";
 
+export function setToken_ApiCalls(token) {
+    token_AuthService = token;
+}
 export async function apiUserLogin(email, password) {
     const response = await fetchApi("auth/login", "POST", { email, password });
     return response.json();
@@ -25,7 +29,7 @@ export async function apiUserRegister(email, password, username) {
 }
 
 export async function apiGetUsers() {
-    console.log(apiUrl);
+    console.log("token", token_AuthService);
     const response = await fetchApi("users", "GET");
     return response.json();
 }
@@ -50,19 +54,19 @@ export async function apiDeleteUser(id) {
     return response.json();
 }
 
-export async function apiUpdateUserEmail(token, email){
+export async function apiUpdateUserEmail(token, email) {
     token = token == "" ? "no_token" : token;
-    const response = await fetchApi(`users/update/email/${token == "" ? "no_token" : token}`, "POST", {email});
+    const response = await fetchApi(`users/update/email/${token == "" ? "no_token" : token}`, "POST", { email });
     return response.json();
 }
-export async function apiUpdateUserPassword(token, password){
+export async function apiUpdateUserPassword(token, password) {
     token = token == "" ? "no_token" : token;
-    const response = await fetchApi(`users/update/password/${token == "" ? "no_token" : token}`, "POST", {password});
+    const response = await fetchApi(`users/update/password/${token == "" ? "no_token" : token}`, "POST", { password });
     return response.json();
 }
-export async function apiUpdateUserUsername(token, username){
+export async function apiUpdateUserUsername(token, username) {
     token = token == "" ? "no_token" : token;
-    const response = await fetchApi(`users/update/username/${token == "" ? "no_token" : token}`, "POST", {username});
+    const response = await fetchApi(`users/update/username/${token == "" ? "no_token" : token}`, "POST", { username });
     return response.json();
 }
 
@@ -127,6 +131,7 @@ async function fetchApi(url, method, data) {
         method: method,
         headers: {
             "Content-Type": "application/json",
+            Authorization: "Bearer " + token_AuthService,
         },
         body: JSON.stringify(data),
     });
