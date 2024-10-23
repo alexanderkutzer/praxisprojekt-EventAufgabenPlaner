@@ -5,6 +5,7 @@ import Login from "./pages/cores/login/Index.jsx";
 import Button from "./components/Button.jsx";
 import PageDevelop from "./pages/develop/index.jsx";
 import { useAuth } from "./service/authStatus.jsx";
+import RegisterPage from "./pages/cores/register/index.jsx";
 
 
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
@@ -46,9 +47,16 @@ export function App() {
                         Develop
                     </Button>
                     {!isLoggedIn_AuthService && (
-                        <Button active={menu === "login"} onClick={() => setMenu("login")}>
-                            Login
-                        </Button>
+
+                        <>
+                            <Button active={menu == "login" ? "true" : "false"} onClick={() => setMenu("login")}>
+                                Login
+                            </Button>
+                            <Button active={menu == "register" ? "true" : "false"} onClick={() => setMenu("register")}>
+                                Register
+                            </Button>
+                        </>
+
                     )}
                     {isLoggedIn_AuthService && (
                         <Button
@@ -70,10 +78,13 @@ export function App() {
                 </div>
 
                 <div id="main" className="w-full flex flex-col items-center">
-                    {menu === "home" && <PageMain />}
-                    {menu === "admin" && <PageAdmin />}
-                    {menu === "develop" && <PageDevelop />}
-                    {menu === "login" && <Login setMenu={setMenu} />}
+
+                    {menu === "home" && <PageMain></PageMain>}
+                    {menu === "admin" && <PageAdmin></PageAdmin>}
+                    {menu === "develop" && <PageDevelop></PageDevelop>}
+                    {menu === "login" && <Login setMenu={setMenu}></Login>}
+                    {menu === "register" && <RegisterPage setMenu={setMenu}></RegisterPage>}
+
                 </div>
             </div>
         </div>

@@ -1,15 +1,69 @@
 import React, { useState, useRef, useEffect } from "react";
 import Calendar from "../../Calendar.jsx";
 import Button from "../../components/Button.jsx";
+import { useAuth } from "../../service/authStatus.jsx";
 
 function PageMain() {
+    const { isLoggedIn_AuthService, token_AuthService, setToken_AuthService } = useAuth();
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [events, setEvents] = useState([
-        { id: 1, title: "Team Meeting", start: "2024-10-25T10:00:00", end: "2024-10-28T12:00:00", extendedProps: { description: "Description for Event 1" } },
-        { id: 2, title: "Event 2", start: "2024-10-15T09:00:00", extendedProps: { description: "Description for Event 2" } },
-        { id: 3, title: "Event 3", start: "2024-10-20T14:00:00", extendedProps: { description: "Description for Event 3" } },
+        { id: 1, title: "Team Meeting", start: "2024-10-25", end: "2024-10-28T12:00:00", extendedProps: { description: "Description for Event 1" } },
+        { id: 2, title: "Event 2", start: "2024-10-15", extendedProps: { description: "Description for Event 2" } },
+        { id: 3, title: "Event 3", start: "2024-10-20", extendedProps: { description: "Description for Event 3" } },
+        { id: 4, title: "Event 4", start: "2024-10-20", extendedProps: { description: "Description for Event 4" } },
+
     ]);
+    const [tasks, setTask] = useState([
+        { id: 1, id_event: 1, user_id: "", title: "TestTask 1", description: "Test Descripten Task 1", todo: 0, inProgress: 0, done: 0 },
+        { id: 2, id_event: 1, user_id: "", title: "TestTask 2", description: "Test Descripten Task 2", todo: 0, inProgress: 0, done: 0 },
+        { id: 3, id_event: 1, user_id: "", title: "TestTask 3", description: "Test Descripten Task 3", todo: 0, inProgress: 0, done: 0 },
+        { id: 4, id_event: 2, user_id: "", title: "TestTask 3", description: "Test Descripten Task 3", todo: 0, inProgress: 0, done: 0 },
+        { id: 5, id_event: 3, user_id: "", title: "TestTask 3", description: "Test Descripten Task 3", todo: 0, inProgress: 0, done: 0 },
+        { id: 6, id_event: 3, user_id: "", title: "TestTask 3", description: "Test Descripten Task 3", todo: 0, inProgress: 0, done: 0 },
+        { id: 7, id_event: 4, user_id: "", title: "TestTask 4", description: "Test Descripten Task 3", todo: 0, inProgress: 0, done: 0 },
+    ]);
+
+    const [eventTaskShow, setEventTaskShow] = useState([]);
+    useEffect(() => {
+        let list = [];
+        console.log(events.length);
+        events.forEach((event) => {
+            let status = {
+                id: event.id,
+                show: false,
+            };
+            list.push(status);
+        });
+        setEventTaskShow(list);
+    }, [events]);
+
+    useEffect(() => {
+        console.log(eventTaskShow);
+    }, [eventTaskShow]);
+
+    const [selectedTasks, setSelectedTasks] = useState([]); 
+
+    const toggleTaskSelection = (task) => {
+
+        if (selectedTasks.includes(task)) {
+            setSelectedTasks(selectedTasks.filter((t) => t.id !== task.id));
+        } else {
+            setSelectedTasks([...selectedTasks, task]);
+        }
+    };
+    
+    const isTaskSelected = (task) => (selectedTasks.filter((t) => t.id == task.id).length == 1)
+    
+    
+    useEffect(() => {
+        console.log("Markierte Tasks:", selectedTasks);
+    }, [selectedTasks]);
+    
+    
+
+
+
     const [activeContent, setActiveContent] = useState("EventOverview");
     const [inputValues, setInputValues] = useState({
         title: "",
@@ -116,7 +170,7 @@ function PageMain() {
         if (calendarRef.current) {
             const calendarApi = calendarRef.current.getApi();
             calendarApi.removeAllEvents();
-            calendarApi.addEventSource(events);
+            calendarApi.addEventSource(events); // Füge die aktualisierte Eventliste hinzu
         }
     }, [events]);
 
@@ -163,6 +217,7 @@ function PageMain() {
                             <p>End Datum: {selectedEvent.end && `${formatDate(selectedEvent.end)} ${formatTime(selectedEvent.end)}`}</p>
                             <p>{selectedEvent.description}</p>
                             <Button onClick={startEditing}>Bearbeiten</Button>
+                            <Button onClick={() => switchContent("EventOverview")}>Zurück</Button>
                         </div>
                     ) : activeContent === "AddEvent" ? (
                         <div className="flex flex-col space-y-4 p-4 border border-gray-300 rounded-lg shadow-lg">
@@ -182,7 +237,7 @@ function PageMain() {
                                 name="startDate"
                                 value={inputValues.startDate}
                                 onChange={handleInputChange}
-                                className="p-2 border rounded resize-none w-1/2"
+                                className="p-2 border rounded resize-none w-1/2 text-gray-500"
                             />
                             <p className="mt-3">Event Ende (Angabe nur notwendig, wenn das Event mehrtägig ist)</p>
                             <input
@@ -190,7 +245,7 @@ function PageMain() {
                                 name="endDate"
                                 value={inputValues.endDate}
                                 onChange={handleInputChange}
-                                className="p-2 border rounded resize-none w-1/2"
+                                className="p-2 border rounded resize-none w-1/2 text-gray-500"
                             />
                             <p className="mt-3">Details zu deinem Event</p>
                             <textarea
@@ -221,7 +276,7 @@ function PageMain() {
                                 name="startDate"
                                 value={inputValues.startDate}
                                 onChange={handleInputChange}
-                                className="p-2 border rounded"
+                                className="p-2 border rounded text-gray-500"
                             />
                             <p className="mt-3">Event Ende (Angabe nur notwendig, wenn das Event mehrtägig ist)</p>
                             <input
@@ -229,7 +284,7 @@ function PageMain() {
                                 name="endDate"
                                 value={inputValues.endDate}
                                 onChange={handleInputChange}
-                                className="p-2 border rounded"
+                                className="p-2 border rounded text-gray-500"
                             />
                             <p className="mt-3">Details zu deinem Event</p>
                             <textarea
@@ -251,24 +306,67 @@ function PageMain() {
                     )}
 
                         {activeContent === "EventOverview" && (
-                            <div>
-                                <h1 className="text-xl flex-col font-bold">Eventübersicht</h1>
-                                <p className="text-sm">Event auswählen, um Details anzuzeigen.</p>
-                                <p className="text-lg underline underline-offset-2">Demnächst:</p>
-                                <ul className="space-y-4">
-                                    {events.map((event) => (
-                                        <li key={event.id} className="p-4 border border-gray-300 rounded-lg shadow-md">
-                                            <span 
-                                                className="font-semibold text-lg cursor-pointer" 
-                                                onClick={() => handleEventClick({ event })}
-                                            >
-                                                {event.title}
-                                            </span>
-                                            <span className="text-gray-600 block">{formatDate(event.start)} {formatTime(event.start)} {event.end && `bis ${formatDate(event.end)} ${formatTime(event.end)}`}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
+                                    <div>
+                                        <h1 className="text-xl flex-col font-bold">Eventübersicht</h1>
+                                        <p className="text-sm">Event auswählen, um Details anzuzeigen.</p>
+                                        <p className="text-lg underline underline-offset-2">Demnächst:</p> 
+                                        <ul className="space-y-4">
+                                            {events.map((event) => (
+                                                <li key={event.id} className="p-4 border border-gray-300 rounded-lg shadow-md">
+                                                    <span 
+                                                        className="font-semibold text-lg cursor-pointer" 
+                                                        onClick={() => handleEventClick({ event })}
+                                                    >
+                                                        {event.title}
+                                                    </span>
+                                                    <span className="text-gray-600 dark:text-gray-400 block">{formatDate(event.start)} {formatTime(event.start)} {event.end && `bis ${formatDate(event.end)} ${formatTime(event.end)}`}</span>
+                                                    <button
+                                                        onClick={() => {
+                                                            let newShow = eventTaskShow.map((e) => {
+                                                                if (e.id === event.id) {
+                                                                    e.show = !e.show;
+                                                                }
+                                                                return e;
+                                                            });
+                                                            setEventTaskShow(newShow);
+                                                        }}
+                                                        className="ml-2"
+                                                    >
+                                                        <svg
+                                                            className={`w-4 h-4 transition-transform duration-200 ${eventTaskShow.find((e) => e.id === event.id)?.show ? 'rotate-180' : 'rotate-0'}`}
+                                                            fill="none"
+                                                            viewBox="0 0 24 24"
+                                                            stroke="currentColor"
+                                                        >
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 10l5 5 5-5" />
+                                                        </svg>
+                                                    </button>
+                                                    <div
+                                                        className={
+                                                            eventTaskShow.length > 0 && eventTaskShow.filter((ets) => ets.id === event.id)[0].show ? " " : " hidden "
+                                                        }
+                                                    >
+                                                        {tasks
+                                                            .filter((t) => t.id_event === event.id)
+                                                            .map((t) => (
+                                                                <div 
+                                                                    key={t.id}
+                                                                    onClick={() => toggleTaskSelection(t)}  // Beim Klick Task umschalten
+                                                                    style={{
+                                                                        cursor: "pointer",
+                                                                        color: isTaskSelected(t) ? "green" : "gray-600 dark:gray-400",  // Ändere die Farbe, wenn markiert
+                                                                    }}
+                                                                    onMouseEnter={(e) => (e.target.style.color = "blue")}
+                                                                    onMouseLeave={(e) => (e.target.style.color = isTaskSelected(t) ? "green" : "gray-600 dark:gray-400")}
+                                                                >
+                                                                    {t.title}
+                                                                </div>
+                                                            ))}
+                                                    </div>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
                         )}
                 </div>
             </div> 
