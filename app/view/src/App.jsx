@@ -44,7 +44,6 @@ export function App() {
                     }}
                     className=" w-14 h-14 fill-gray-200 dark:fill-gray-800 hover:fill-gray-800 dark:hover:fill-gray-200"
                 ></ButtonFingerprint>
-                {fingerMenu}
             </div>
             <div id="nav" className="fixed right-1 ">
                 <DarkModeSwitch checked={isDarkMode} onChange={toggleDarkMode} size={30} />
