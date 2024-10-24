@@ -3,7 +3,7 @@ import Button from "../../../components/Button";
 import { apiUserByToken, apiUpdateUserEmail, apiUpdateUserPassword, apiUpdateUserUsername } from "../../../service/api_calls";
 import { useAuth } from "../../../service/authStatus";
 
-function ProfileModal({ setMenu }) {
+function ProfilePage({ setMenu }) {
     const { token_AuthService } = useAuth();
     const [activeSection, setActiveSection] = useState("");
 
@@ -56,7 +56,7 @@ function ProfileModal({ setMenu }) {
             <h2 className="text-xl font-bold mb-4">Edit Profile</h2>
 
             {activeSection === "" && (
-                <div>
+                <div className="flex gap-2">
                     <Button onClick={() => setActiveSection("email")}>Edit E-mail Address</Button>
 
                     <Button onClick={() => setActiveSection("password")}>Edit Password</Button>
@@ -155,4 +155,4 @@ function ProfileModal({ setMenu }) {
     );
 }
 
-export default ProfileModal;
+export default ProfilePage;

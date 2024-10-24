@@ -23,7 +23,10 @@ export class UserService {
     }
     async getUserByToken(token) {
         let data = await this.dbService.getAll(this.table);
-        let user = data.find((user) => user.token === token);
+
+        let user = data.find((user) => {
+            return user.token === token;
+        });
         return user;
     }
     async create(newUser) {

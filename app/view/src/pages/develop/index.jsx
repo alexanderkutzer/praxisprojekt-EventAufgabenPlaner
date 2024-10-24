@@ -8,17 +8,11 @@ function PageDevelop() {
 
     return (
         <div className="w-full flex flex-col items-center">
-            <div>
-                <Button
-                    active={menu === "dashboard" ? "true" : "false"}
-                    onClick={() => setMenu("dashboard")}
-                >
+            <div className="flex gap-2">
+                <Button active={menu === "dashboard" ? "true" : "false"} onClick={() => setMenu("dashboard")}>
                     Dashboard
                 </Button>
-                <Button
-                    active={menu === "apicall" ? "true" : "false"}
-                    onClick={() => setMenu("apicall")}
-                >
+                <Button active={menu === "apicall" ? "true" : "false"} onClick={() => setMenu("apicall")}>
                     ApiCall's
                 </Button>
             </div>
