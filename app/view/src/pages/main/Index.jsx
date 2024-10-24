@@ -293,6 +293,7 @@ function PageMain() {
                             <p>{selectedEvent.description}</p>
                             <Button onClick={startEditing}>Bearbeiten</Button>
                             <Button onClick={() => switchContent("EventOverview")}>Zurück</Button>
+                            <Button onClick={() => switchContent("EventOverview")}>Zurück</Button>
                         </div>
                     ) : activeContent === "AddEvent" ? (
                         <div className="flex flex-col space-y-4 p-4 border border-gray-300 rounded-lg shadow-lg">
