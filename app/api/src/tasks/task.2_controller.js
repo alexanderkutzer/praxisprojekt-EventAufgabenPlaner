@@ -13,7 +13,8 @@ export class TaskController {
     async getAllTasksController(req, res) {
         try {
             const token = getToken(req);
-            res.json((await this.taskService.getAll(token)) ?? []);
+            const id_user = (await this.userService.getUserByToken(token)).id;
+            res.json((await this.taskService.getAll(id_user)) ?? []);
         } catch (err) {
             console.error("f64386ca-fb06-4ae4-8aac-ce940d34dea9", err);
             res.status(500).json({
@@ -23,8 +24,8 @@ export class TaskController {
     }
     async getTaskByIdController(req, res) {
         try {
-            let token = getToken(req);
-            let id_user = (await this.userService.getUserId(token)).id;
+            const token = getToken(req);
+            const id_user = (await this.userService.getUserByToken(token)).id;
             const id = req.params.id;
             res.json((await this.taskService.getOne(id_user, id)) ?? {});
         } catch (err) {
@@ -36,8 +37,8 @@ export class TaskController {
     }
     async createTaskController(req, res) {
         try {
-            let token = getToken(req);
-            let id_user = (await this.userService.getUserId(token)).id;
+            const token = getToken(req);
+            const id_user = (await this.userService.getUserByToken(token)).id;
             let newTask = req.body;
             res.json((await this.taskService.create(id_user, newTask)) ?? {});
         } catch (err) {
@@ -49,8 +50,8 @@ export class TaskController {
     }
     async updateTaskController(req, res) {
         try {
-            let token = getToken(req);
-            let id_user = (await this.userService.getUserId(token)).id;
+            const token = getToken(req);
+            const id_user = (await this.userService.getUserByToken(token)).id;
             const id = req.params.id;
             const updateTask = req.body;
             res.json((await this.taskService.update(id_user, updateTask)) ?? {});
@@ -63,8 +64,8 @@ export class TaskController {
     }
     async deleteTaskController(req, res) {
         try {
-            let token = getToken(req);
-            let id_user = (await this.userService.getUserId(token)).id;
+            const token = getToken(req);
+            const id_user = (await this.userService.getUserByToken(token)).id;
             let id = req.params.id;
             console.log("id", id);
             const result = await this.taskService.delete(id_user, id);

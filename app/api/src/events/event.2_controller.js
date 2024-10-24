@@ -1,3 +1,4 @@
+import { getToken } from "../common/getToken.js";
 export class EventController {
     constructor(EventService, UserService) {
         this.eventService = EventService;
@@ -14,7 +15,9 @@ export class EventController {
 
     async getAllEventsController(req, res) {
         try {
-            res.json((await this.eventService.getAll()) ?? []);
+            const token = getToken(req);
+            const id_user = (await this.userService.getUserByToken(token)).id;
+            res.json((await this.eventService.getAll(id_user)) ?? []);
         } catch (err) {
             console.error(err);
             res.status(500).json({
@@ -24,8 +27,10 @@ export class EventController {
     }
     async getEventByIdController(req, res) {
         try {
+            const token = getToken(req);
+            const id_user = (await this.userService.getUserByToken(token)).id;
             const id = req.params.id;
-            res.json((await this.eventService.getOne(id)) ?? {});
+            res.json((await this.eventService.getOne(id_user, id)) ?? {});
         } catch (err) {
             console.error(err);
             res.status(500).json({
@@ -36,7 +41,10 @@ export class EventController {
     async createEventController(req, res) {
         try {
             let newEvent = req.body;
-            res.json((await this.eventService.create(newEvent)) ?? {});
+            const token = getToken(req);
+            const id_user = (await this.userService.getUserByToken(token)).id;
+            newEvent.id_user = id_user;
+            res.json((await this.eventService.create(id_user, newEvent)) ?? {});
         } catch (err) {
             console.error(err);
             res.status(500).json({
@@ -46,9 +54,11 @@ export class EventController {
     }
     async updateEventController(req, res) {
         try {
+            const token = getToken(req);
+            const id_user = (await this.userService.getUserByToken(token)).id;
             const id = req.params.id;
             const updateEvent = req.body;
-            const updateStatus = await this.eventService.update(id, updateEvent);
+            const updateStatus = await this.eventService.update(id_user, id, updateEvent);
             if (!updateStatus) {
                 res.status(404).json({
                     update: false,
@@ -65,8 +75,10 @@ export class EventController {
     }
     async deleteEventController(req, res) {
         try {
+            const token = getToken(req);
+            const id_user = (await this.userService.getUserByToken(token)).id;
             let id = req.params.id;
-            const result = await this.eventService.delete(id);
+            const result = await this.eventService.delete(id_user, id);
             if (!result) {
                 res.status(404).json({ delete: false, id });
                 return;
