@@ -29,7 +29,6 @@ export async function apiUserRegister(email, password, username) {
 }
 
 export async function apiGetUsers() {
-    console.log("token", token_AuthService);
     const response = await fetchApi("users", "GET");
     return response.json();
 }
@@ -126,7 +125,6 @@ export async function apiLogin(email, password) {
 }
 
 async function fetchApi(url, method, data) {
-    console.log("fetchApi: ", apiUrl + url, method, data ?? "");
     return fetch(apiUrl + url, {
         method: method,
         headers: {
