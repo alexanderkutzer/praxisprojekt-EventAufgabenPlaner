@@ -290,7 +290,7 @@ function PageMain() {
                             <h3 className="text-xl font-bold">{selectedEvent.title}</h3>
                             <p>Start Datum: {selectedEvent.start}</p>
                             <p>End Datum: {selectedEvent.end}</p>
-                            <p>{selectedEvent.description}</p>
+                            <p>Event Details: {selectedEvent.description}</p>
                             <Button onClick={startEditing}>Bearbeiten</Button>
                             <Button onClick={() => switchContent("EventOverview")}>Abbrechen</Button>
                         </div>
@@ -432,6 +432,8 @@ function PageMain() {
                                             {formatDate(event.start)} {formatTime(event.start)}{" "}
                                             {event.end && `bis ${formatDate(event.end)} ${formatTime(event.end)}`}
                                         </span>
+
+                                        
                                         <button
                                             onClick={() => {
                                                 let newShow = eventTaskShow.map((e) => {
