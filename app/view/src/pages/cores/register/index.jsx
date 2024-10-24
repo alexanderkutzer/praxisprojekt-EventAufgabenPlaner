@@ -92,11 +92,12 @@ function RegisterPage({ setMenu }) {
                     />
                 </div>
             </div>
-            <div>
-                <Button onClick={() => onClickRegister()}>Registrieren</Button>
-                <Button onClick={() => onClickCancel()}>Abbruch</Button>
+            <div className="flex w-full">
+                <Button className={"w-full"} onClick={() => onClickRegister()}>
+                    Registrieren
+                </Button>
             </div>
-            <div className="flex items-center">
+            <div className="flex items-center text-sm gap-2">
                 <div>Doch schon registriert, dann zum </div>
                 <Button onClick={() => onClickLogin()}>Login</Button>
             </div>

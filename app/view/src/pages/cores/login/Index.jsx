@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { apiUserLogin } from "../../../service/api_calls";
 import Button from "../../../components/Button";
@@ -73,19 +72,23 @@ function LoginPage({ setMenu, setFingerMenu }) {
                     }}
                 />
             </div>
-            <div className="flex justify-between w-4/5">
-                <Button
+            <div className="flex w-4/5">
+                {/* <Button
                     onClick={() => {
                         setEmail("");
                         setPassword("");
                     }}
                 >
                     Felder leeren
+                </Button> */}
+                <Button className={"w-full mx-3"} onClick={() => onClickLogin()}>
+                    Login
                 </Button>
-                <Button onClick={() => onClickLogin()}>Login</Button>
             </div>
-            <div className="w-4/5 border border-gray-500 py-3 rounded text-center shadow-sm shadow-black">
-                Noch nicht registriert? <Button onClick={() => onClickRegister()}>Konto erstellen</Button>
+            <div className="flex w-4/5 ">
+                <div className="text-sm flex w-full items-center gap-2 border border-gray-500 mx-3 py-2 px-4 rounded text-center shadow-sm shadow-black">
+                    Noch nicht registriert? <Button onClick={() => onClickRegister()}>Konto erstellen</Button>
+                </div>
             </div>
             <p>
                 <br />

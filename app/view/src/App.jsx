@@ -9,6 +9,8 @@ import PageAdmin from "./pages/admin/Index";
 import ProfilePage from "./pages/cores/profil/index.jsx";
 import PageDevelop from "./pages/develop/index";
 import RegisterPage from "./pages/cores/register/index.jsx";
+import PageMain2 from "./pages/main/Index2.jsx";
+import ButtonLightDark from "./components/ButtonLightDark.jsx";
 
 export function App() {
     const { isLoggedIn_AuthService, setToken_AuthService } = useAuth();
@@ -36,18 +38,19 @@ export function App() {
     };
 
     return (
-        <div className="mx-16 dark:text-gray-200">
+        <div className="mx-16 dark:text-[#0b0a22]">
             <div className="fixed left-1">
                 <ButtonFingerprint
                     onClick={() => {
-                        console.log(isLoggedIn_AuthService);
                         setFingerMenu(fingerMenu == "start" ? "usermenu" : "start");
                     }}
                     className=" w-14 h-14 fill-gray-200 dark:fill-gray-800 hover:fill-gray-800 dark:hover:fill-gray-200"
                 ></ButtonFingerprint>
             </div>
             <div id="nav" className="fixed right-1 ">
-                <DarkModeSwitch checked={isDarkMode} onChange={toggleDarkMode} size={30} />
+                <ButtonLightDark className={" w-14 h-14 "}>
+                    <DarkModeSwitch checked={isDarkMode} onChange={toggleDarkMode} size={30} moonColor="gray" sunColor="yellow" />
+                </ButtonLightDark>
             </div>
             <div className="flex flex-col items-center mt-4">
                 <div id="main" className="w-full flex flex-col items-center">

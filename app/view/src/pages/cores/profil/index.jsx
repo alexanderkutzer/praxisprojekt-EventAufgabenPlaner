@@ -21,8 +21,7 @@ function ProfilePage({ setMenu }) {
     useEffect(() => {
         const fetchData = async () => {
             let response = await apiUserByToken(token_AuthService);
-            console.log("email", response.email);
-            console.log("username", response.username);
+
             setCurrentEmail(response.email);
             setNewUsername(response.username);
         };
@@ -43,7 +42,6 @@ function ProfilePage({ setMenu }) {
             setConfirmNewUsername("");
         }
 
-        console.log("Profile updated:", response);
         setActiveSection("");
     };
 

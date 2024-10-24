@@ -67,7 +67,7 @@ export class TaskController {
             const token = getToken(req);
             const id_user = (await this.userService.getUserByToken(token)).id;
             let id = req.params.id;
-            console.log("id", id);
+
             const result = await this.taskService.delete(id_user, id);
             if (!result) {
                 res.status(404).json({ delete: false, id: id });

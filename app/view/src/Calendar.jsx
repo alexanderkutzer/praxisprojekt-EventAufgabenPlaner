@@ -16,7 +16,6 @@ export default function Calendar({ events, onDateClick, onEventClick, onDateSele
         onDateSelect({ start: info.startStr, end: info.endStr });
     };
     const handleEventClick = (info) => {
-        console.log(info.event);
         if (onEventClick) {
             onEventClick(info);
         }
@@ -44,6 +43,9 @@ export default function Calendar({ events, onDateClick, onEventClick, onDateSele
             select={handleSelect}
             selectable={true}
             //locale={de}
+            eventDisplay="block"
+            displayEventTime={false}
+            displayEventEnd={false}
         />
     );
 }
