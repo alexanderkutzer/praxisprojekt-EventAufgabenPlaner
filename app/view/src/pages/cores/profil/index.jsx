@@ -16,14 +16,14 @@ function ProfilePage({ setMenu }) {
 
     const [currentUsername, setCurrentUsername] = useState("");
     const [newUsername, setNewUsername] = useState("");
-    const [confirmNewUsername, setConfirmNewUsername] = useState("");
+    //const [confirmNewUsername, setConfirmNewUsername] = useState("");
 
     useEffect(() => {
         const fetchData = async () => {
             let response = await apiUserByToken(token_AuthService);
 
             setCurrentEmail(response.email);
-            setNewUsername(response.username);
+            setCurrentUsername(response.username);
         };
         fetchData();
     }, [token_AuthService]);
@@ -37,9 +37,9 @@ function ProfilePage({ setMenu }) {
         }
         if (activeSection == "username") {
             response = await apiUpdateUserUsername(token_AuthService, newUsername);
-            setCurrentUsername("");
-            setNewUsername("");
-            setConfirmNewUsername("");
+            //setCurrentUsername("");
+            //setNewUsername("");
+            //setConfirmNewUsername("");
         }
 
         setActiveSection("");
@@ -51,7 +51,14 @@ function ProfilePage({ setMenu }) {
                 &times;
             </button>
 
-            <h2 className="text-xl font-bold mb-4">Edit Profile</h2>
+            <h2 className="text-xl font-bold mb-4 text-lg">Edit Profile</h2>
+            {activeSection === "" && (
+            <div className="mb-4 text-gray-600 text-lg">
+              <p>
+                {currentUsername ||currentEmail}
+              </p>
+              </div>
+            )}
 
             {activeSection === "" && (
                 <div className="flex gap-2">
@@ -115,33 +122,17 @@ function ProfilePage({ setMenu }) {
             {activeSection === "username" && (
                 <>
                     <h3 className="text-lg font-semibold mb-4">Username</h3>
-                    <div className="mb-4">
-                        <input
-                            type="text"
-                            value={currentUsername}
-                            onChange={(e) => setCurrentUsername(e.target.value)}
-                            className="w-full border px-3 py-2 rounded-md"
-                            placeholder="Current username"
-                        />
-                    </div>
+                    <div>{currentUsername}</div>
                     <div className="mb-4">
                         <input
                             type="text"
                             value={newUsername}
                             onChange={(e) => setNewUsername(e.target.value)}
                             className="w-full border px-3 py-2 rounded-md"
-                            placeholder="New username"
+                            placeholder="new username"
                         />
                     </div>
-                    <div className="mb-4">
-                        <input
-                            type="text"
-                            value={confirmNewUsername}
-                            onChange={(e) => setConfirmNewUsername(e.target.value)}
-                            className="w-full border px-3 py-2 rounded-md"
-                            placeholder="Confirm new username"
-                        />
-                    </div>
+                   
                 </>
             )}
 
