@@ -26,7 +26,6 @@ function LoginPage({ setMenu, setFingerMenu }) {
         }
     }, [isLoggedIn_AuthService]);
     return (
-<<<<<<< HEAD
         <div className="container flex flex-col md:mt-40 items-center justify-center space-y-4 p-4 border border-gray-300 rounded-lg shadow-lg max-w-md mx-auto">
             <p className="text-xl font-bold">Login</p>
             <h2 className="text-xl ">Wilkommen!</h2>
@@ -42,44 +41,6 @@ function LoginPage({ setMenu, setFingerMenu }) {
                             onClickLogin();
                         }
                         if (event.key === "Escape") {
-=======
-                <div
-                    className="container flex flex-col items-center justify-center space-y-4 p-4 border border-gray-300 rounded-lg shadow-lg max-w-md mx-auto"
-                    style={{ marginTop: "10vh" }}
-                >
-                    <h2>Wilkommen!</h2>
-                    <p>Login</p>
-                    <div className="mb-3 space-x-2">
-                        <label htmlFor="email" className="form-label">
-                            Email
-                        </label>
-                        <input
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            type="email"
-                            className="form-control p-1,5 border rounded"
-                            id="email"
-                        />
-                    </div>
-
-                    <div className="mb-3 space-x-2">
-                        <label htmlFor="password" className="form-label">
-                            Passwort
-                        </label>
-                        <input
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            type="password"
-                            className="form-control p-1,5 border rounded"
-                            id="password"
-                        />
-                    </div>
-                    <Button onClick={() => onClickLogin()} >
-                        Login
-                    </Button>
-                    <Button
-                        onClick={() => {
->>>>>>> main
                             setEmail("");
                             setPassword("");
                         }
