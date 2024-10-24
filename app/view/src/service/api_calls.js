@@ -110,13 +110,13 @@ export async function apiCreateTask(data) {
     return response.json();
 }
 
-export async function apiUpdateTask(data) {
+export async function apiUpdateTask(id, data) {
     const response = await fetchApi(`tasks`, "PUT", data);
     return response.json();
 }
 
-export async function apiDeleteTask(data) {
-    const response = await fetchApi(`tasks`, "DELETE", data);
+export async function apiDeleteTask(id) {
+    const response = await fetchApi(`tasks/${id == "" ? "noId" : id}`, "DELETE");
     return response.json();
 }
 
