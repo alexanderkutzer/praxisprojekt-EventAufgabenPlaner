@@ -5,32 +5,32 @@ import { useAuth } from "../../service/authStatus.jsx";
 import { apiGetEvents, apiGetTasks, apiCreateEvent, apiCreateTask, apiUpdateEvent } from "../../service/api_calls.js";
 
 function PageMain() {
-    const { isLoggedIn_AuthService, token_AuthService, setToken_AuthService } = useAuth();
+    const { isLoggedIn_AuthService, setIsLoggedIn_AuthService, token_AuthService, setToken_AuthService } = useAuth();
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString());
     const [selectedEvent, setSelectedEvent] = useState(null);
-    const [id_user_maintainer, setIdUserMaintainer] = useState("");
+    const [id_user, setIdUser] = useState("");
     const [selectedEventForTask, setSelectedEventForTask] = useState(""); // Für das Dropdown der Events
 
-    const [events, setEvents] = useState([
-        { id: 1, title: "Team Meeting", start: "2024-10-25", end: "2024-10-28T12:00:00", extendedProps: { description: "Description for Event 1" } },
-        { id: 2, title: "Event 2", start: "2024-10-15", extendedProps: { description: "Description for Event 2" } },
-        { id: 3, title: "Event 3", start: "2024-10-20", extendedProps: { description: "Description for Event 3" } },
-        { id: 4, title: "Event 4", start: "2024-10-20", extendedProps: { description: "Description for Event 4" } },
-    ]);
-    const [tasks, setTask] = useState([
-        { id: 1, id_event: 1, user_id: "", title: "TestTask 1", description: "Test Descripten Task 1", todo: 0, inProgress: 0, done: 0 },
-        { id: 2, id_event: 1, user_id: "", title: "TestTask 2", description: "Test Descripten Task 2", todo: 0, inProgress: 0, done: 0 },
-        { id: 3, id_event: 1, user_id: "", title: "TestTask 3", description: "Test Descripten Task 3", todo: 0, inProgress: 0, done: 0 },
-        { id: 4, id_event: 2, user_id: "", title: "TestTask 3", description: "Test Descripten Task 3", todo: 0, inProgress: 0, done: 0 },
-        { id: 5, id_event: 3, user_id: "", title: "TestTask 3", description: "Test Descripten Task 3", todo: 0, inProgress: 0, done: 0 },
-        { id: 6, id_event: 3, user_id: "", title: "TestTask 3", description: "Test Descripten Task 3", todo: 0, inProgress: 0, done: 0 },
-        { id: 7, id_event: 4, user_id: "", title: "TestTask 4", description: "Test Descripten Task 3", todo: 0, inProgress: 0, done: 0 },
-    ]);
+    const [events, setEvents] = useState([]);
+    const [tasks, setTask] = useState([]);
 
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const events = await apiGetEvents();
+                const response = await apiGetEvents();
+                if (response.error) {
+                    if (response.error === "Invalid token") {
+                        console.error("Token abgelaufen");
+                        setToken_AuthService(null);
+                        setIsLoggedIn_AuthService(false);
+                        return;
+                    }
+                    console.error("Fehler beim Abrufen der Events", response.error);
+                    return;
+                }
+                const events = response;
+                console.log("Events: ", events);
+
                 events.forEach((event) => {
                     event.start = event.startDateTime;
                     event.end = event.endDateTime;
@@ -52,7 +52,12 @@ function PageMain() {
     useEffect(() => {
         const fetchTasks = async () => {
             try {
-                const tasks = await apiGetTasks();
+                const response = await apiGetTasks();
+                if (response.error) {
+                    console.log("Fehler beim Abrufen der Tasks", response.error);
+                    return;
+                }
+                const task = response.tasks;
                 console.log("Tasks: ", tasks);
                 setTask(tasks);
             } catch (error) {
@@ -184,7 +189,7 @@ function PageMain() {
                     description: inputValues.description,
                     startDateTime: inputValues.startDate,
                     endDateTime: inputValues.endDate || null,
-                    id_user_maintainer: id_user_maintainer, // Dieser Wert muss definiert sein
+                    id_user: id_user, // Dieser Wert muss definiert sein
                 };
                 await apiUpdateEvent(updatedEvent.id, updatedEvent); // Sende das aktualisierte Event an die API
                 setEvents(events.map((event) => (event.id === selectedEvent.id ? updatedEvent : event)));
@@ -196,7 +201,7 @@ function PageMain() {
                     description: inputValues.description,
                     startDateTime: inputValues.startDate,
                     endDateTime: inputValues.endDate || inputValues.startDate,
-                    id_user_maintainer: id_user_maintainer, // Dieser Wert muss definiert sein
+                    id_user: id_user, // Dieser Wert muss definiert sein
                 };
                 console.log(newEvent.startDateTime);
                 let createdEvent = await apiCreateEvent(newEvent); // API-Call zum Erstellen eines neuen Events
@@ -266,7 +271,7 @@ function PageMain() {
 
     return (
         <>
-            <div>
+            <div className="flex gap-2">
                 <Button onClick={() => switchContent("EventOverview")}>Event Übersicht</Button>
                 <Button onClick={() => switchContent("AddEvent")}>Neues Event</Button>
                 <Button onClick={() => switchContent("AddTask")}>Neue Aufgabe</Button>
@@ -437,27 +442,27 @@ function PageMain() {
                                             <div className="space-x-2">
                                                 {/* Menu */}
                                                 {/* Status-Buttons */}
-                                                <div class="relative inline-block group">
+                                                <div className="relative inline-block group">
                                                     <button className="bg-red-700 hover:bg-red-200 text-gray-200 hover:text-gray-600 h-6 w-6 rounded-full">
                                                         s
                                                     </button>
-                                                    <div class="invisible absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-800 text-white text-xs rounded px-2 py-1 mt-2 group-hover:visible group-hover:opacity-100 opacity-0 transition-opacity duration-300">
+                                                    <div className="invisible absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-800 text-white text-xs rounded px-2 py-1 mt-2 group-hover:visible group-hover:opacity-100 opacity-0 transition-opacity duration-300">
                                                         ToDo
                                                     </div>
                                                 </div>
-                                                <div class="relative inline-block group">
+                                                <div className="relative inline-block group">
                                                     <button className="bg-yellow-500 hover:bg-yellow-200 text-gray-200 hover:text-gray-600 h-6 w-6 rounded-full">
                                                         s
                                                     </button>
-                                                    <div class="invisible absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-800 text-white text-xs rounded px-2 py-1 mt-2 group-hover:visible group-hover:opacity-100 opacity-0 transition-opacity duration-300">
+                                                    <div className="invisible absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-800 text-white text-xs rounded px-2 py-1 mt-2 group-hover:visible group-hover:opacity-100 opacity-0 transition-opacity duration-300">
                                                         In Progress
                                                     </div>
                                                 </div>
-                                                <div class="relative inline-block group">
+                                                <div className="relative inline-block group">
                                                     <button className="bg-green-600 hover:bg-green-200 text-gray-200 hover:text-gray-600 h-6 w-6 rounded-full">
                                                         s
                                                     </button>
-                                                    <div class="invisible absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-800 text-white text-xs rounded px-2 py-1 mt-2 group-hover:visible group-hover:opacity-100 opacity-0 transition-opacity duration-300">
+                                                    <div className="invisible absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-800 text-white text-xs rounded px-2 py-1 mt-2 group-hover:visible group-hover:opacity-100 opacity-0 transition-opacity duration-300">
                                                         Done!
                                                     </div>
                                                 </div>
