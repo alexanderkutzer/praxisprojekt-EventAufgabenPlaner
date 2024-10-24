@@ -284,7 +284,7 @@ function PageMain() {
                     />
                 </div>
 
-                <div className="w-full sm:w-1/2 max-w-[50%] p-4">
+                <div className="w-full sm:w-1/2 max-w-[50%] min-w-96 border border-gray-300 p-4 rounded-lg shadow-lg">
                     {selectedEvent && activeContent === "Details" ? (
                         <div className="p-4 border border-gray-300 rounded-lg shadow-lg">
                             <h3 className="text-xl font-bold">{selectedEvent.title}</h3>
@@ -429,32 +429,36 @@ function PageMain() {
                             <ul className="space-y-4">
                                 {events.map((event) => (
                                     <li key={event.id} className="p-4 border border-gray-300 rounded-lg shadow-md">
-                                        <span className="font-semibold text-lg cursor-pointer" onClick={() => handleEventClick({ event })}>
-                                            {event.title}
-                                        </span>
-                                        <div className="space-x-2">
-                                            <div class="relative inline-block group">
-                                                <button className="bg-red-700 hover:bg-red-200 text-gray-200 hover:text-gray-600 h-6 w-6 rounded-full">
-                                                    s
-                                                </button>
-                                                <div class="invisible absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-800 text-white text-xs rounded px-2 py-1 mt-2 group-hover:visible group-hover:opacity-100 opacity-0 transition-opacity duration-300">
-                                                    ToDo
+                                        <div className="flex justify-between">
+                                            <span className="font-semibold text-lg cursor-pointer" onClick={() => handleEventClick({ event })}>
+                                                {event.title}
+                                            </span>
+                                            <div className="space-x-2">
+                                                {/* Menu */}
+                                                {/* Status-Buttons */}
+                                                <div class="relative inline-block group">
+                                                    <button className="bg-red-700 hover:bg-red-200 text-gray-200 hover:text-gray-600 h-6 w-6 rounded-full">
+                                                        s
+                                                    </button>
+                                                    <div class="invisible absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-800 text-white text-xs rounded px-2 py-1 mt-2 group-hover:visible group-hover:opacity-100 opacity-0 transition-opacity duration-300">
+                                                        ToDo
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="relative inline-block group">
-                                                <button className="bg-yellow-500 hover:bg-yellow-200 text-gray-200 hover:text-gray-600 h-6 w-6 rounded-full">
-                                                    s
-                                                </button>
-                                                <div class="invisible absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-800 text-white text-xs rounded px-2 py-1 mt-2 group-hover:visible group-hover:opacity-100 opacity-0 transition-opacity duration-300">
-                                                    In Progress
+                                                <div class="relative inline-block group">
+                                                    <button className="bg-yellow-500 hover:bg-yellow-200 text-gray-200 hover:text-gray-600 h-6 w-6 rounded-full">
+                                                        s
+                                                    </button>
+                                                    <div class="invisible absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-800 text-white text-xs rounded px-2 py-1 mt-2 group-hover:visible group-hover:opacity-100 opacity-0 transition-opacity duration-300">
+                                                        In Progress
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="relative inline-block group">
-                                                <button className="bg-green-600 hover:bg-green-200 text-gray-200 hover:text-gray-600 h-6 w-6 rounded-full">
-                                                    s
-                                                </button>
-                                                <div class="invisible absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-800 text-white text-xs rounded px-2 py-1 mt-2 group-hover:visible group-hover:opacity-100 opacity-0 transition-opacity duration-300">
-                                                    Done!
+                                                <div class="relative inline-block group">
+                                                    <button className="bg-green-600 hover:bg-green-200 text-gray-200 hover:text-gray-600 h-6 w-6 rounded-full">
+                                                        s
+                                                    </button>
+                                                    <div class="invisible absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-800 text-white text-xs rounded px-2 py-1 mt-2 group-hover:visible group-hover:opacity-100 opacity-0 transition-opacity duration-300">
+                                                        Done!
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -487,7 +491,7 @@ function PageMain() {
                                         </button>
                                         <div
                                             className={
-                                                eventTaskShow.length > 0 && eventTaskShow.filter((ets) => ets.id === event.id)[0].show ? " " : " hidden "
+                                                eventTaskShow.length > 0 && eventTaskShow.filter((ets) => ets.id === event.id)[0]?.show ? " " : " hidden "
                                             }
                                         >
                                             {tasks
