@@ -36,12 +36,10 @@ function UserEdit({ selectedUser, setSelectedUser, users, setUsers }) {
     async function onClickSave() {
         setSelectedUser({ ...selectedUser, email, username, isActive, isAdmin });
         let response = await apiUpdateUser(selectedUser.id, { email, username, isActive, isAdmin });
-        console.log(response);
     }
 
     async function onConfirmDelete() {
         const response = await apiDeleteUser(selectedUser.id);
-        console.log(response);
 
         const remainingUsers = users.filter((user) => user.id !== selectedUser.id);
         setUsers(remainingUsers);
