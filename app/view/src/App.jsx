@@ -74,8 +74,8 @@ export function App() {
                             onLoginClick={() => setShowLogin(true)}    
                         ></StartPage>
                     )}
-                    {!isLoggedIn_AuthService && showLogin && <LoginPage setMenu={setMenu}></LoginPage>}
-                    {!isLoggedIn_AuthService && menu == "register" && <RegisterPage setMenu={setMenu}></RegisterPage>}
+                    {!isLoggedIn_AuthService && showLogin && menu !== "register" && (<LoginPage setMenu={setMenu}></LoginPage>)}
+                    {!isLoggedIn_AuthService && menu  == "register" && <RegisterPage setMenu={setMenu}></RegisterPage>}
                     {isLoggedIn_AuthService && fingerMenu == "start" && <PageMain></PageMain>}
                     {isLoggedIn_AuthService && fingerMenu == "usermenu" && (
                         <div className="flex flex-row items-center gap-2 mb-2">
