@@ -15,6 +15,12 @@ function PageMain() {
     const [selectedDate, setSelectedDate] = useState(new Date().setHours(0, 0, 0, 0));
     const [selectedDateForInputs, setSelectedDateForInputs] = useState("");
     const [selectedEvent, setSelectedEvent] = useState(null);
+    // const [selectedEvent, setSelectedEvent] = useState({
+    //     id: "",
+    //     title: "",
+    //     start: "",
+    //     end: "",
+    // });
     const [id_user, setIdUser] = useState("");
     const [selectedEventForTask, setSelectedEventForTask] = useState(""); // Für das Dropdown der Events
     const [menuSesitive, setMenuSensitive] = useState("");
@@ -90,8 +96,8 @@ function PageMain() {
     }, []);
 
     useEffect(() => {
-        let date = new Date(selectedDate);
-        let inputDate = date.getDay().toString().padStart(2, "0") + "." + (date.getMonth() + 1).toString().padStart(2, "0") + "." + date.getFullYear();
+        let date = new Date(parseInt(selectedDate));
+        let inputDate = date.getDate().toString().padStart(2, "0") + "." + (date.getMonth() + 1).toString().padStart(2, "0") + "." + date.getFullYear();
         setSelectedDateForInputs(inputDate);
         inputValues.startDateUnix = selectedDateForInputs;
         inputValues.endDateUnix = selectedDateForInputs;
@@ -145,14 +151,18 @@ function PageMain() {
 
     const onDateSelect = ({ start, end }) => {};
 
-    const handleEventClick = (info) => {
+    const handleEventClick = ({ event }) => {
+        console.log("Event clicked", event);
+        if (selectedEvent) {
+            setSelectedEvent(null);
+            return;
+        }
         setSelectedEvent({
-            id: info.event.id,
-            title: info.event.title,
-            start: info.event.startStr,
-            end: info.event.endStr,
+            id: event.id,
+            title: event.title,
+            start: event.startStr,
+            end: event.endStr,
         });
-        setActiveContent("Details");
     };
 
     const handleInputChange = (event) => {
@@ -299,11 +309,12 @@ function PageMain() {
     return (
         <>
             <div>
-                <div>{selectedDate}</div>
-                <div>{selectedDateForInputs}</div>
-                <div>{menuSesitive}</div>
-                <div>{activeContent}</div>
-                <div>{JSON.stringify(inputValues)}</div>
+                <div>selectedDate:{selectedDate}</div>
+                <div>selectedDateForInputs:{selectedDateForInputs}</div>
+                <div>menuSesitive:{menuSesitive}</div>
+                <div>activeContent:{activeContent}</div>
+                <div>selectedEvent:{JSON.stringify(selectedEvent)}</div>
+                <div>inputValues:{JSON.stringify(inputValues)}</div>
                 <Button onClick={() => setMenuSensitive(menuSesitive != "date" ? "date" : "")}>Select a Date</Button>
                 <Button onClick={() => setMenuSensitive(menuSesitive != "task" ? "task" : "")}>Select a Task</Button>
                 <Button onClick={() => setMenuSensitive(menuSesitive != "tasks" ? "tasks" : "")}>Selected Tasks</Button>
@@ -367,7 +378,7 @@ function PageMain() {
                             </div>
                         )}
                     </div>
-                    {selectedEvent && activeContent === "Details" ? (
+                    {activeContent === "Details" ? (
                         <div className="p-4 border border-gray-300 rounded-lg shadow-lg">
                             <h3 className="text-xl font-bold">{selectedEvent.title}</h3>
                             <p>Start Datum: {selectedEvent.start}</p>
@@ -430,6 +441,7 @@ function PageMain() {
                         <EventList
                             testpercentage={testpercentage}
                             events={events}
+                            selectedEvent={selectedEvent}
                             handleEventClick={handleEventClick}
                             formatDate={formatDate}
                             formatTime={formatTime}

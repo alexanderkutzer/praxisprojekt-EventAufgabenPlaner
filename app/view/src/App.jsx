@@ -86,7 +86,7 @@ export function App() {
                     {!isLoggedIn_AuthService && menu == "register" && <RegisterPage setMenu={setMenu}></RegisterPage>}
                     {isLoggedIn_AuthService && fingerMenu == "start" && <PageMain></PageMain>}
                     {isLoggedIn_AuthService && fingerMenu == "usermenu" && (
-                        <div className="flex flex-row items-center gap-2 mb-2">
+                        <div className="flex flex-row items-center gap-2 mb-2 mt-20">
                             <Button
                                 onClick={() => {
                                     setMenu("profile");
