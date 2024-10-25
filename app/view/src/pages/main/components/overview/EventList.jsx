@@ -1,6 +1,17 @@
 import React from "react";
 
-function EventList({ events, handleEventClick, formatDate, formatTime, eventTaskShow, setEventTaskShow, tasks, toggleTaskSelection, isTaskSelected }) {
+function EventList({
+    testpercentage,
+    events,
+    handleEventClick,
+    formatDate,
+    formatTime,
+    eventTaskShow,
+    setEventTaskShow,
+    tasks,
+    toggleTaskSelection,
+    isTaskSelected,
+}) {
     return (
         <>
             <div>
@@ -16,6 +27,9 @@ function EventList({ events, handleEventClick, formatDate, formatTime, eventTask
                             <span className="text-gray-600 dark:text-gray-400 block">
                                 {formatDate(event.start)} {formatTime(event.start)} {event.end && `bis ${formatDate(event.end)} ${formatTime(event.end)}`}
                             </span>
+                            <div className="w-full h-1 bg-red-200">
+                                <div style={{ width: testpercentage + "%" }} className="h-1 bg-red-500"></div>
+                            </div>
                             <button
                                 onClick={() => {
                                     let newShow = eventTaskShow.map((e) => {
@@ -39,6 +53,7 @@ function EventList({ events, handleEventClick, formatDate, formatTime, eventTask
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 10l5 5 5-5" />
                                 </svg>
                             </button>
+
                             <div className={eventTaskShow.length > 0 && eventTaskShow.filter((ets) => ets.id === event.id)[0]?.show ? " " : " hidden "}>
                                 {tasks
                                     .filter((t) => t.id_event === event.id)
