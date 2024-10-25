@@ -6,6 +6,7 @@ import { useAuth } from "../../../service/authStatus";
 function ProfilePage({ setMenu }) {
     const { token_AuthService } = useAuth();
     const [activeSection, setActiveSection] = useState("");
+    const [isTestUser, setIsTestUser] = useState(false);
 
     const [currentEmail, setCurrentEmail] = useState("");
     const [newEmail, setNewEmail] = useState("");
@@ -16,18 +17,28 @@ function ProfilePage({ setMenu }) {
 
     const [currentUsername, setCurrentUsername] = useState("");
     const [newUsername, setNewUsername] = useState("");
-    //const [confirmNewUsername, setConfirmNewUsername] = useState("");
-
+    
     useEffect(() => {
         const fetchData = async () => {
             let response = await apiUserByToken(token_AuthService);
 
             setCurrentEmail(response.email);
             setCurrentUsername(response.username);
+            setIsTestUser(localStorage.getItem("isTestUser") === "true");
+            
+
+
+           
         };
         fetchData();
     }, [token_AuthService]);
+
     const handleSaveChanges = async () => {
+      if (isTestUser) {
+        alert("Test users cannot change their profile.");
+        setActiveSection("");
+        return;
+      }
         let response = false;
         if (activeSection == "email") {
             response = apiUpdateUserEmail(token_AuthService, newEmail);
@@ -37,9 +48,7 @@ function ProfilePage({ setMenu }) {
         }
         if (activeSection == "username") {
             response = await apiUpdateUserUsername(token_AuthService, newUsername);
-            //setCurrentUsername("");
-            //setNewUsername("");
-            //setConfirmNewUsername("");
+            
         }
 
         setActiveSection("");
