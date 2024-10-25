@@ -45,7 +45,7 @@ export function App() {
                     className=" w-14 h-14 fill-gray-200 dark:fill-gray-800 hover:fill-gray-800 dark:hover:fill-gray-200"
                 ></ButtonFingerprint>
             </div>
-            <div id="nav" className="fixed right-1 ">
+            <div id="nav" className="fixed right-1 mr-2">
                 <DarkModeSwitch checked={isDarkMode} onChange={toggleDarkMode} size={30} />
             </div>
             <div className="flex flex-col items-center mt-4">
