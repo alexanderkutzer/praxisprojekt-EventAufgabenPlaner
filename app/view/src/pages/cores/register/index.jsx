@@ -98,7 +98,7 @@ function RegisterPage({ setMenu }) {
                 </Button>
             </div>
             <div className="flex items-center text-sm gap-2">
-                <div>Doch schon registriert, dann zum </div>
+                <div>Hast du schon ein Konto? Zurück zu</div>
                 <Button onClick={() => onClickLogin()}>Login</Button>
             </div>
         </div>
