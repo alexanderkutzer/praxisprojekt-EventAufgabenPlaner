@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Button from "../../../components/Button";
 import { apiUserRegister } from "../../../service/api_calls";
+import Input from "../../../components/Input";
 
 function RegisterPage({ setMenu }) {
     const [email, setEmail] = useState("");
@@ -26,25 +27,79 @@ function RegisterPage({ setMenu }) {
         setMenu("login");
     }
     return (
-        <div className="container flex flex-col items-center justify-center space-y-4 p-4 border border-gray-300 rounded-lg shadow-lg max-w-md mx-auto">
-            <div className="flex flex-col gap-1">
+        <div className="container flex flex-col md:mt-40  items-center justify-center space-y-4 p-4 border border-gray-300 rounded-lg shadow-lg max-w-md mx-auto">
+            <div className="flex flex-col gap-2 w-full">
                 <p className="text-xl flex-col font-bold">Neues Konto Erstellen</p>
-                <label>Email </label>
-                <input onChange={(e) => setEmail(e.target.value)} value={email} type="text" name="" id="" className="form-control p-1,5 border rounded"/>
-                <label>Username </label>
-                <input onChange={(e) => setUsername(e.target.value)} value={username} type="text" name="" id="" className="form-control p-1,5 border rounded" />
+                <div className="flex w-full items-center">
+                    <label className="w-2/5">Email </label>
+                    <Input
+                        onChange={(e) => setEmail(e.target.value)}
+                        value={email}
+                        type="text"
+                        name=""
+                        id=""
+                        className=" w-3/5 form-control p-1,5 border rounded"
+                    />
+                </div>
+                <div className="flex w-full items-center">
+                    <label className="w-2/5">Username </label>
+                    <Input
+                        onChange={(e) => setUsername(e.target.value)}
+                        value={username}
+                        type="text"
+                        name=""
+                        id=""
+                        className=" w-3/5 form-control p-1,5 border rounded"
+                    />
+                </div>
 
-                <label>Passwort </label>
-
-                <input onChange={(e) => setpasswordA(e.target.value)} value={passwordA} type="password" name="" id="" className="form-control p-1,5 border rounded"/>
-                <label>Wiederholung </label>
-
-                <input onChange={(e) => setpasswordB(e.target.value)} value={passwordB} type="password" name="" id="" className="form-control p-1,5 border rounded"/>
+                <div className="flex w-full items-center">
+                    <label className="w-2/5">Passwort </label>
+                    <Input
+                        onChange={(e) => setpasswordA(e.target.value)}
+                        onKeyDown={(event) => {
+                            if (event.key === "Enter") {
+                                onClickRegister();
+                            }
+                            if (event.key === "Escape") {
+                                onClickCancel();
+                            }
+                        }}
+                        value={passwordA}
+                        type="password"
+                        name=""
+                        id=""
+                        className=" w-3/5 form-control p-1,5 border rounded"
+                    />
+                </div>
+                <div className="flex w-full items-center">
+                    <label className="w-2/5">Wiederholung </label>
+                    <Input
+                        onChange={(e) => setpasswordB(e.target.value)}
+                        onKeyDown={(event) => {
+                            if (event.key === "Enter") {
+                                onClickRegister();
+                            }
+                            if (event.key === "Escape") {
+                                onClickCancel();
+                            }
+                        }}
+                        value={passwordB}
+                        type="password"
+                        name=""
+                        id=""
+                        className=" w-3/5 form-control p-1,5 border rounded"
+                    />
+                </div>
             </div>
-            <div>
-            <Button onClick={() => onClickRegister()}>Registrieren</Button>
-            <Button onClick={() => onClickLogin()}>Login</Button>
-            <Button onClick={() => onClickCancel()}>Abbruch</Button>
+            <div className="flex w-full">
+                <Button className={"w-full"} onClick={() => onClickRegister()}>
+                    Registrieren
+                </Button>
+            </div>
+            <div className="flex items-center text-sm gap-2">
+                <div>Hast du schon ein Konto? Zurück zu</div>
+                <Button onClick={() => onClickLogin()}>Login</Button>
             </div>
         </div>
     );

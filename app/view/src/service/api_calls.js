@@ -1,6 +1,10 @@
+let token_AuthService = "";
 const public_ip = "";
 const apiUrl = "http://" + (public_ip === "" ? "localhost" : public_ip) + ":3000/api/v1/";
 
+export function setToken_ApiCalls(token) {
+    token_AuthService = token;
+}
 export async function apiUserLogin(email, password) {
     const response = await fetchApi("auth/login", "POST", { email, password });
     return response.json();
@@ -25,7 +29,6 @@ export async function apiUserRegister(email, password, username) {
 }
 
 export async function apiGetUsers() {
-    console.log(apiUrl);
     const response = await fetchApi("users", "GET");
     return response.json();
 }
@@ -122,11 +125,11 @@ export async function apiLogin(email, password) {
 }
 
 async function fetchApi(url, method, data) {
-    console.log("fetchApi: ", apiUrl + url, method, data ?? "");
     return fetch(apiUrl + url, {
         method: method,
         headers: {
             "Content-Type": "application/json",
+            Authorization: "Bearer " + token_AuthService,
         },
         body: JSON.stringify(data),
     });

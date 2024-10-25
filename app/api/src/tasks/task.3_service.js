@@ -4,24 +4,29 @@ export class TaskService {
         this.dbService = dbService;
         this.table = "tasks";
     }
-    async getAll() {
-        return this.dbService.getAll(this.table);
+    async getAll(id_user) {
+        const filter = { id_user };
+        return this.dbService.getAll(this.table, filter);
     }
-    async getOne(id) {
-        return this.dbService.getOne(this.table, id);
+    async getOne(id_user, id) {
+        const filter = { id_user };
+        return this.dbService.getOne(this.table, id, filter);
     }
-    async create(newTask) {
+    async create(id_user, newTask) {
+        const filter = { id_user };
         newTask.id = crypto.randomUUID();
-        let dbNewTask = this.dbService.create(this.table, newTask);
+        let dbNewTask = this.dbService.create(this.table, newTask, filter);
         if (!dbNewTask) {
             return { create: false, Task: {} };
         }
         return { create: true, Task: newTask };
     }
-    async update(id, data) {
-        return this.dbService.update(this.table, id, data);
+    async update(id_user, id, data) {
+        const filter = { id_user };
+        return this.dbService.update(this.table, id, data, filter);
     }
-    async delete(id) {
-        return this.dbService.delete(this.table, id);
+    async delete(id_user, id) {
+        const filter = { id_user };
+        return this.dbService.delete(this.table, id, filter);
     }
 }

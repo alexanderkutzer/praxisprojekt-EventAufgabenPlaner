@@ -18,18 +18,17 @@ const dbServiceSQLite3 = new DBServiceSqlite3("./data/db.sqlite3");
 
 const dbService = new DBService(dbServiceSQLite3);
 await dbService.init();
-
-const eventService = new EventService(dbService);
-const eventController = new EventController(eventService);
-const eventRouter = new EventRouter(eventController);
-
-const taskService = new TaskService(dbService);
-const taskController = new TaskController(taskService);
-const taskRouter = new TaskRouter(taskController);
-
 const userService = new UserService(dbService);
 const usersController = new UserController(userService);
-const userRouter = new UserRouter(usersController);
+const userRouter = new UserRouter(usersController, userService);
+
+const eventService = new EventService(dbService);
+const eventController = new EventController(eventService, userService);
+const eventRouter = new EventRouter(eventController, userService);
+
+const taskService = new TaskService(dbService);
+const taskController = new TaskController(taskService, userService);
+const taskRouter = new TaskRouter(taskController, userService);
 
 const authController = new AuthController(userService);
 const authRouter = new AuthRouter(authController);

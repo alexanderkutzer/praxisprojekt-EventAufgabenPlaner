@@ -3,7 +3,7 @@ import Button from "../../../components/Button";
 import { apiUserByToken, apiUpdateUserEmail, apiUpdateUserPassword, apiUpdateUserUsername } from "../../../service/api_calls";
 import { useAuth } from "../../../service/authStatus";
 
-function ProfileModal({ setMenu }) {
+function ProfilePage({ setMenu }) {
     const { token_AuthService } = useAuth();
     const [activeSection, setActiveSection] = useState("");
 
@@ -16,15 +16,14 @@ function ProfileModal({ setMenu }) {
 
     const [currentUsername, setCurrentUsername] = useState("");
     const [newUsername, setNewUsername] = useState("");
-    const [confirmNewUsername, setConfirmNewUsername] = useState("");
+    //const [confirmNewUsername, setConfirmNewUsername] = useState("");
 
     useEffect(() => {
         const fetchData = async () => {
             let response = await apiUserByToken(token_AuthService);
-            console.log("email", response.email);
-            console.log("username", response.username);
+
             setCurrentEmail(response.email);
-            setNewUsername(response.username);
+            setCurrentUsername(response.username);
         };
         fetchData();
     }, [token_AuthService]);
@@ -38,12 +37,11 @@ function ProfileModal({ setMenu }) {
         }
         if (activeSection == "username") {
             response = await apiUpdateUserUsername(token_AuthService, newUsername);
-            setCurrentUsername("");
-            setNewUsername("");
-            setConfirmNewUsername("");
+            //setCurrentUsername("");
+            //setNewUsername("");
+            //setConfirmNewUsername("");
         }
 
-        console.log("Profile updated:", response);
         setActiveSection("");
     };
 
@@ -53,10 +51,17 @@ function ProfileModal({ setMenu }) {
                 &times;
             </button>
 
-            <h2 className="text-xl font-bold mb-4">Edit Profile</h2>
+            <h2 className="text-xl font-bold mb-4 text-lg">Edit Profile</h2>
+            {activeSection === "" && (
+            <div className="mb-4 text-gray-600 text-lg">
+              <p>
+                {currentUsername ||currentEmail}
+              </p>
+              </div>
+            )}
 
             {activeSection === "" && (
-                <div>
+                <div className="flex gap-2">
                     <Button onClick={() => setActiveSection("email")}>Edit E-mail Address</Button>
 
                     <Button onClick={() => setActiveSection("password")}>Edit Password</Button>
@@ -117,33 +122,17 @@ function ProfileModal({ setMenu }) {
             {activeSection === "username" && (
                 <>
                     <h3 className="text-lg font-semibold mb-4">Username</h3>
-                    <div className="mb-4">
-                        <input
-                            type="text"
-                            value={currentUsername}
-                            onChange={(e) => setCurrentUsername(e.target.value)}
-                            className="w-full border px-3 py-2 rounded-md"
-                            placeholder="Current username"
-                        />
-                    </div>
+                    <div>{currentUsername}</div>
                     <div className="mb-4">
                         <input
                             type="text"
                             value={newUsername}
                             onChange={(e) => setNewUsername(e.target.value)}
                             className="w-full border px-3 py-2 rounded-md"
-                            placeholder="New username"
+                            placeholder="new username"
                         />
                     </div>
-                    <div className="mb-4">
-                        <input
-                            type="text"
-                            value={confirmNewUsername}
-                            onChange={(e) => setConfirmNewUsername(e.target.value)}
-                            className="w-full border px-3 py-2 rounded-md"
-                            placeholder="Confirm new username"
-                        />
-                    </div>
+                   
                 </>
             )}
 
@@ -155,4 +144,4 @@ function ProfileModal({ setMenu }) {
     );
 }
 
-export default ProfileModal;
+export default ProfilePage;

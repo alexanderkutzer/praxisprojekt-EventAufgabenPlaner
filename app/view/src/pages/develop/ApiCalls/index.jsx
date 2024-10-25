@@ -71,7 +71,6 @@ function DevelopApiCalls() {
     }, [email]);
 
     function recogniceResponse(res) {
-        console.log(res);
         setResponse(res);
         setResponse2(JSON.stringify(res, null, 2));
     }

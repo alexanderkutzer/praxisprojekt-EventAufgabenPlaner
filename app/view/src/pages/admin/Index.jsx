@@ -6,17 +6,11 @@ function PageAdmin() {
     const [menu, setMenu] = useState("dashboard");
     return (
         <div className="flex flex-col w-full">
-            <div className="flex flex-row justify-center">
-                <Button
-                    active={menu === "dashboard" ? "true" : "false"}
-                    onClick={() => setMenu("dashboard")}
-                >
+            <div className="flex flex-row justify-center gap-2">
+                <Button active={menu === "dashboard" ? "true" : "false"} onClick={() => setMenu("dashboard")}>
                     Dashboard
                 </Button>
-                <Button
-                    active={menu === "users" ? "true" : "false"}
-                    onClick={() => setMenu("users")}
-                >
+                <Button active={menu === "users" ? "true" : "false"} onClick={() => setMenu("users")}>
                     Users
                 </Button>
             </div>

@@ -1,19 +1,25 @@
 import React, { useState } from "react";
-import PageAdmin from "./pages/admin/Index";
-import PageMain from "./pages/main/Index.jsx";
-import Login from "./pages/cores/login/Index.jsx";
-import Button from "./components/Button.jsx";
-import PageDevelop from "./pages/develop/index.jsx";
 import { useAuth } from "./service/authStatus.jsx";
-import RegisterPage from "./pages/cores/register/index.jsx";
-import ProfileModal from "./pages/cores/profil/index.jsx";
 import ButtonFingerprint from "./components/ButtonFingerprint.jsx";
 import { DarkModeSwitch } from "react-toggle-dark-mode";
+import LoginPage from "./pages/cores/login/Index.jsx";
+import PageMain from "./pages/main/Index";
+import Button from "./components/Button.jsx";
+import PageAdmin from "./pages/admin/Index";
+import ProfilePage from "./pages/cores/profil/index.jsx";
+import PageDevelop from "./pages/develop/index";
+import RegisterPage from "./pages/cores/register/index.jsx";
+import PageMain2 from "./pages/main/Index2.jsx";
+import ButtonLightDark from "./components/ButtonLightDark.jsx";
+import StartPage from "./pages/start/index.jsx";
+import ButtonStart from "./components/ButtonStart.jsx";
 
 export function App() {
     const { isLoggedIn_AuthService, setToken_AuthService } = useAuth();
     const [fingerMenu, setFingerMenu] = useState("start");
     const [menu, setMenu] = useState("profile");
+    const [showLogin, setShowLogin] = useState(false);
+    
 
     const [isDarkMode, setDarkMode] = React.useState(false);
 
@@ -35,8 +41,12 @@ export function App() {
         });
     };
 
+    const navigateToHome = () => {
+        window.location.href = '/';
+    };
+
     return (
-        <div className="mx-16 dark:text-gray-200">
+        <div className="mx-16 dark:text-[#0b0a22]">
             <div className="fixed left-1">
                 <ButtonFingerprint
                     onClick={() => {
@@ -45,23 +55,30 @@ export function App() {
                     className=" w-14 h-14 fill-gray-200 dark:fill-gray-800 hover:fill-gray-800 dark:hover:fill-gray-200"
                 ></ButtonFingerprint>
             </div>
-            <div id="nav" className="fixed right-1 mr-2">
-                <DarkModeSwitch checked={isDarkMode} onChange={toggleDarkMode} size={30} />
+
+            <div className="fixed inset-x-0 flex items-center justify-center left-40 right-40">
+                <ButtonStart onClick={navigateToHome}></ButtonStart>
+            </div>
+
+            <div id="nav" className="fixed right-1 ">
+                <ButtonLightDark className={" w-14 h-14 "}>
+                    <DarkModeSwitch checked={isDarkMode} onChange={toggleDarkMode} size={30} moonColor="gray" sunColor="yellow" />
+                </ButtonLightDark>
             </div>
             <div className="flex flex-col items-center mt-4">
-                <div id="main" className="w-full flex flex-col items-center">
-                    {fingerMenu == "start" &&
-                        (!isLoggedIn_AuthService ? (
-                            menu != "register" ? (
-                                <Login setMenu={setMenu}></Login>
-                            ) : (
-                                <RegisterPage setMenu={setMenu}></RegisterPage>
-                            )
-                        ) : (
-                            <PageMain></PageMain>
-                        ))}
-                    {fingerMenu == "usermenu" && isLoggedIn_AuthService && (
-                        <div className="flex flex-row items-center">
+                <div id="main" className="w-full flex flex-col items-center mt-32">
+
+                    {!isLoggedIn_AuthService && !showLogin &&(
+                        <StartPage
+                            setMenu={setMenu}
+                            onLoginClick={() => setShowLogin(true)}    
+                        ></StartPage>
+                    )}
+                    {!isLoggedIn_AuthService && showLogin && menu !== "register" && (<LoginPage setMenu={setMenu}></LoginPage>)}
+                    {!isLoggedIn_AuthService && menu  == "register" && <RegisterPage setMenu={setMenu}></RegisterPage>}
+                    {isLoggedIn_AuthService && fingerMenu == "start" && <PageMain></PageMain>}
+                    {isLoggedIn_AuthService && fingerMenu == "usermenu" && (
+                        <div className="flex flex-row items-center gap-2 mb-2">
                             <Button
                                 onClick={() => {
                                     setMenu("profile");
@@ -97,12 +114,10 @@ export function App() {
                             </Button>
                         </div>
                     )}
-                    {fingerMenu == "usermenu" &&
-                        (!isLoggedIn_AuthService
-                            ? setFingerMenu("start")
-                            : (menu === "profile" && <ProfileModal setMenu={setMenu}></ProfileModal>) ||
-                              (menu === "admin" && <PageAdmin></PageAdmin>) ||
-                              (menu === "develop" && <PageDevelop></PageDevelop>))}
+
+                    {isLoggedIn_AuthService && fingerMenu == "usermenu" && menu === "admin" && <PageAdmin></PageAdmin>}
+                    {isLoggedIn_AuthService && fingerMenu == "usermenu" && menu === "develop" && <PageDevelop></PageDevelop>}
+                    {isLoggedIn_AuthService && fingerMenu == "usermenu" && menu === "profile" && <ProfilePage setMenu={setMenu}></ProfilePage>}
                 </div>
             </div>
         </div>

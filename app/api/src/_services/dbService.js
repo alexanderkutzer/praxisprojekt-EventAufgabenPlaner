@@ -1,7 +1,7 @@
 const sqls = [
     `CREATE TABLE IF NOT EXISTS events (
         id TEXT PRIMARY KEY,
-        id_user_maintainer TEXT,
+        id_user TEXT,
         title TEXT,
         description TEXT,
         startDateTime TEXT,
@@ -9,6 +9,7 @@ const sqls = [
     )`,
     `CREATE TABLE IF NOT EXISTS tasks (
         id TEXT PRIMARY KEY,
+        id_user TEXT,
         id_event TEXT,
         id_tasks_parent TEXT,
         title TEXT,
@@ -47,19 +48,19 @@ export class DBService {
         await this.dbServiceSystem.checkAndCreateTables(sqls);
         return true;
     }
-    async getAll(table) {
-        return await this.dbServiceSystem.getAll(table);
+    async getAll(table, filter) {
+        return await this.dbServiceSystem.getAll(table, filter);
     }
-    async getOne(table, id) {
-        return await this.dbServiceSystem.getOne(table, id);
+    async getOne(table, id, filter) {
+        return await this.dbServiceSystem.getOne(table, id, filter);
     }
-    async create(table, data) {
-        return await this.dbServiceSystem.create(table, data);
+    async create(table, data, filter) {
+        return await this.dbServiceSystem.create(table, data, filter);
     }
-    async update(table, id, data) {
-        return await this.dbServiceSystem.update(table, id, data);
+    async update(table, id, data, filter) {
+        return await this.dbServiceSystem.update(table, id, data, filter);
     }
-    async delete(table, id) {
-        return await this.dbServiceSystem.delete(table, id);
+    async delete(table, id, filter) {
+        return await this.dbServiceSystem.delete(table, id, filter);
     }
 }

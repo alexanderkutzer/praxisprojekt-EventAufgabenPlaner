@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-
+import { setToken_ApiCalls } from "./api_calls";
 // Erstelle den AuthContext
 const AuthContext = createContext();
 
@@ -19,9 +19,11 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         if (token_AuthService !== "") {
             localStorage.setItem("token", token_AuthService);
+            setToken_ApiCalls(token_AuthService);
             setIsLoggedIn_AuthService(true);
         } else {
             localStorage.removeItem("token");
+            setToken_ApiCalls("");
             setIsLoggedIn_AuthService(false);
         }
     }, [token_AuthService]);
