@@ -115,7 +115,7 @@ function CalendarOwn({ selectedDate, setSelectedDate, events }) {
     function setEventsInCalenderFromMonth(calBoxes, events) {
         let index = 0;
         events.forEach((event) => {
-            let date = new Date(event.start);
+            let date = new Date(parseInt(event.start));
             let day = date.getDate();
             let month = date.getMonth();
             let year = date.getFullYear();

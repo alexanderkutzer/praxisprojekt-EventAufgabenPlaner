@@ -2,31 +2,39 @@ import React, { useState, useRef, useEffect } from "react";
 import Calendar from "../../Calendar.jsx";
 import Button from "../../components/Button.jsx";
 import { useAuth } from "../../service/authStatus.jsx";
-import { apiGetEvents, apiGetTasks, apiCreateEvent, apiCreateTask, apiUpdateEvent } from "../../service/api_calls.js";
+import { apiGetEvents, apiGetTasks, apiCreateEvent, apiCreateTask, apiUpdateEvent, apiDeleteEvent } from "../../service/api_calls.js";
+import CalendarOwn from "./components/CalenderOwn.jsx";
+import EventNew from "./components/overview/EventNew.jsx";
+import TaskNew from "./components/overview/TaskNew.jsx";
+import EventDetail from "./components/overview/EventDetail.jsx";
+import EventList from "./components/overview/EventList.jsx";
+import TaskDetail from "./components/overview/TaskDetail.jsx";
 
 function PageMain() {
-    const { isLoggedIn_AuthService, token_AuthService, setToken_AuthService } = useAuth();
-    const [selectedDate, setSelectedDate] = useState(new Date().toISOString());
+    const { isLoggedIn_AuthService, setIsLoggedIn_AuthService, token_AuthService, setToken_AuthService } = useAuth();
+    const [selectedDate, setSelectedDate] = useState(new Date().setHours(0, 0, 0, 0));
+    const [selectedDateForInputs, setSelectedDateForInputs] = useState("");
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [id_user_maintainer, setIdUserMaintainer] = useState("");
     const [selectedEventForTask, setSelectedEventForTask] = useState(""); // Für das Dropdown der Events
-
-    const [events, setEvents] = useState([
-        { id: 1, title: "Team Meeting", start: "2024-10-25", end: "2024-10-28T12:00:00", extendedProps: { description: "Description for Event 1" } },
-        { id: 2, title: "Event 2", start: "2024-10-15", extendedProps: { description: "Description for Event 2" } },
-        { id: 3, title: "Event 3", start: "2024-10-20", extendedProps: { description: "Description for Event 3" } },
-        { id: 4, title: "Event 4", start: "2024-10-20", extendedProps: { description: "Description for Event 4" } },
-    ]);
-    const [tasks, setTask] = useState([
-        { id: 1, id_event: 1, user_id: "", title: "TestTask 1", description: "Test Descripten Task 1", todo: 0, inProgress: 0, done: 0 },
-        { id: 2, id_event: 1, user_id: "", title: "TestTask 2", description: "Test Descripten Task 2", todo: 0, inProgress: 0, done: 0 },
-        { id: 3, id_event: 1, user_id: "", title: "TestTask 3", description: "Test Descripten Task 3", todo: 0, inProgress: 0, done: 0 },
-        { id: 4, id_event: 2, user_id: "", title: "TestTask 3", description: "Test Descripten Task 3", todo: 0, inProgress: 0, done: 0 },
-        { id: 5, id_event: 3, user_id: "", title: "TestTask 3", description: "Test Descripten Task 3", todo: 0, inProgress: 0, done: 0 },
-        { id: 6, id_event: 3, user_id: "", title: "TestTask 3", description: "Test Descripten Task 3", todo: 0, inProgress: 0, done: 0 },
-        { id: 7, id_event: 4, user_id: "", title: "TestTask 4", description: "Test Descripten Task 3", todo: 0, inProgress: 0, done: 0 },
-    ]);
-
+    const [menuSesitive, setMenuSensitive] = useState("");
+    const [events, setEvents] = useState([]);
+    const [tasks, setTask] = useState([]);
+    const [eventTaskShow, setEventTaskShow] = useState([]);
+    const [selectedTasks, setSelectedTasks] = useState([]);
+    const [activeContent, setActiveContent] = useState("EventOverview");
+    const [inputValues, setInputValues] = useState({
+        title: "",
+        startDate: "",
+        startDateUnix: "",
+        startTime: "",
+        endDate: "",
+        endDateUnix: "",
+        endTime: "",
+        description: "",
+        color: "",
+    });
+    const [errorMessage, setErrorMessage] = useState("");
     useEffect(() => {
         const fetchEvents = async () => {
             try {
@@ -57,7 +65,13 @@ function PageMain() {
         };
         fetchEvents();
     }, []);
-
+    useEffect(() => {
+        if (calendarRef.current) {
+            const calendarApi = calendarRef.current.getApi();
+            calendarApi.removeAllEvents();
+            calendarApi.addEventSource(events); // Füge die aktualisierte Eventliste hinzu
+        }
+    }, [events]);
     useEffect(() => {
         const fetchTasks = async () => {
             try {
@@ -71,7 +85,14 @@ function PageMain() {
         fetchTasks();
     }, []);
 
-    const [eventTaskShow, setEventTaskShow] = useState([]);
+    useEffect(() => {
+        let date = new Date(selectedDate);
+        let inputDate = date.getDay().toString().padStart(2, "0") + "." + (date.getMonth() + 1).toString().padStart(2, "0") + "." + date.getFullYear();
+        setSelectedDateForInputs(inputDate);
+        inputValues.startDate = selectedDateForInputs;
+        inputValues.endDate = selectedDateForInputs;
+        setInputValues({ ...inputValues });
+    }, [selectedDate]);
     useEffect(() => {
         let list = [];
         console.log("n", events.length);
@@ -96,8 +117,6 @@ function PageMain() {
         setSelectedEventForTask(event.target.value);
     };
 
-    const [selectedTasks, setSelectedTasks] = useState([]);
-
     const toggleTaskSelection = (task) => {
         if (selectedTasks.includes(task)) {
             setSelectedTasks(selectedTasks.filter((t) => t.id !== task.id));
@@ -108,18 +127,6 @@ function PageMain() {
 
     const isTaskSelected = (task) => selectedTasks.filter((t) => t.id == task.id).length == 1;
 
-    useEffect(() => {
-        console.log("Markierte Tasks:", selectedTasks);
-    }, [selectedTasks]);
-
-    const [activeContent, setActiveContent] = useState("EventOverview");
-    const [inputValues, setInputValues] = useState({
-        title: "",
-        startDate: "",
-        endDate: "",
-        description: "",
-    });
-    const [errorMessage, setErrorMessage] = useState("");
     const calendarRef = useRef(null);
 
     const onDateClick = (date) => {
@@ -143,9 +150,10 @@ function PageMain() {
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
+        console.log(name, value);
         setInputValues({
             ...inputValues,
-            [name]: value,
+            [name]: value == "on" || value == "off" ? event.target.checked : value,
         });
     };
 
@@ -158,6 +166,9 @@ function PageMain() {
         } else if (content === "EventOverview") {
             setSelectedEvent(null);
             setInputValues({ title: "", startDate: "", endDate: "", description: "" });
+        } else if (content === "EditTask") {
+            setInputValues({ title: "", description: "", id_event: "", todo: false, inProgress: false, done: false });
+            setErrorMessage("");
         }
     };
 
@@ -191,9 +202,9 @@ function PageMain() {
                     id: selectedEvent.id,
                     title: inputValues.title,
                     description: inputValues.description,
-                    startDateTime: inputValues.startDate,
-                    endDateTime: inputValues.endDate || null,
-                    id_user_maintainer: id_user_maintainer, // Dieser Wert muss definiert sein
+                    startDateTime: inputValues.startDateUnix,
+                    endDateTime: inputValues.endDateUnix || null,
+                    id_user: id_user, // Dieser Wert muss definiert sein
                 };
                 await apiUpdateEvent(updatedEvent.id, updatedEvent); // Sende das aktualisierte Event an die API
                 setEvents(events.map((event) => (event.id === selectedEvent.id ? updatedEvent : event)));
@@ -203,9 +214,9 @@ function PageMain() {
                 const newEvent = {
                     title: inputValues.title,
                     description: inputValues.description,
-                    startDateTime: inputValues.startDate,
-                    endDateTime: inputValues.endDate || inputValues.startDate,
-                    id_user_maintainer: id_user_maintainer, // Dieser Wert muss definiert sein
+                    startDateTime: inputValues.startDateUnix,
+                    endDateTime: inputValues.endDateUnix || inputValues.startDate,
+                    id_user: id_user, // Dieser Wert muss definiert sein
                 };
                 console.log(newEvent.startDateTime);
                 let createdEvent = await apiCreateEvent(newEvent); // API-Call zum Erstellen eines neuen Events
@@ -225,16 +236,19 @@ function PageMain() {
     };
 
     const saveTask = async () => {
-        if (!inputValues.title || !selectedEventForTask) {
+        if (!inputValues.title || !inputValues.id_event) {
             setErrorMessage("Titel und Event müssen angegeben werden.");
             return;
         }
 
         try {
             const newTask = {
-                id_event: selectedEventForTask, // Event-ID aus dem Dropdown
+                id_event: inputValues.id_event, // Event-ID aus dem Dropdown
                 title: inputValues.title,
                 description: inputValues.description,
+                todo: inputValues.todo,
+                in_Progress: inputValues.inProgress,
+                done: inputValues.done,
             };
 
             const createdTask = await apiCreateTask(newTask); // API-Call zum Erstellen einer neuen Aufgabe
@@ -249,36 +263,44 @@ function PageMain() {
     };
 
     // Aktualisiere den Kalender, wenn sich die Events ändern
-    useEffect(() => {
-        if (calendarRef.current) {
-            const calendarApi = calendarRef.current.getApi();
-            calendarApi.removeAllEvents();
-            calendarApi.addEventSource(events); // Füge die aktualisierte Eventliste hinzu
-        }
-    }, [events]);
 
-    useEffect(() => {
-        inputValues.startDate = selectedDate.slice(0, 16);
-        inputValues.endDate = selectedDate.slice(0, 16);
-        setInputValues({ ...inputValues });
-    }, [selectedDate]);
+    function formatDate(dateInput) {
+        const options = { year: "numeric", month: "numeric", day: "numeric" };
+        return new Date(parseInt(dateInput)).toLocaleDateString("de-DE", options);
+    }
+    function formatDateOwn(dateInput) {
+        let date = new Date(dateInput);
+        let inputDate = date.getDay().toString().padStart(2, "0") + "." + (date.getMonth() + 1).toString().padStart(2, "0") + "." + date.getFullYear();
+        return inputDate;
+    }
+    function formatTimeOwn(dateString) {
+        const options = { hour: "2-digit", minute: "2-digit", hour12: false };
+        return new Date(parseInt(dateString)).toLocaleTimeString("de-DE", options);
+    }
 
-    const formatDate = (dateString) => {
-        const options = { year: "numeric", month: "long", day: "numeric" };
-        return new Date(dateString).toLocaleDateString("de-DE", options);
-    };
+    function unixToDateTime(unix) {
+        const day = new Date(parseInt(unix)).getDate();
+        const month = new Date(parseInt(unix)).getMonth();
+        const year = new Date(parseInt(unix)).getFullYear();
+        return day + "." + (month + 1).toString().padStart(2, "0") + "." + year;
+    }
 
     const formatTime = (dateString) => {
         const options = { hour: "2-digit", minute: "2-digit", hour12: false };
-        return new Date(dateString).toLocaleTimeString("de-DE", options);
+        return new Date(parseInt(dateString)).toLocaleTimeString("de-DE", options);
     };
 
     return (
         <>
             <div>
-                <Button onClick={() => switchContent("EventOverview")}>Event Übersicht</Button>
-                <Button onClick={() => switchContent("AddEvent")}>Neues Event</Button>
-                <Button onClick={() => switchContent("AddTask")}>Neue Aufgabe</Button>
+                <div>{selectedDate}</div>
+                <div>{selectedDateForInputs}</div>
+                <div>{menuSesitive}</div>
+                <div>{activeContent}</div>
+                <div>{JSON.stringify(inputValues)}</div>
+                <Button onClick={() => setMenuSensitive(menuSesitive != "date" ? "date" : "")}>Select a Date</Button>
+                <Button onClick={() => setMenuSensitive(menuSesitive != "task" ? "task" : "")}>Select a Task</Button>
+                <Button onClick={() => setMenuSensitive(menuSesitive != "tasks" ? "tasks" : "")}>Selected Tasks</Button>
             </div>
 
             <div className="flex flex-col sm:flex-row items-center sm:items-start w-full mt-8 space-x-5">
@@ -294,6 +316,45 @@ function PageMain() {
                 </div>
 
                 <div className="w-full sm:w-1/2 max-w-[50%] min-w-96 border border-gray-300 p-4 rounded-lg shadow-lg">
+                    <div className="flex gap-2 w-full justify-between">
+                        {menuSesitive == "date" && (
+                            <div className="flex w-full justify-between">
+                                <Button onClick={() => switchContent("EventOverview")}>Event Übersicht</Button>
+                                <Button onClick={() => switchContent("AddEvent")}>Neues Event</Button>
+                                <Button onClick={() => switchContent("AddTask")}>Neue Aufgabe</Button>
+                            </div>
+                        )}
+                        {menuSesitive == "events" && "Events"}
+                        {menuSesitive == "task" && (
+                            <div>
+                                <Button onClick={() => switchContent("EditTask")}>Aufgabe Bearbeiten</Button>
+                            </div>
+                        )}
+                        {menuSesitive == "tasks" && (
+                            <div className="flex w-full justify-between">
+                                {/* Menu */}
+                                {/* Status-Buttons */}
+                                <div className="relative inline-block group">
+                                    <button className="bg-red-700 hover:bg-red-200 text-gray-200 hover:text-gray-600 h-6 w-6 rounded-full">s</button>
+                                    <div className="invisible absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-800 text-white text-xs rounded px-2 py-1 mt-2 group-hover:visible group-hover:opacity-100 opacity-0 transition-opacity duration-300">
+                                        ToDo
+                                    </div>
+                                </div>
+                                <div className="relative inline-block group">
+                                    <button className="bg-yellow-500 hover:bg-yellow-200 text-gray-200 hover:text-gray-600 h-6 w-6 rounded-full">s</button>
+                                    <div className="invisible absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-800 text-white text-xs rounded px-2 py-1 mt-2 group-hover:visible group-hover:opacity-100 opacity-0 transition-opacity duration-300">
+                                        In Progress
+                                    </div>
+                                </div>
+                                <div className="relative inline-block group">
+                                    <button className="bg-green-600 hover:bg-green-200 text-gray-200 hover:text-gray-600 h-6 w-6 rounded-full">s</button>
+                                    <div className="invisible absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-800 text-white text-xs rounded px-2 py-1 mt-2 group-hover:visible group-hover:opacity-100 opacity-0 transition-opacity duration-300">
+                                        Done!
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                     {selectedEvent && activeContent === "Details" ? (
                         <div className="p-4 border border-gray-300 rounded-lg shadow-lg">
                             <h3 className="text-xl font-bold">{selectedEvent.title}</h3>
@@ -305,127 +366,47 @@ function PageMain() {
                             <Button onClick={() => switchContent("EventOverview")}>Zurück</Button>
                         </div>
                     ) : activeContent === "AddEvent" ? (
-                        <div className="flex flex-col space-y-4 p-4 border border-gray-300 rounded-lg shadow-lg">
-                            <h1 className="text-2xl font-semibold">Neues Event hinzufügen</h1>
-                            <input
-                                type="text"
-                                name="title"
-                                value={inputValues.title}
-                                onChange={handleInputChange}
-                                placeholder="Event Titel"
-                                className="p-2 border rounded resize-none w-1/2"
-                            />
-                            <p className="mt-3">Eventbeginn</p>
-                            <input
-                                type="datetime-local"
-                                name="startDate"
-                                value={inputValues.startDate}
-                                onChange={handleInputChange}
-                                className="p-2 border rounded resize-none w-1/2 text-gray-500"
-                            />
-                            <p className="mt-3">Event Ende (Angabe nur notwendig, wenn das Event mehrtägig ist)</p>
-                            <input
-                                type="datetime-local"
-                                name="endDate"
-                                value={inputValues.endDate}
-                                onChange={handleInputChange}
-                                className="p-2 border rounded resize-none w-1/2 text-gray-500"
-                            />
-                            <p className="mt-3">Details zu deinem Event</p>
-                            <textarea
-                                name="description"
-                                value={inputValues.description}
-                                onChange={handleInputChange}
-                                placeholder="Details"
-                                className="p-2 border rounded h-32"
-                            />
-                            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-                            <Button className="resize-none w-1/2" onClick={saveEvent}>
-                                Event erstellen
-                            </Button>
-                            <Button className="resize-none w-1/2" onClick={() => switchContent("EventOverview")}>
-                                Abbrechen
-                            </Button>
-                        </div>
+                        <EventNew
+                            selectedDate={selectedDate}
+                            selectedDateForInputs={selectedDateForInputs}
+                            saveEvent={saveEvent}
+                            inputValues={inputValues}
+                            handleInputChange={handleInputChange}
+                            switchContent={switchContent}
+                            errorMessage={errorMessage}
+                        ></EventNew>
                     ) : activeContent === "AddTask" ? (
-                        <div className="flex flex-col space-y-4 p-4 border border-gray-300 rounded-lg shadow-lg">
-                            <h1 className="text-2xl font-semibold">Neue Aufgabe hinzufügen</h1>
-                            <select id="event-select" value={selectedEventForTask} onChange={handleEventSelectChange} className="p-2 border rounded">
-                                <option value="" disabled>
-                                    -- Wähle ein Event --
-                                </option>
-                                {events.map((event) => (
-                                    <option key={event.id} value={event.id}>
-                                        {event.title} (Start: {event.start})
-                                    </option>
-                                ))}
-                            </select>
-
-                            <input
-                                type="text"
-                                name="title"
-                                value={inputValues.title}
-                                onChange={handleInputChange}
-                                placeholder="Aufgabe eingeben"
-                                className="p-2 border rounded"
-                            />
-                            <p className="mt-3">Details zur Aufgabe</p>
-                            <input
-                                type="text"
-                                name="description"
-                                value={inputValues.description}
-                                onChange={handleInputChange}
-                                placeholder="Aufgaben Details"
-                                className="p-2 border rounded"
-                            />
-                            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-                            <div className="space-x-2">
-                            <Button onClick={saveTask}>Aufgabe erstellen</Button>
-                            <Button onClick={() => switchContent("EventOverview")}>Abbrechen</Button>
-                            </div>
-                        </div>
+                        <TaskNew
+                            events={events}
+                            saveTask={saveTask}
+                            inputValues={inputValues}
+                            handleInputChange={handleInputChange}
+                            handleEventSelectChange={handleEventSelectChange}
+                            switchContent={switchContent}
+                            errorMessage={errorMessage}
+                            formatDate={formatDate}
+                            formatTime={formatTime}
+                        ></TaskNew>
                     ) : activeContent === "Bearbeiten" ? (
-                        <div>
-                            <h1>Event bearbeiten</h1>
-                            <input
-                                type="text"
-                                name="title"
-                                value={inputValues.title}
-                                onChange={handleInputChange}
-                                placeholder="Event-Titel eingeben"
-                                className="p-2 border rounded"
-                            />
-                            <p className="mt-3">Eventbeginn</p>
-                            <input
-                                type="datetime-local"
-                                name="startDate"
-                                value={inputValues.startDate}
-                                onChange={handleInputChange}
-                                className="p-2 border rounded text-gray-500"
-                            />
-                            <p className="mt-3">Event Ende (Angabe nur notwendig, wenn das Event mehrtägig ist)</p>
-                            <input
-                                type="datetime-local"
-                                name="endDate"
-                                value={inputValues.endDate}
-                                onChange={handleInputChange}
-                                className="p-2 border rounded text-gray-500"
-                            />
-                            <p className="mt-3">Details zu deinem Event</p>
-                            <textarea
-                                type="text"
-                                name="description"
-                                value={inputValues.description}
-                                onChange={handleInputChange}
-                                placeholder="Details"
-                                className="p-2 border rounded h-32"
-                            />
-                            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-                            <p>
-                                <Button onClick={saveEvent}>Änderungen speichern</Button>
-                                <Button onClick={() => switchContent("Details")}>Abbrechen</Button>
-                            </p>
-                        </div>
+                        <EventDetail
+                            saveEvent={saveEvent}
+                            switchContent={switchContent}
+                            inputValues={inputValues}
+                            handleInputChange={handleInputChange}
+                            errorMessage={errorMessage}
+                        ></EventDetail>
+                    ) : activeContent === "EditTask" ? (
+                        // inputValues, handleInputChange, errorMessage, saveEvent, switchContent
+                        <TaskDetail
+                            inputValues={inputValues}
+                            handleInputChange={handleInputChange}
+                            events={events}
+                            errorMessage={errorMessage}
+                            saveTask={saveTask}
+                            switchContent={switchContent}
+                            formatDate={formatDate}
+                            formatTime={formatTime}
+                        ></TaskDetail>
                     ) : (
                         <div>
                             <h1 className="text-xl flex-col font-bold"></h1>
@@ -434,110 +415,17 @@ function PageMain() {
                     )}
 
                     {activeContent === "EventOverview" && (
-                        <div>
-                            <h1 className="text-xl flex-col font-bold">Eventübersicht</h1>
-                            <p className="text-sm">Event auswählen, um Details anzuzeigen.</p>
-                            <p className="text-lg underline underline-offset-2">Demnächst:</p>
-                            <ul className="space-y-4">
-                                {events.map((event) => (
-                                    <li key={event.id} className="p-4 border border-gray-300 rounded-lg shadow-md">
-                                        <div className="flex justify-between">
-                                            <span className="font-semibold text-lg cursor-pointer" onClick={() => handleEventClick({ event })}>
-                                                {event.title}
-                                            </span>
-                                            <div className="space-x-2">
-                                                {/* Menu */}
-                                                {/* Status-Buttons */}
-                                                <div class="relative inline-block group">
-                                                    <button className="bg-red-700 hover:bg-red-200 text-gray-200 hover:text-gray-600 h-6 w-6 rounded-full">
-                                                        s
-                                                    </button>
-                                                    <div class="invisible absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-800 text-white text-xs rounded px-2 py-1 mt-2 group-hover:visible group-hover:opacity-100 opacity-0 transition-opacity duration-300">
-                                                        ToDo
-                                                    </div>
-                                                </div>
-                                                <div class="relative inline-block group">
-                                                    <button className="bg-yellow-500 hover:bg-yellow-200 text-gray-200 hover:text-gray-600 h-6 w-6 rounded-full">
-                                                        s
-                                                    </button>
-                                                    <div class="invisible absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-800 text-white text-xs rounded px-2 py-1 mt-2 group-hover:visible group-hover:opacity-100 opacity-0 transition-opacity duration-300">
-                                                        In Progress
-                                                    </div>
-                                                </div>
-                                                <div class="relative inline-block group">
-                                                    <button className="bg-green-600 hover:bg-green-200 text-gray-200 hover:text-gray-600 h-6 w-6 rounded-full">
-                                                        s
-                                                    </button>
-                                                    <div class="invisible absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-800 text-white text-xs rounded px-2 py-1 mt-2 group-hover:visible group-hover:opacity-100 opacity-0 transition-opacity duration-300">
-                                                        Done!
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <span className="text-gray-600 dark:text-gray-400 block">
-                                            {formatDate(event.start)} {formatTime(event.start)}{" "}
-                                            {event.end && `bis ${formatDate(event.end)} ${formatTime(event.end)}`}
-                                        </span>
-
-                                        
-                                        <button
-                                            onClick={() => {
-                                                let newShow = eventTaskShow.map((e) => {
-                                                    if (e.id === event.id) {
-                                                        e.show = !e.show;
-                                                    }
-                                                    return e;
-                                                });
-                                                setEventTaskShow(newShow);
-                                            }}
-                                            className="ml-2"
-                                        >
-                                            <svg
-                                                className={`w-4 h-4 transition-transform duration-200 ${
-                                                    eventTaskShow.find((e) => e.id === event.id)?.show ? "rotate-180" : "rotate-0"
-                                                }`}
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                            >
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 10l5 5 5-5" />
-                                            </svg>
-                                        </button>
-                                        <div className={ 
-                                                eventTaskShow.length > 0 && eventTaskShow.filter((ets) => ets.id === event.id)[0]?.show ? " " : " hidden "
-                                            } >
-                                                <div className="space-x-1">
-                                                        <div class="relative inline-block group">
-                                                            <button className="bg-red-700 hover:bg-red-200 text-gray-200 hover:text-gray-600 h-6 w-6 rounded-full">s</button>
-                                                            <div class="invisible absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-800 text-white text-xs rounded px-2 py-1 mt-2 group-hover:visible group-hover:opacity-100 opacity-0 transition-opacity duration-300">
-                                                                ToDo
-                                                            </div>
-                                                        </div>
-                                                        <div class="relative inline-block group">
-                                                            <button className="bg-yellow-500 hover:bg-yellow-200 text-gray-200 hover:text-gray-600 h-6 w-6 rounded-full">s</button>
-                                                            <div class="invisible absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-800 text-white text-xs rounded px-2 py-1 mt-2 group-hover:visible group-hover:opacity-100 opacity-0 transition-opacity duration-300">
-                                                                In Progress
-                                                            </div>
-                                                        </div>
-                                                        <div class="relative inline-block group">
-                                                            <button className="bg-green-600 hover:bg-green-200 text-gray-200 hover:text-gray-600 h-6 w-6 rounded-full">s</button>
-                                                            <div class="invisible absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-800 text-white text-xs rounded px-2 py-1 mt-2 group-hover:visible group-hover:opacity-100 opacity-0 transition-opacity duration-300">
-                                                                Done!
-                                                            </div>
-                                                        </div>
-                                                </div>
-                                        </div>
-                                        <div
-                                            className={
-                                                eventTaskShow.length > 0 && eventTaskShow.filter((ets) => ets.id === event.id)[0]?.show ? " " : " hidden "
-                                            }
-                                        >
-                                           
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
+                        <EventList
+                            events={events}
+                            handleEventClick={handleEventClick}
+                            formatDate={formatDate}
+                            formatTime={formatTime}
+                            eventTaskShow={eventTaskShow}
+                            setEventTaskShow={setEventTaskShow}
+                            tasks={tasks}
+                            toggleTaskSelection={toggleTaskSelection}
+                            isTaskSelected={isTaskSelected}
+                        ></EventList>
                     )}
                 </div>
             </div>

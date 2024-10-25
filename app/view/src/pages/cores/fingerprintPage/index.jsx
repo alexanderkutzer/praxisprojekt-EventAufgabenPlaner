@@ -1,6 +1,8 @@
 import React from "react";
+import { useAuth } from "../../../service/authStatus.jsx";
 
 function FingerprintPage() {
+    const { isLoggedIn_AuthService } = useAuth();
     return (
         <>
             <div id="nav" className="flex flex-row">
@@ -26,8 +28,8 @@ function FingerprintPage() {
                 {isLoggedIn_AuthService && (
                     <Button
                         onClick={() => {
-                            setToken_AuthService("");
-                            setMenu("home");
+                            setToken_AuthService("start");
+                            setMenu("start");
                         }}
                     >
                         Logoff

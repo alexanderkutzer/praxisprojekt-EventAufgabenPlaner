@@ -22,7 +22,7 @@ function LoginPage({ setMenu, setFingerMenu }) {
     useEffect(() => {
         if (isLoggedIn_AuthService) {
             setFingerMenu("start");
-            setMenu("home");
+            setMenu("main");
         }
     }, [isLoggedIn_AuthService]);
     return (
