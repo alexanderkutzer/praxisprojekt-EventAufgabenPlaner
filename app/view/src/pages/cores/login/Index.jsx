@@ -8,27 +8,47 @@ function LoginPage({ setMenu, setFingerMenu }) {
     const { isLoggedIn_AuthService, setToken_AuthService } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [errorMessage, setErrorMessage] = useState(""); 
 
     function onClickRegister() {
         setMenu("register");
     }
 
     async function onClickLogin() {
+      
         let response = await apiUserLogin(email, password);
         if (response.login) {
             setToken_AuthService(response.token);
+            setErrorMessage(""); 
+            if (email === "jane@doe.com") {
+                localStorage.setItem("isTestUser", true);
+                
+            
+            } else{
+                localStorage.removeItem("isTestUser");
+            }
+            
+        
+           
+        } else {
+            setErrorMessage("Incorrect email or password, or account not registered."); 
         }
     }
+
     useEffect(() => {
         if (isLoggedIn_AuthService) {
             setFingerMenu("start");
             setMenu("home");
         }
     }, [isLoggedIn_AuthService]);
+
     return (
         <div className="container flex flex-col md:mt-40 items-center justify-center space-y-4 p-4 border border-gray-300 rounded-lg shadow-lg max-w-md mx-auto">
             <p className="text-xl font-bold">Login</p>
             <h2 className="text-xl ">Wilkommen!</h2>
+
+            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+
             <div className="mb-3 flex w-4/5 justify-center items-center">
                 <label htmlFor="email" className="form-label w-1/4">
                     Email
@@ -73,19 +93,11 @@ function LoginPage({ setMenu, setFingerMenu }) {
                 />
             </div>
             <div className="flex w-4/5">
-                {/* <Button
-                    onClick={() => {
-                        setEmail("");
-                        setPassword("");
-                    }}
-                >
-                    Felder leeren
-                </Button> */}
                 <Button className={"w-full mx-3"} onClick={() => onClickLogin()}>
                     Login
                 </Button>
             </div>
-            <div className="flex w-4/5 ">
+            <div className="flex w-4/5">
                 <div className="text-sm flex w-full items-center gap-2 border border-gray-500 mx-3 py-2 px-4 rounded text-center shadow-sm shadow-black">
                     Noch nicht registriert? <Button onClick={() => onClickRegister()}>Konto erstellen</Button>
                 </div>
@@ -102,7 +114,7 @@ function LoginPage({ setMenu, setFingerMenu }) {
                     setPassword("password12345");
                 }}
             >
-                Test Profil daten einfügen
+                Test Profil Daten einfügen
             </Button>
         </div>
     );
