@@ -45,7 +45,7 @@ function PageMain() {
 
     const positionBoxAtBottom = () => {
         let boxNewHeight = 0;
-        if (containerRef.current && window.innerWidth > 1024) {
+        if (containerRef.current) {
             const windowHeight = window.innerHeight;
             const boxTop = containerRef.current.getBoundingClientRect().top;
             boxNewHeight = windowHeight - boxTop - 16;
@@ -186,7 +186,6 @@ function PageMain() {
     const onDateSelect = ({ start, end }) => {};
 
     const handleEventClick = ({ event }) => {
-        console.log("Event clicked", event);
         if (selectedEvent) {
             if (selectedEvent.id === event.id) {
                 setSelectedEvent(null);
@@ -203,7 +202,6 @@ function PageMain() {
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
-        console.log(name, value);
         setInputValues({
             ...inputValues,
             [name]: value == "on" || value == "off" ? event.target.checked : value,
@@ -292,6 +290,8 @@ function PageMain() {
         }
 
         try {
+            <div>Test 1</div>;
+
             const newTask = {
                 id_event: inputValues.id_event, // Event-ID aus dem Dropdown
                 title: inputValues.title,
@@ -343,7 +343,7 @@ function PageMain() {
     return (
         <>
             <div className="flex flex-col md:flex-row items-center md:items-start w-full  md:gap-5">
-                <div className="w-full md:w-1/2 min-w-96 border border-gray-300 p-4 rounded-lg shadow-lg ">
+                <div className="w-full md:w-1/2 min-w-96 border border-gray-300 p-2 md:p-4 rounded-lg shadow-lg ">
                     <CalendarOwn
                         testPercentage={testpercentage}
                         setTestPercentage={setTestPercentage}
@@ -363,7 +363,7 @@ function PageMain() {
                     /> */}
                 </div>
 
-                <div ref={containerRef} className="bottom-0 w-full md:w-1/2  min-w-96 border border-gray-300 p-4 rounded-lg shadow-lg">
+                <div ref={containerRef} className="bottom-0 w-full md:w-1/2  min-w-96 border border-gray-300 p-2 md:p-4 rounded-lg shadow-lg">
                     <div className="text-xs md:text-xs lg:text-base flex gap-2 w-full justify-between border border-gray-300 rounded-lg shadow-lg p-1">
                         {menuSesitive == "date" && (
                             <>
@@ -470,12 +470,7 @@ function PageMain() {
                             formatTime={formatTime}
                             boxHight={boxHight}
                         ></TaskDetail>
-                    ) : (
-                        <div>
-                            <h1 className="text-xl flex-col font-bold"></h1>
-                            <p></p>
-                        </div>
-                    )}
+                    ) : null}
 
                     {activeContent === "EventOverview" && (
                         <EventList
@@ -491,6 +486,7 @@ function PageMain() {
                             toggleTaskSelection={toggleTaskSelection}
                             isTaskSelected={isTaskSelected}
                             boxHight={boxHight}
+                            selectedDate={selectedDate}
                         ></EventList>
                     )}
                 </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Button from "../../../components/Button";
 import { apiUserByToken, apiUpdateUserEmail, apiUpdateUserPassword, apiUpdateUserUsername } from "../../../service/api_calls";
 import { useAuth } from "../../../service/authStatus";
+import Input from "../../../components/Input";
 
 function ProfilePage({ setMenu }) {
     const { token_AuthService } = useAuth();
@@ -77,12 +78,13 @@ function ProfilePage({ setMenu }) {
                     <h3 className="text-lg font-semibold mb-4">E-mail Address</h3>
                     <div>{currentEmail}</div>
                     <div className="mb-4">
-                        <input
+                        <Input
                             type="email"
                             value={newEmail}
                             onChange={(e) => setNewEmail(e.target.value)}
                             className="w-full border px-3 py-2 rounded-md"
                             placeholder="new e-mail address"
+                            autocomplete="new-username"
                         />
                     </div>
                 </>
@@ -92,30 +94,33 @@ function ProfilePage({ setMenu }) {
                 <>
                     <h3 className="text-lg font-semibold mb-4">Password</h3>
                     <div className="mb-4">
-                        <input
+                        <Input
                             type="password"
                             value={currentPassword}
                             onChange={(e) => setCurrentPassword(e.target.value)}
                             className="w-full border px-3 py-2 rounded-md"
                             placeholder="Current password"
+                            autocomplete="current-password"
                         />
                     </div>
                     <div className="mb-4">
-                        <input
+                        <Input
                             type="password"
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
                             className="w-full border px-3 py-2 rounded-md"
                             placeholder="New password"
+                            autocomplete="new-password"
                         />
                     </div>
                     <div className="mb-4">
-                        <input
+                        <Input
                             type="password"
                             value={confirmNewPassword}
                             onChange={(e) => setConfirmNewPassword(e.target.value)}
                             className="w-full border px-3 py-2 rounded-md"
                             placeholder="Confirm new password"
+                            autocomplete="new-password"
                         />
                     </div>
                 </>
@@ -132,6 +137,7 @@ function ProfilePage({ setMenu }) {
                             onChange={(e) => setNewUsername(e.target.value)}
                             className="w-full border px-3 py-2 rounded-md"
                             placeholder="new username"
+                            autocomplete="new-name"
                         />
                     </div>
                 </>
