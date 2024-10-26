@@ -44,7 +44,7 @@ function EventList({
                                         (event.id === selectedEvent?.id && " border-orange-500 hover:border-orange-700")
                                     }
                                 >
-                                    <div className="flex justify-between hover:bg-gray-100 px-2 rounded">
+                                    <div className="flex justify-between px-2 rounded">
                                         <span className="font-semibold text-lg cursor-pointer">{event.title}</span>
                                     </div>
                                     <span className="text-gray-600 dark:text-gray-400 block">

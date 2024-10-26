@@ -27,7 +27,7 @@ function RegisterPage({ setMenu }) {
         setMenu("login");
     }
     return (
-        <div className="container flex flex-col md:mt-40  items-center justify-center space-y-4 p-4 border border-gray-300 rounded-lg shadow-lg max-w-md mx-auto">
+        <div className="container flex flex-col md:mt-40  items-center justify-center space-y-4 p-4 border border-gray-300 rounded-lg shadow-lg md:max-w-md ">
             <div className="flex flex-col gap-2 w-full">
                 <p className="text-xl flex-col font-bold">Neues Konto Erstellen</p>
                 <div className="flex w-full items-center">

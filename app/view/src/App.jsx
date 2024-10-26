@@ -48,29 +48,32 @@ export function App() {
         !isLoggedIn_AuthService && setMenu("start");
     }, [isLoggedIn_AuthService]);
     return (
-        <div className="mx-16 dark:text-[#0b0a22]">
-            <div className="fixed left-1">
-                <ButtonFingerprint
-                    onClick={() => {
-                        if (isLoggedIn_AuthService) {
-                            setFingerMenu(fingerMenu == "start" ? "usermenu" : "start");
-                            setMenu(fingerMenu !== "usermenu" ? "profile" : "main");
-                        } else {
-                            setMenu("start");
-                        }
-                    }}
-                    className=" w-14 h-14 fill-gray-200 dark:fill-gray-800 hover:fill-gray-800 dark:hover:fill-gray-200"
-                ></ButtonFingerprint>
+        <div className="m-1 md:mx-16 dark:text-[#0b0a22]">
+            <div className="flex justify-between">
+                <div className="">
+                    <ButtonFingerprint
+                        onClick={() => {
+                            if (isLoggedIn_AuthService) {
+                                setFingerMenu(fingerMenu == "start" ? "usermenu" : "start");
+                                setMenu(fingerMenu !== "usermenu" ? "profile" : "main");
+                            } else {
+                                setMenu("start");
+                            }
+                        }}
+                        className=" w-14 h-14 fill-gray-200 dark:fill-gray-800 hover:fill-gray-800 dark:hover:fill-gray-200"
+                    ></ButtonFingerprint>
+                </div>
+                <div className="">
+                    <ButtonStart onClick={navigateToHome}></ButtonStart>
+                </div>
+                <div id="nav" className=" ">
+                    <ButtonLightDark className={" w-14 h-14 "}>
+                        <DarkModeSwitch checked={isDarkMode} onChange={toggleDarkMode} size={30} moonColor="gray" sunColor="yellow" />
+                    </ButtonLightDark>
+                </div>
             </div>
-            <div className="fixed inset-x-0 flex items-center justify-center left-40 right-40">
-                <ButtonStart onClick={navigateToHome}></ButtonStart>
-            </div>
-            <div id="nav" className="fixed right-1 ">
-                <ButtonLightDark className={" w-14 h-14 "}>
-                    <DarkModeSwitch checked={isDarkMode} onChange={toggleDarkMode} size={30} moonColor="gray" sunColor="yellow" />
-                </ButtonLightDark>
-            </div>
-            <div className="flex flex-col items-center mt-4">
+
+            <div className="flex flex-col items-center ">
                 <div id="main" className="w-full flex flex-col items-center ">
                     {menu == "start" && (
                         <StartPage
@@ -86,7 +89,7 @@ export function App() {
                     {!isLoggedIn_AuthService && menu == "register" && <RegisterPage setMenu={setMenu}></RegisterPage>}
                     {isLoggedIn_AuthService && fingerMenu == "start" && <PageMain></PageMain>}
                     {isLoggedIn_AuthService && fingerMenu == "usermenu" && (
-                        <div className="flex flex-row items-center gap-2 mb-2 mt-20">
+                        <div className="flex flex-row items-center gap-2">
                             <Button
                                 onClick={() => {
                                     setMenu("profile");
