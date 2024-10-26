@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Calendar from "../../../Calendar";
 import Button from "../../../components/Button";
 
-function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelectedDate, events }) {
+function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelectedDate, events, selectedEvent, setSelectedEvent }) {
     const [date, setDate] = React.useState(new Date());
     const [day, setDay] = React.useState(new Date().getDay());
     const [dayName, setDayName] = React.useState(new Date().toLocaleString("de-DE", { weekday: "short" }));
@@ -29,7 +29,11 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
         { normal: "#ec4899", light: "#fbcfe8", dark: "#9d174d" },
         { normal: "#f43f5e", light: "#fecdd3", dark: "#9f1239" },
     ];
-
+    useEffect(() => {
+        if (selectedEvent && new Date(parseInt(selectedEvent.start)).getMonth() != date.getMonth()) {
+            setDate(new Date(parseInt(selectedEvent.start) ?? Date.now()));
+        }
+    }, [selectedEvent]);
     useEffect(() => {
         setPlacesInCalenderFromMonth(date);
     }, [events, testPercentage]);
@@ -143,6 +147,7 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
     }
     return (
         <div className="w-full p-2">
+            {date.toDateString()}
             <div className="w-full flex-col flex gap-2 ">
                 <div className="flex justify-between">
                     <div className="whitespace-nowrap">
@@ -164,10 +169,7 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
                         </Button>
                         <Button className={"rounded-s-[0]"}>{monthName}</Button>
                     </div>
-                    <div className="whitespace-nowrap">
-                        <Button onClick={() => setTestPercentage(testPercentage <= 0 ? 0 : testPercentage - 5)}>-</Button>
-                        <Button onClick={() => setTestPercentage(testPercentage >= 100 ? 100 : testPercentage + 5)}>+</Button>
-                    </div>
+
                     <div className="whitespace-nowrap">
                         <Button
                             onClick={() => {
@@ -175,7 +177,7 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
                                 setSelectedDate(new Date().setHours(0, 0, 0, 0));
                             }}
                         >
-                            {new Date(Date.now()).getDay() + "." + (new Date(Date.now()).getMonth() + 1) + "." + new Date(Date.now()).getFullYear()}
+                            {new Date(Date.now()).getDate() + "." + (new Date(Date.now()).getMonth() + 1) + "." + new Date(Date.now()).getFullYear()}
                         </Button>
                     </div>
                     <div className="whitespace-nowrap">
@@ -212,7 +214,7 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
                         return index % 8 == 0 ? (
                             <div
                                 key={index}
-                                className="flex items-center justify-center border border-gray-500 w-full select-none aspect-square text-gray-500 text-sm  "
+                                className="flex items-center justify-center border border-gray-500 w-full h-full select-none aspect-square text-gray-500 text-sm  "
                             >
                                 {calBox.text}
                             </div>
@@ -238,7 +240,21 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
                                 <div className="h-[1.5rem] flex">
                                     {calBox.events.map((event, index) => {
                                         return (
-                                            <div key={index} style={{ backgroundColor: event.color.light }} className="flex items-end w-full h-full ">
+                                            <div
+                                                title={event.id}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+
+                                                    setSelectedEvent(selectedEvent == null ? event : selectedEvent?.id != event.id ? event : null);
+                                                }}
+                                                key={index}
+                                                style={{
+                                                    backgroundColor: event.color.light,
+                                                    borderColor: selectedEvent?.id == event?.id ? "orange" : "",
+                                                    borderWidth: selectedEvent?.id == event?.id ? "1px" : "0px",
+                                                }}
+                                                className="flex items-end w-full h-full"
+                                            >
                                                 <div style={{ backgroundColor: event.color.normal, height: event.taskpercent + "%" }} className="w-full"></div>
                                             </div>
                                         );

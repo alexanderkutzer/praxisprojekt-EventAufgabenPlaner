@@ -8,37 +8,31 @@ function LoginPage({ setMenu, setFingerMenu }) {
     const { isLoggedIn_AuthService, setToken_AuthService } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [errorMessage, setErrorMessage] = useState(""); 
+    const [errorMessage, setErrorMessage] = useState("");
 
     function onClickRegister() {
         setMenu("register");
     }
 
     async function onClickLogin() {
-      
         let response = await apiUserLogin(email, password);
         if (response.login) {
             setToken_AuthService(response.token);
-            setErrorMessage(""); 
+            setErrorMessage("");
             if (email === "jane@doe.com") {
                 localStorage.setItem("isTestUser", true);
-                
-            
-            } else{
+            } else {
                 localStorage.removeItem("isTestUser");
             }
-            
-        
-           
         } else {
-            setErrorMessage("Incorrect email or password, or account not registered."); 
+            setErrorMessage("Incorrect email or password, or account not registered.");
         }
     }
 
     useEffect(() => {
         if (isLoggedIn_AuthService) {
             setFingerMenu("start");
-            setMenu("main");
+            setMenu("start");
         }
     }, [isLoggedIn_AuthService]);
 
