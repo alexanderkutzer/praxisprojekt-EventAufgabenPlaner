@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Calendar from "../../../Calendar";
 import Button from "../../../components/Button";
 
-function CalendarOwn({ selectedDate, setSelectedDate, events }) {
+function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelectedDate, events }) {
     const [date, setDate] = React.useState(new Date());
     const [day, setDay] = React.useState(new Date().getDay());
     const [dayName, setDayName] = React.useState(new Date().toLocaleString("de-DE", { weekday: "short" }));
@@ -32,7 +32,7 @@ function CalendarOwn({ selectedDate, setSelectedDate, events }) {
 
     useEffect(() => {
         setPlacesInCalenderFromMonth(date);
-    }, [events]);
+    }, [events, testPercentage]);
 
     useEffect(() => {
         setDay(date.getDay());
@@ -119,7 +119,7 @@ function CalendarOwn({ selectedDate, setSelectedDate, events }) {
             let day = date.getDate();
             let month = date.getMonth();
             let year = date.getFullYear();
-            event.taskpercent = getEventTasksDone(event);
+            event.taskpercent = testPercentage; //getEventTasksDone(event);
             calBoxes.forEach((calBox) => {
                 if (calBox.day == day && calBox.month - 1 == month && calBox.year == year) {
                     event.color = colors[calBox.events.length % colors.length];
@@ -163,6 +163,10 @@ function CalendarOwn({ selectedDate, setSelectedDate, events }) {
                             {">"}
                         </Button>
                         <Button className={"rounded-s-[0]"}>{monthName}</Button>
+                    </div>
+                    <div className="whitespace-nowrap">
+                        <Button onClick={() => setTestPercentage(testPercentage <= 0 ? 0 : testPercentage - 5)}>-</Button>
+                        <Button onClick={() => setTestPercentage(testPercentage >= 100 ? 100 : testPercentage + 5)}>+</Button>
                     </div>
                     <div className="whitespace-nowrap">
                         <Button

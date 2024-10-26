@@ -11,6 +11,7 @@ import TaskDetail from "./components/overview/TaskDetail.jsx";
 
 function PageMain() {
     const { isLoggedIn_AuthService, setIsLoggedIn_AuthService, token_AuthService, setToken_AuthService } = useAuth();
+    const [testpercentage, setTestPercentage] = useState(50);
     const [selectedDate, setSelectedDate] = useState(new Date().setHours(0, 0, 0, 0));
     const [selectedDateForInputs, setSelectedDateForInputs] = useState("");
     const [selectedEvent, setSelectedEvent] = useState(null);
@@ -92,8 +93,8 @@ function PageMain() {
         let date = new Date(selectedDate);
         let inputDate = date.getDay().toString().padStart(2, "0") + "." + (date.getMonth() + 1).toString().padStart(2, "0") + "." + date.getFullYear();
         setSelectedDateForInputs(inputDate);
-        inputValues.startDate = selectedDateForInputs;
-        inputValues.endDate = selectedDateForInputs;
+        inputValues.startDateUnix = selectedDateForInputs;
+        inputValues.endDateUnix = selectedDateForInputs;
         setInputValues({ ...inputValues });
     }, [selectedDate]);
     useEffect(() => {
@@ -172,7 +173,7 @@ function PageMain() {
         } else if (content === "EventOverview") {
             setSelectedEvent(null);
             setInputValues({ title: "", startDate: "", endDate: "", description: "" });
-        } else if (content === "EditTask") {
+        } else if (content === "AddTask") {
             setInputValues({ title: "", description: "", id_event: "", todo: false, inProgress: false, done: false });
             setErrorMessage("");
         }
@@ -270,7 +271,8 @@ function PageMain() {
 
     function formatDate(dateInput) {
         const options = { year: "numeric", month: "numeric", day: "numeric" };
-        return new Date(parseInt(dateInput)).toLocaleDateString("de-DE", options);
+        let text = new Date(parseInt(dateInput)).toLocaleDateString("de-DE", options);
+        return text;
     }
     function formatDateOwn(dateInput) {
         let date = new Date(dateInput);
@@ -306,9 +308,15 @@ function PageMain() {
                 <Button onClick={() => setMenuSensitive(menuSesitive != "task" ? "task" : "")}>Select a Task</Button>
                 <Button onClick={() => setMenuSensitive(menuSesitive != "tasks" ? "tasks" : "")}>Selected Tasks</Button>
             </div>
-            <div className="flex flex-col md:flex-row items-center sm:items-start w-full mt-8 space-x-5">
-                <div className="w-full sm:w-1/2 max-w-[50%] min-w-96 border border-gray-300 p-4 rounded-lg shadow-lg aspect-square ">
-                    <CalendarOwn selectedDate={selectedDate} setSelectedDate={setSelectedDate} events={events}></CalendarOwn>
+            <div className="flex flex-col lg:flex-row  lg:items-start sm:items-center  w-full mt-8 space-x-5">
+                <div className="w-full sm:w-1/2 max-w-[50%] min-w-[450px] border border-gray-300 dark:border-[#D5CDB8] p-4 rounded-lg shadow-lg ">
+                    <CalendarOwn
+                        testPercentage={testpercentage}
+                        setTestPercentage={setTestPercentage}
+                        selectedDate={selectedDate}
+                        setSelectedDate={setSelectedDate}
+                        events={events}
+                    ></CalendarOwn>
                     {/* <Calendar
                         key={JSON.stringify(events)} // Neurendering bei Änderung
                         events={events}
@@ -318,8 +326,8 @@ function PageMain() {
                         ref={calendarRef}
                     /> */}
                 </div>
-
-                <div className="w-full sm:w-1/2 max-w-[50%] min-w-96 border border-gray-300 p-4 rounded-lg shadow-lg aspect-square">
+                        <div className="hidden sm:block p-2">{/*Dient als Padding zwischen den DIV's bei sm view (wird zurzeit noch bei jeder ansicht angezeigt*/}</div>
+                <div className="w-full  sm:w-1/2 max-w-[50%] min-w-[450px] border border-gray-300 dark:border-[#D5CDB8] p-4 rounded-lg shadow-lg">
                     <div className="flex gap-2 w-full justify-between">
                         {menuSesitive == "date" && (
                             <div className="flex w-full justify-between">
@@ -360,7 +368,7 @@ function PageMain() {
                         )}
                     </div>
                     {selectedEvent && activeContent === "Details" ? (
-                        <div className="p-4 border border-gray-300 rounded-lg shadow-lg">
+                        <div className="p-4 border border-gray-300 dark:border-[#D5CDB8] dark:text-[#D5CDB8] rounded-lg shadow-lg">
                             <h3 className="text-xl font-bold">{selectedEvent.title}</h3>
                             <p>Start Datum: {selectedEvent.start}</p>
                             <p>End Datum: {selectedEvent.end}</p>
@@ -400,17 +408,17 @@ function PageMain() {
                             errorMessage={errorMessage}
                         ></EventDetail>
                     ) : activeContent === "EditTask" ? (
-                        // inputValues, handleInputChange, errorMessage, saveEvent, switchContent
-                        <TaskDetail
+                        <TaskNewTaskNew
                             inputValues={inputValues}
-                            handleInputChange={handleInputChange}
-                            events={events}
-                            errorMessage={errorMessage}
                             saveTask={saveTask}
+                            handleInputChange={handleInputChange}
                             switchContent={switchContent}
+                            errorMessage={errorMessage}
+                            events={events}
+                            selectedEventForTask={selectedEventForTask}
                             formatDate={formatDate}
                             formatTime={formatTime}
-                        ></TaskDetail>
+                        ></TaskNewTaskNew>
                     ) : (
                         <div>
                             <h1 className="text-xl flex-col font-bold"></h1>
@@ -420,6 +428,7 @@ function PageMain() {
 
                     {activeContent === "EventOverview" && (
                         <EventList
+                            testpercentage={testpercentage}
                             events={events}
                             handleEventClick={handleEventClick}
                             formatDate={formatDate}

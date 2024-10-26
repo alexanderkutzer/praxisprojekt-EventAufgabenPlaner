@@ -71,7 +71,7 @@ export function App() {
                 </ButtonLightDark>
             </div>
             <div className="flex flex-col items-center mt-4">
-                <div id="main" className="w-full flex flex-col items-center mt-32">
+                <div id="main" className="w-full flex flex-col items-center ">
                     {menu == "start" && (
                         <StartPage
                             setMenu={setMenu}

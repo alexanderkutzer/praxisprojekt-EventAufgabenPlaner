@@ -4,8 +4,9 @@ import Button from "../../../../components/Button";
 function EventDetail({ saveEvent, switchContent, inputValues, handleInputChange, errorMessage }) {
     return (
         <>
-            <div>
-                <h1>Event bearbeiten</h1>
+            <div className="dark:text-[#D5CDB8]">
+                <h1 className="text-xl">Event bearbeiten</h1>
+                <p className="mt-3">Event Titel</p>
                 <input
                     type="text"
                     name="title"

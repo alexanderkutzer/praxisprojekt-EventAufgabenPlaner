@@ -8,7 +8,7 @@ function ButtonFingerprint({ className, disabled, onClick, type, active }) {
                 "rounded-full px-2 py-0.5 m-2 border border-transparent font-bold " +
                 (disabled
                     ? "text-gray-300 dark:text-gray-700 cursor-not-allowed"
-                    : "text-gray-200 dark:text-gray-800 bg-gray-700 dark:bg-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700 hover:text-black dark:hover:text-white hover:border-black dark:hover:border-white") +
+                    : "text-gray-200 dark:text-gray-800 bg-gray-700 dark:bg-[#D5CDB8] hover:bg-gray-300 dark:hover:bg-[#393632] hover:text-black dark:hover:text-white hover:border-black dark:hover:border-[#D5CDB8]") +
                 (active === "true" && !disabled ? " bg-gray-400 dark:bg-gray-500 hover:border-gray-300 dark:hover:border-gray-700" : "") +
                 className
             }
@@ -16,6 +16,7 @@ function ButtonFingerprint({ className, disabled, onClick, type, active }) {
             onClick={onClick}
             active={active}
         >
+            
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="" className="w-full h-full" viewBox="0 0 16 16">
                 <path d="M8.06 6.5a.5.5 0 0 1 .5.5v.776a11.5 11.5 0 0 1-.552 3.519l-1.331 4.14a.5.5 0 0 1-.952-.305l1.33-4.141a10.5 10.5 0 0 0 .504-3.213V7a.5.5 0 0 1 .5-.5Z" />
                 <path d="M6.06 7a2 2 0 1 1 4 0 .5.5 0 1 1-1 0 1 1 0 1 0-2 0v.332q0 .613-.066 1.221A.5.5 0 0 1 6 8.447q.06-.555.06-1.115zm3.509 1a.5.5 0 0 1 .487.513 11.5 11.5 0 0 1-.587 3.339l-1.266 3.8a.5.5 0 0 1-.949-.317l1.267-3.8a10.5 10.5 0 0 0 .535-3.048A.5.5 0 0 1 9.569 8m-3.356 2.115a.5.5 0 0 1 .33.626L5.24 14.939a.5.5 0 1 1-.955-.296l1.303-4.199a.5.5 0 0 1 .625-.329" />
@@ -28,3 +29,4 @@ function ButtonFingerprint({ className, disabled, onClick, type, active }) {
 }
 
 export default ButtonFingerprint;
+
