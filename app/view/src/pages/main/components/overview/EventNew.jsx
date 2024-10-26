@@ -43,7 +43,12 @@ function EventNew({ selectedDate, selectedDateForInputs, inputValues, saveEvent,
                     className="p-2 border rounded h-32"
                 />
                 {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-                <Button className="resize-none w-1/2" onClick={saveEvent}>
+                <Button
+                    className="resize-none w-1/2"
+                    onClick={() => {
+                        saveEvent("new");
+                    }}
+                >
                     Event erstellen
                 </Button>
                 <Button className="resize-none w-1/2" onClick={() => switchContent("EventOverview")}>

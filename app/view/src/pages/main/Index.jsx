@@ -12,13 +12,13 @@ import SelectedEventMenu from "./components/overview/SelectedEventMenu";
 import SelectedDateMenu from "./components/overview/SelectedDateMenu";
 import SelectedTaskMenu from "./components/overview/SelectedTaskMenu";
 
-function PageMain() {
+function PageMain({ setTop }) {
     const { isLoggedIn_AuthService, setIsLoggedIn_AuthService, token_AuthService, setToken_AuthService } = useAuth();
     const [testpercentage, setTestPercentage] = useState(50);
     const [selectedDate, setSelectedDate] = useState(new Date().setHours(0, 0, 0, 0));
     const [selectedDateForInputs, setSelectedDateForInputs] = useState("");
     const [selectedEvent, setSelectedEvent] = useState(null);
-
+    const [update, setUpdate] = useState(false);
     const [id_user, setIdUser] = useState("");
     const [selectedEventForTask, setSelectedEventForTask] = useState(""); // Für das Dropdown der Events
     const [menuSesitive, setMenuSensitive] = useState("");
@@ -51,9 +51,6 @@ function PageMain() {
             boxNewHeight = windowHeight - boxTop - 16;
             containerRef.current.style.height = `${boxNewHeight}px`;
             setBoxHight(boxNewHeight);
-        } else {
-            containerRef.current.style.height = "1024px";
-            setBoxHight(1024 + 16);
         }
     };
 
@@ -95,7 +92,7 @@ function PageMain() {
             }
         };
         fetchEvents();
-    }, []);
+    }, [, update]);
     useEffect(() => {
         if (calendarRef.current) {
             const calendarApi = calendarRef.current.getApi();
@@ -146,6 +143,13 @@ function PageMain() {
     }, [eventTaskShow]);
     useEffect(() => {
         setMenuSensitive("event");
+        selectedEvent &&
+            setInputValues({
+                title: selectedEvent.title,
+                startDate: formatDate(selectedEvent.start),
+                endDate: formatDate(selectedEvent.end),
+                description: selectedEvent.description,
+            });
     }, [selectedEvent]);
 
     const sortEvents = (events) => {
@@ -233,7 +237,7 @@ function PageMain() {
         }
     };
 
-    const saveEvent = async () => {
+    const saveEvent = async (typeOfEvent) => {
         if (!inputValues.title || !inputValues.startDate) {
             setErrorMessage("Titel und Startdatum müssen angegeben werden.");
             return;
@@ -246,7 +250,7 @@ function PageMain() {
 
         try {
             // Falls ein Event ausgewählt wurde, wird es aktualisiert
-            if (selectedEvent) {
+            if (typeOfEvent == "update") {
                 const updatedEvent = {
                     id: selectedEvent.id,
                     title: inputValues.title,
@@ -364,16 +368,22 @@ function PageMain() {
                 </div>
 
                 <div ref={containerRef} className="bottom-0 w-full md:w-1/2  min-w-96 border border-gray-300 p-2 md:p-4 rounded-lg shadow-lg">
-                    <div className="text-xs md:text-xs lg:text-base flex gap-2 w-full justify-between border border-gray-300 rounded-lg shadow-lg p-1">
+                    <div className="text-xs md:text-xs lg:text-base flex gap-2 w-full justify-between mb-2">
                         {menuSesitive == "date" && (
                             <>
-                                <SelectedDateMenu switchContent={switchContent} selectedEvent={selectedEvent} activeContent={activeContent}></SelectedDateMenu>
+                                <SelectedDateMenu
+                                    switchContent={switchContent}
+                                    selectedEvent={selectedEvent}
+                                    setSelectedEvent={setSelectedEvent}
+                                    activeContent={activeContent}
+                                ></SelectedDateMenu>
                             </>
                         )}
                         {menuSesitive == "event" && (
                             <SelectedEventMenu
                                 switchContent={switchContent}
-                                selectedEvent={selectedEvent == null ? true : false}
+                                selectedEvent={selectedEvent}
+                                setSelectedEvent={setSelectedEvent}
                                 activeContent={activeContent}
                             ></SelectedEventMenu>
                         )}
@@ -432,7 +442,26 @@ function PageMain() {
                             switchContent={switchContent}
                             errorMessage={errorMessage}
                             boxHight={boxHight}
+                            update={update}
+                            setUpdate={setUpdate}
                         ></EventNew>
+                    ) : activeContent === "EditEvent" ? (
+                        <EventDetail
+                            selectedDate={selectedDate}
+                            selectedDateForInputs={selectedDateForInputs}
+                            selectedEvent={selectedEvent}
+                            formatDate={formatDate}
+                            formatTime={formatTime}
+                            saveEvent={saveEvent}
+                            inputValues={inputValues}
+                            setInputValues={setInputValues}
+                            handleInputChange={handleInputChange}
+                            switchContent={switchContent}
+                            errorMessage={errorMessage}
+                            boxHight={boxHight}
+                            update={update}
+                            setUpdate={setUpdate}
+                        ></EventDetail>
                     ) : activeContent === "AddTask" ? (
                         <TaskNew
                             inputValues={inputValues}
@@ -447,15 +476,6 @@ function PageMain() {
                             formatTime={formatTime}
                             boxHight={boxHight}
                         ></TaskNew>
-                    ) : activeContent === "Bearbeiten" ? (
-                        <EventDetail
-                            saveEvent={saveEvent}
-                            switchContent={switchContent}
-                            inputValues={inputValues}
-                            handleInputChange={handleInputChange}
-                            errorMessage={errorMessage}
-                            boxHight={boxHight}
-                        ></EventDetail>
                     ) : activeContent === "EditTask" ? (
                         <TaskDetail
                             inputValues={inputValues}
@@ -477,6 +497,7 @@ function PageMain() {
                             testpercentage={testpercentage}
                             events={events}
                             selectedEvent={selectedEvent}
+                            setSelectedEvent={setSelectedEvent}
                             handleEventClick={handleEventClick}
                             formatDate={formatDate}
                             formatTime={formatTime}
@@ -487,6 +508,7 @@ function PageMain() {
                             isTaskSelected={isTaskSelected}
                             boxHight={boxHight}
                             selectedDate={selectedDate}
+                            setTop={setTop}
                         ></EventList>
                     )}
                 </div>

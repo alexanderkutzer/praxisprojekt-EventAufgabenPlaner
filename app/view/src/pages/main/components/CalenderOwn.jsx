@@ -147,7 +147,6 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
     }
     return (
         <div className="w-full">
-            {date.toDateString()}
             <div className="w-full flex-col flex gap-2 ">
                 <div className="flex justify-between">
                     <div className="whitespace-nowrap">
@@ -204,7 +203,20 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
                         </Button>
                     </div>
                 </div>
-                <div className="grid grid-cols-8 border border-gray-500 rounded">
+                <div
+                    onWheel={(e) => {
+                        if (e.deltaY < 0) {
+                            //month back
+                            setDate(new Date(date.setMonth(date.getMonth() - 1)));
+                            setSelectedDate(new Date(date.setMonth(date.getMonth() - 1)).setHours(0, 0, 0, 0));
+                        } else {
+                            //month forward
+                            setDate(new Date(date.setMonth(date.getMonth() + 1)));
+                            setSelectedDate(new Date(date.setMonth(date.getMonth() + 1)).setHours(0, 0, 0, 0));
+                        }
+                    }}
+                    className="grid grid-cols-8 border border-gray-500 rounded"
+                >
                     <div className=" select-none border border-gray-500 w-full justify-center flex">KW</div>
                     <div className=" select-none border border-gray-500 w-full justify-center flex">Mo</div>
                     <div className=" select-none border border-gray-500 w-full justify-center flex">Di</div>
@@ -218,7 +230,7 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
                         return index % 8 == 0 ? (
                             <div
                                 key={index}
-                                className="flex items-center justify-center border border-gray-500 w-full h-full select-none aspect-square text-gray-500 text-sm  "
+                                className="flex items-center justify-center border border-gray-500 w-full max-h-[42px] h-full select-none aspect-square text-gray-500 text-sm  "
                             >
                                 {calBox.text}
                             </div>
@@ -234,7 +246,7 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
                                 }}
                                 key={index}
                                 className={
-                                    " flex flex-col justify-between select-none cursor-pointer border border-gray-500 aspect-square" +
+                                    " flex flex-col justify-between select-none cursor-pointer border border-gray-500 max-h-[42px]" +
                                     (calBox.active == false ? " text-gray-400 " : "") +
                                     (calBox.active2 == true ? " bg-orange-300 " : "")
                                 }
