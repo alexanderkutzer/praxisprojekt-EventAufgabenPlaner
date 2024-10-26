@@ -5,5 +5,5 @@
 html {
     min-width: 420px;
     @apply bg-[#fafafa];
-    @apply dark:bg-[#303030];
+    @apply dark:bg-[#393632];
 }

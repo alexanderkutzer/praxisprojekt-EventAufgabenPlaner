@@ -7,7 +7,7 @@ function EventList({ events, handleEventClick, formatDate, formatTime, eventTask
                 <h1 className="text-xl flex-col font-bold">Eventübersicht</h1>
                 <p className="text-sm">Event auswählen, um Details anzuzeigen.</p>
                 <p className="text-lg underline underline-offset-2">Demnächst:</p>
-                <ul className="space-y-4">
+                <ul className="space-y-4 overflow-y-scroll">
                     {events.map((event) => (
                         <li key={event.id} className="p-4 border border-gray-300 rounded-lg shadow-md">
                             <div onClick={() => handleEventClick({ event })} className="flex justify-between hover:bg-gray-100 px-2 rounded">

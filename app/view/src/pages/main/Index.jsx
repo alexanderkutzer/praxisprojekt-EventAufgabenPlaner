@@ -307,7 +307,7 @@ function PageMain() {
                 <Button onClick={() => setMenuSensitive(menuSesitive != "tasks" ? "tasks" : "")}>Selected Tasks</Button>
             </div>
             <div className="flex flex-col md:flex-row items-center sm:items-start w-full mt-8 space-x-5">
-                <div className="w-full sm:w-1/2 max-w-[50%] min-w-96 border border-gray-300 p-4 rounded-lg shadow-lg ">
+                <div className="w-full sm:w-1/2 max-w-[50%] min-w-96 border border-gray-300 p-4 rounded-lg shadow-lg aspect-square ">
                     <CalendarOwn selectedDate={selectedDate} setSelectedDate={setSelectedDate} events={events}></CalendarOwn>
                     {/* <Calendar
                         key={JSON.stringify(events)} // Neurendering bei Änderung
@@ -319,7 +319,7 @@ function PageMain() {
                     /> */}
                 </div>
 
-                <div className="w-full sm:w-1/2 max-w-[50%] min-w-96 border border-gray-300 p-4 rounded-lg shadow-lg">
+                <div className="w-full sm:w-1/2 max-w-[50%] min-w-96 border border-gray-300 p-4 rounded-lg shadow-lg aspect-square">
                     <div className="flex gap-2 w-full justify-between">
                         {menuSesitive == "date" && (
                             <div className="flex w-full justify-between">
