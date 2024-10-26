@@ -146,7 +146,7 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
         return 100;
     }
     return (
-        <div className="w-full p-2">
+        <div className="w-full">
             {date.toDateString()}
             <div className="w-full flex-col flex gap-2 ">
                 <div className="flex justify-between">
@@ -155,6 +155,7 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
                             className={"rounded-e-[0]"}
                             onClick={() => {
                                 setDate(new Date(date.setMonth(date.getMonth() - 1)));
+                                setSelectedDate(new Date(date.setMonth(date.getMonth() - 1)).setHours(0, 0, 0, 0));
                             }}
                         >
                             {"<"}
@@ -163,6 +164,7 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
                             className={"rounded-s-[0] rounded-e-[0]"}
                             onClick={() => {
                                 setDate(new Date(date.setMonth(date.getMonth() + 1)));
+                                setSelectedDate(new Date(date.setMonth(date.getMonth() + 1)).setHours(0, 0, 0, 0));
                             }}
                         >
                             {">"}
@@ -186,6 +188,7 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
                             className={"rounded-s-[0] rounded-e-[0]"}
                             onClick={() => {
                                 setDate(new Date(date.setYear(date.getFullYear() + -1)));
+                                setSelectedDate(new Date(date.setYear(date.getFullYear() + -1)).setHours(0, 0, 0, 0));
                             }}
                         >
                             {"<"}
@@ -194,6 +197,7 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
                             className={"rounded-s-[0]"}
                             onClick={() => {
                                 setDate(new Date(date.setYear(date.getFullYear() + 1)));
+                                setSelectedDate(new Date(date.setYear(date.getFullYear() + 1)).setHours(0, 0, 0, 0));
                             }}
                         >
                             {">"}

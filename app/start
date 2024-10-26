@@ -18,11 +18,11 @@ case $choice in
     ./start-dev.sh
     ;;
 2)
-    echo "Start AWS Public IP"
+    echo "Deploy on AWS Public IP"
     ./deployment.sh
     ;;
 3)
-    echo "Update AWS Public IP from the Rpository"
+    echo "Update on AWS Public IP from the Rpository"
     ./update.sh
     ;;
 4)

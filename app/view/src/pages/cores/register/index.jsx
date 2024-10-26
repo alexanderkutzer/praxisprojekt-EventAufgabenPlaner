@@ -36,8 +36,8 @@ function RegisterPage({ setMenu }) {
                         onChange={(e) => setEmail(e.target.value)}
                         value={email}
                         type="text"
-                        name=""
-                        id=""
+                        name="email"
+                        autocomplete="username"
                         className=" w-3/5 form-control p-1,5 border rounded"
                     />
                 </div>
@@ -47,8 +47,8 @@ function RegisterPage({ setMenu }) {
                         onChange={(e) => setUsername(e.target.value)}
                         value={username}
                         type="text"
-                        name=""
-                        id=""
+                        name="name"
+                        autocomplete="name"
                         className=" w-3/5 form-control p-1,5 border rounded"
                     />
                 </div>
@@ -67,8 +67,8 @@ function RegisterPage({ setMenu }) {
                         }}
                         value={passwordA}
                         type="password"
-                        name=""
-                        id=""
+                        name="passworda"
+                        autocomplete="new-password"
                         className=" w-3/5 form-control p-1,5 border rounded"
                     />
                 </div>
@@ -86,8 +86,8 @@ function RegisterPage({ setMenu }) {
                         }}
                         value={passwordB}
                         type="password"
-                        name=""
-                        id=""
+                        name="passwordb"
+                        autocomplete="new-password"
                         className=" w-3/5 form-control p-1,5 border rounded"
                     />
                 </div>

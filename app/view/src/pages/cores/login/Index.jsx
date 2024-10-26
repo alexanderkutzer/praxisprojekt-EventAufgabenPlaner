@@ -60,6 +60,8 @@ function LoginPage({ setMenu, setFingerMenu }) {
                         }
                     }}
                     type="email"
+                    name="email"
+                    autocomplete="username"
                     className=" w-3/4 form-control p-1,5 border rounded"
                     id="email"
                 />
@@ -75,6 +77,8 @@ function LoginPage({ setMenu, setFingerMenu }) {
                     type="password"
                     className="form-control p-1,5 border rounded w-3/4"
                     id="password"
+                    name="password"
+                    autocomplete="current-password"
                     onKeyDown={(event) => {
                         if (event.key === "Enter") {
                             onClickLogin();

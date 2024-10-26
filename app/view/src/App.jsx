@@ -13,6 +13,7 @@ import PageMain2 from "./pages/main/Index2.jsx";
 import ButtonLightDark from "./components/ButtonLightDark.jsx";
 import StartPage from "./pages/start/index.jsx";
 import ButtonStart from "./components/ButtonStart.jsx";
+import ButtonTop from "./components/ButtonTop.jsx";
 
 export function App() {
     const { isLoggedIn_AuthService, setToken_AuthService, isAdmin } = useAuth();
@@ -49,6 +50,7 @@ export function App() {
     }, [isLoggedIn_AuthService]);
     return (
         <div className="m-1 md:mx-16 dark:text-[#0b0a22]">
+            <div id="top"></div>
             <div className="flex justify-between">
                 <div className="">
                     <ButtonFingerprint
@@ -134,6 +136,15 @@ export function App() {
                     {isLoggedIn_AuthService && fingerMenu == "usermenu" && menu === "develop" && <PageDevelop></PageDevelop>}
                     {isLoggedIn_AuthService && fingerMenu == "usermenu" && menu === "profile" && <ProfilePage setMenu={setMenu}></ProfilePage>}
                 </div>
+            </div>
+            <div className="fixed bottom-[-8px] right-[-8px]">
+                <ButtonTop
+                    onClick={() => {
+                        const element = document.getElementById("top");
+                        element.scrollIntoView({ behavior: "smooth" });
+                    }}
+                    className=" w-14 h-14 fill-gray-200 dark:fill-gray-800 hover:fill-gray-800 dark:hover:fill-gray-200"
+                ></ButtonTop>
             </div>
         </div>
     );
