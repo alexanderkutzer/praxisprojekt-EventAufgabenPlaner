@@ -5,7 +5,7 @@ function ButtonFingerprint({ className, disabled, onClick, type, active }) {
         <button
             disabled={disabled}
             className={
-                "rounded-full px-2 py-0.5 m-2 border border-transparent font-bold " +
+                "rounded-full px-2 py-0.5  border border-transparent font-bold " +
                 (disabled
                     ? "text-gray-300 dark:text-gray-700 cursor-not-allowed"
                     : "text-gray-200 dark:text-gray-800 bg-gray-700 dark:bg-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700 hover:text-black dark:hover:text-white hover:border-black dark:hover:border-white") +

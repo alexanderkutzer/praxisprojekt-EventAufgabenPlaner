@@ -27,7 +27,7 @@ function RegisterPage({ setMenu }) {
         setMenu("login");
     }
     return (
-        <div className="container flex flex-col md:mt-40  items-center justify-center space-y-4 p-4 border border-gray-300 rounded-lg shadow-lg max-w-md mx-auto">
+        <div className="container flex flex-col md:mt-40  items-center justify-center space-y-4 p-4 border border-gray-300 rounded-lg shadow-lg md:max-w-md ">
             <div className="flex flex-col gap-2 w-full">
                 <p className="text-xl flex-col font-bold">Neues Konto Erstellen</p>
                 <div className="flex w-full items-center">
@@ -36,8 +36,8 @@ function RegisterPage({ setMenu }) {
                         onChange={(e) => setEmail(e.target.value)}
                         value={email}
                         type="text"
-                        name=""
-                        id=""
+                        name="email"
+                        autocomplete="username"
                         className=" w-3/5 form-control p-1,5 border rounded"
                     />
                 </div>
@@ -47,8 +47,8 @@ function RegisterPage({ setMenu }) {
                         onChange={(e) => setUsername(e.target.value)}
                         value={username}
                         type="text"
-                        name=""
-                        id=""
+                        name="name"
+                        autocomplete="name"
                         className=" w-3/5 form-control p-1,5 border rounded"
                     />
                 </div>
@@ -67,8 +67,8 @@ function RegisterPage({ setMenu }) {
                         }}
                         value={passwordA}
                         type="password"
-                        name=""
-                        id=""
+                        name="passworda"
+                        autocomplete="new-password"
                         className=" w-3/5 form-control p-1,5 border rounded"
                     />
                 </div>
@@ -86,8 +86,8 @@ function RegisterPage({ setMenu }) {
                         }}
                         value={passwordB}
                         type="password"
-                        name=""
-                        id=""
+                        name="passwordb"
+                        autocomplete="new-password"
                         className=" w-3/5 form-control p-1,5 border rounded"
                     />
                 </div>
