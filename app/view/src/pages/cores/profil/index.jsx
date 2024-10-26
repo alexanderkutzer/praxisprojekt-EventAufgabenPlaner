@@ -17,7 +17,7 @@ function ProfilePage({ setMenu }) {
 
     const [currentUsername, setCurrentUsername] = useState("");
     const [newUsername, setNewUsername] = useState("");
-    
+
     useEffect(() => {
         const fetchData = async () => {
             let response = await apiUserByToken(token_AuthService);
@@ -25,20 +25,16 @@ function ProfilePage({ setMenu }) {
             setCurrentEmail(response.email);
             setCurrentUsername(response.username);
             setIsTestUser(localStorage.getItem("isTestUser") === "true");
-            
-
-
-           
         };
         fetchData();
     }, [token_AuthService]);
 
     const handleSaveChanges = async () => {
-      if (isTestUser) {
-        alert("Test users cannot change their profile.");
-        setActiveSection("");
-        return;
-      }
+        if (isTestUser) {
+            alert("Test users cannot change their profile.");
+            setActiveSection("");
+            return;
+        }
         let response = false;
         if (activeSection == "email") {
             response = apiUpdateUserEmail(token_AuthService, newEmail);
@@ -48,29 +44,26 @@ function ProfilePage({ setMenu }) {
         }
         if (activeSection == "username") {
             response = await apiUpdateUserUsername(token_AuthService, newUsername);
-            
         }
 
         setActiveSection("");
     };
 
     return (
-        <div className="bg-gray-200 dark:bg-gray-800 p-6 rounded-md shadow-md relative">
+        <div className="container bg-gray-200 dark:bg-gray-800 p-6 rounded-md shadow-md relative ">
             <button className="absolute top-2 right-2 text-xl" onClick={() => setMenu("home")}>
                 &times;
             </button>
 
             <h2 className="text-xl font-bold mb-4 text-lg">Edit Profile</h2>
             {activeSection === "" && (
-            <div className="mb-4 text-gray-600 text-lg">
-              <p>
-                {currentUsername ||currentEmail}
-              </p>
-              </div>
+                <div className="mb-4 text-gray-600 text-lg">
+                    <p>{currentUsername || currentEmail}</p>
+                </div>
             )}
 
             {activeSection === "" && (
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-col md:flex-row">
                     <Button onClick={() => setActiveSection("email")}>Edit E-mail Address</Button>
 
                     <Button onClick={() => setActiveSection("password")}>Edit Password</Button>
@@ -141,14 +134,14 @@ function ProfilePage({ setMenu }) {
                             placeholder="new username"
                         />
                     </div>
-                   
                 </>
             )}
-
-            <div className="flex justify-end space-x-2 mt-4">
-                <Button onClick={() => setActiveSection("")}>Cancel</Button>
-                <Button onClick={handleSaveChanges}>Save Changes</Button>
-            </div>
+            {activeSection !== "" && (
+                <div className="flex justify-center space-x-2 mt-4">
+                    <Button onClick={() => setActiveSection("")}>Cancel</Button>
+                    <Button onClick={handleSaveChanges}>Save Changes</Button>
+                </div>
+            )}
         </div>
     );
 }

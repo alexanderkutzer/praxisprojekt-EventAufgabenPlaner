@@ -58,7 +58,7 @@ function PageMain() {
     };
 
     useLayoutEffect(() => {
-        positionBoxAtBottom();
+        setTimeout(() => positionBoxAtBottom(), 10);
         window.addEventListener("resize", positionBoxAtBottom);
         return () => {
             window.removeEventListener("resize", positionBoxAtBottom);
@@ -342,7 +342,7 @@ function PageMain() {
 
     return (
         <>
-            <div className="flex flex-col md:flex-row items-center md:items-start w-full mt-8 md:gap-5">
+            <div className="flex flex-col md:flex-row items-center md:items-start w-full  md:gap-5">
                 <div className="w-full md:w-1/2 min-w-96 border border-gray-300 p-4 rounded-lg shadow-lg ">
                     <CalendarOwn
                         testPercentage={testpercentage}

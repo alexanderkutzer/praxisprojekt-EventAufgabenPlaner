@@ -37,7 +37,7 @@ function LoginPage({ setMenu, setFingerMenu }) {
     }, [isLoggedIn_AuthService]);
 
     return (
-        <div className="container flex flex-col md:mt-40 items-center justify-center space-y-4 p-4 border border-gray-300 rounded-lg shadow-lg max-w-md mx-auto">
+        <div className="container flex flex-col items-center justify-center space-y-4 p-4 border border-gray-300 rounded-lg shadow-lg md:max-w-md">
             <p className="text-xl font-bold">Login</p>
             <h2 className="text-xl ">Wilkommen!</h2>
 
