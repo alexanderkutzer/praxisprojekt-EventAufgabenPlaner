@@ -1,21 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "../../../../components/Button";
 
-function SelectedDateMenu({ switchContent, selectedEvent, activeContent }) {
+function SelectedDateMenu({ switchContent, selectedEvent, setSelectedEvent, activeContent }) {
     return (
         <>
             <div className="flex w-full justify-between">
                 <Button
                     className=""
                     active={activeContent === "AddEvent" ? "true" : "false"}
-                    onClick={() => switchContent(activeContent === "AddEvent" ? "EventOverview" : "AddEvent")}
+                    onClick={() => {
+                        setSelectedEvent(null);
+                        switchContent(activeContent === "AddEvent" ? "EventOverview" : "AddEvent");
+                    }}
                 >
                     Neues Event
                 </Button>
                 <Button
                     disabled={selectedEvent == null}
-                    active={activeContent === "AddEvent" ? "true" : "false"}
-                    onClick={() => switchContent(activeContent === "AddEvent" ? "EventOverview" : "AddEvent")}
+                    active={activeContent === "EditEvent" ? "true" : "false"}
+                    onClick={() => switchContent(activeContent === "EditEvent" ? "EventOverview" : "EditEvent")}
                 >
                     Event Bearbeiten
                 </Button>

@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 
 function EventList({
     testpercentage,
     events,
     handleEventClick,
     selectedEvent,
+    setSelectedEvent,
     formatDate,
     formatTime,
     eventTaskShow,
@@ -14,32 +15,57 @@ function EventList({
     isTaskSelected,
     boxHight,
     selectedDate,
+    setTop,
 }) {
     const scrollContainer = useRef(null);
     const scrollContainerInner = useRef(null);
+    const positionBoxAtBottom = () => {
+        let boxNewHeight = 0;
+        if (scrollContainer.current) {
+            const windowHeight = window.innerHeight;
+            const boxTop = scrollContainer.current.getBoundingClientRect().top;
+            boxNewHeight = windowHeight - boxTop - 32;
+            scrollContainer.current.style.height = `${boxNewHeight}px`;
+        }
+    };
+    useLayoutEffect(() => {
+        setTimeout(() => {
+            positionBoxAtBottom();
+        }, 10);
+
+        window.addEventListener("resize", positionBoxAtBottom);
+        return () => {
+            window.removeEventListener("resize", positionBoxAtBottom);
+        };
+    }, []);
+    useEffect(() => {
+        scrollContainer.current.scrollTo({ top: 0, behavior: "smooth" });
+    }, [setTop]);
 
     useEffect(() => {
         if (selectedEvent && scrollContainer) {
             const element = document.getElementById(selectedEvent?.id);
             if (element) {
-                element.scrollIntoView({ behavior: "smooth" });
+                const elementPosition = element.offsetTop - scrollContainer.current.offsetTop;
+                element.scrollIntoView({ behavior: "smooth", block: "center" });
+                // scrollContainer.current.scrollTo({ top: elementPosition - 40, behavior: "smooth", block: "start" });
             }
         }
     }, [selectedEvent]);
     useEffect(() => {
-        console.log("selectedDate", selectedDate);
         if (selectedDate) {
             const element = document.getElementById(
                 [String(new Date(parseInt(selectedDate ?? null)).getMonth()).padStart(2, "0"), new Date(parseInt(selectedDate)).getFullYear()].join("")
             );
             if (element) {
-                element.scrollIntoView({ behavior: "smooth" });
+                const elementPosition = element.offsetTop - scrollContainer.current.offsetTop;
+                scrollContainer.current.scrollTo({ top: elementPosition - 40, behavior: "smooth" });
             }
         }
     }, [selectedDate]);
     return (
-        <div ref={scrollContainer} style={{ maxHeight: boxHight - 76 + "px" }} className="overflow-y-scroll">
-            <ul className="flex flex-col gap-1" style={{ paddingBottom: window.innerHeight - 300 + "px" }}>
+        <div ref={scrollContainer} className="overflow-y-scroll">
+            <ul className="flex flex-col gap-1">
                 {events.map((event, i) => (
                     <React.Fragment key={event.id}>
                         {(new Date(parseInt(events[i - 1 < 0 ? 0 : i - 1].start)).toLocaleString("de", { month: "long" }) !=
@@ -52,13 +78,18 @@ function EventList({
                                 id={[String(new Date(parseInt(event.start)).getMonth()).padStart(2, "0"), new Date(parseInt(event.start)).getFullYear()].join(
                                     ""
                                 )}
-                                className="text-xl font-semibold sticky top-0 bg-[#d0cbbb] p-1 rounded"
-                                style={{ zIndex: 1 }}
+                                className="text-xl font-semibold sticky top-0 bg-[#d0cbbb] p-1 rounded-b z-20 shadow shadow-gray-300"
                             >
                                 {new Date(parseInt(event.start)).toLocaleString("de", { month: "long", year: "numeric" })}
                             </li>
                         )}
-                        <li id={event.id} onClick={() => handleEventClick({ event })} className="p-1 border border-gray-300 rounded-lg shadow-md">
+                        <li
+                            id={event.id}
+                            onClick={() => {
+                                handleEventClick({ event });
+                            }}
+                            className="sticky top-0 p-1 border bg-white border-gray-300 rounded-lg shadow shadow-gray-300 z-10 "
+                        >
                             <div
                                 className={
                                     "border-2 hover:border-gray-700 rounded " + (event.id === selectedEvent?.id && " border-orange-500 hover:border-orange-700")
@@ -74,7 +105,8 @@ function EventList({
                                     <div style={{ width: testpercentage + "%" }} className="absolut inset-0 h-full bg-red-500"></div>
 
                                     <button
-                                        onClick={() => {
+                                        onClick={(e) => {
+                                            e.stopPropagation();
                                             let newShow = eventTaskShow.map((e) => {
                                                 if (e.id === event.id) {
                                                     e.show = !e.show;
@@ -104,7 +136,7 @@ function EventList({
                                     <div
                                         className="cursor-pointer hover:bg-orange-500 hover:text-white"
                                         onClick={(e) => {
-                                            e.preventDefault();
+                                            e.stopPropagation();
                                             console.log("Task 1");
                                         }}
                                     >
@@ -113,7 +145,7 @@ function EventList({
                                     <div
                                         className="cursor-pointer hover:bg-orange-500 hover:text-white"
                                         onClick={(e) => {
-                                            e.preventDefault();
+                                            e.stopPropagation();
                                             console.log("Task 2");
                                         }}
                                     >
@@ -122,7 +154,7 @@ function EventList({
                                     <div
                                         className="cursor-pointer hover:bg-orange-500 hover:text-white"
                                         onClick={(e) => {
-                                            e.preventDefault();
+                                            e.stopPropagation();
                                             console.log("Task 3");
                                         }}
                                     >

@@ -21,6 +21,7 @@ export function App() {
     const [menu, setMenu] = useState("start");
 
     const [isDarkMode, setDarkMode] = React.useState(false);
+    const [setTop, setSetTop] = useState(false);
 
     const events = [
         { title: "Event 1", date: "2024-10-14" },
@@ -89,7 +90,7 @@ export function App() {
                     )}
                     {!isLoggedIn_AuthService && menu == "login" && <LoginPage setMenu={setMenu}></LoginPage>}
                     {!isLoggedIn_AuthService && menu == "register" && <RegisterPage setMenu={setMenu}></RegisterPage>}
-                    {isLoggedIn_AuthService && fingerMenu == "start" && <PageMain></PageMain>}
+                    {isLoggedIn_AuthService && fingerMenu == "start" && <PageMain setTop={setTop}></PageMain>}
                     {isLoggedIn_AuthService && fingerMenu == "usermenu" && (
                         <div className="flex flex-row items-center gap-2">
                             <Button
@@ -137,13 +138,16 @@ export function App() {
                     {isLoggedIn_AuthService && fingerMenu == "usermenu" && menu === "profile" && <ProfilePage setMenu={setMenu}></ProfilePage>}
                 </div>
             </div>
-            <div className="fixed bottom-[-8px] right-[-8px]">
+            <div className="fixed bottom-[-8px] right-[-8px] z-50">
                 <ButtonTop
                     onClick={() => {
                         const element = document.getElementById("top");
                         element.scrollIntoView({ behavior: "smooth" });
+                        setTimeout(() => {
+                            setSetTop(!setTop);
+                        }, 0);
                     }}
-                    className=" w-14 h-14 fill-gray-200 dark:fill-gray-800 hover:fill-gray-800 dark:hover:fill-gray-200"
+                    className=" w-14 h-14 fill-gray-200 dark:fill-gray-800"
                 ></ButtonTop>
             </div>
         </div>
