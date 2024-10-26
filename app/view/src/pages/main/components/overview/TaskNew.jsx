@@ -1,7 +1,18 @@
 import React, { useEffect } from "react";
 import Button from "../../../../components/Button";
 
-function TaskNew({ inputValues, saveTask, handleInputChange, switchContent, errorMessage, events, selectedEventForTask, formatDate, formatTime }) {
+function TaskNew({
+    inputValues,
+    saveTask,
+    handleInputChange,
+    switchContent,
+    errorMessage,
+    events,
+    selectedEvent,
+    selectedEventForTask,
+    formatDate,
+    formatTime,
+}) {
     useEffect(() => {
         events.forEach((e, i) => {
             if (i == 0) {
@@ -14,12 +25,22 @@ function TaskNew({ inputValues, saveTask, handleInputChange, switchContent, erro
         <>
             <div className="flex flex-col space-y-4">
                 <h1 className="text-2xl font-semibold">Neue Aufgabe hinzufügen</h1>
-                <select id="event-select" name="id_event" value={inputValues.id_event} onChange={handleInputChange} className="p-2 border rounded">
-                    {events.map((event) => (
-                        <option key={event.id} value={event.id}>
-                            {event.title} (Start: {formatDate(event.start)} {formatTime(event.start)})
-                        </option>
-                    ))}
+
+                <select
+                    id="event-select"
+                    name="id_event"
+                    value={selectedEvent?.id || inputValues.id_event}
+                    onChange={handleInputChange}
+                    className="p-2 border rounded"
+                >
+                    {events.map((event) => {
+                        console.log("test", event.id == selectedEvent?.id);
+                        return (
+                            <option key={event.id} value={event.id}>
+                                {event.title} (Start: {formatDate(event.start)} {formatTime(event.start)})
+                            </option>
+                        );
+                    })}
                 </select>
 
                 <input

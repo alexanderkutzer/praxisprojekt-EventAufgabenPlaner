@@ -15,7 +15,7 @@ import StartPage from "./pages/start/index.jsx";
 import ButtonStart from "./components/ButtonStart.jsx";
 
 export function App() {
-    const { isLoggedIn_AuthService, setToken_AuthService } = useAuth();
+    const { isLoggedIn_AuthService, setToken_AuthService, isAdmin } = useAuth();
     const [fingerMenu, setFingerMenu] = useState("start");
     const [menu, setMenu] = useState("start");
 
@@ -54,7 +54,7 @@ export function App() {
                     onClick={() => {
                         if (isLoggedIn_AuthService) {
                             setFingerMenu(fingerMenu == "start" ? "usermenu" : "start");
-                            setMenu("main");
+                            setMenu(fingerMenu !== "usermenu" ? "profile" : "main");
                         } else {
                             setMenu("start");
                         }
@@ -86,7 +86,7 @@ export function App() {
                     {!isLoggedIn_AuthService && menu == "register" && <RegisterPage setMenu={setMenu}></RegisterPage>}
                     {isLoggedIn_AuthService && fingerMenu == "start" && <PageMain></PageMain>}
                     {isLoggedIn_AuthService && fingerMenu == "usermenu" && (
-                        <div className="flex flex-row items-center gap-2 mb-2">
+                        <div className="flex flex-row items-center gap-2 mb-2 mt-20">
                             <Button
                                 onClick={() => {
                                     setMenu("profile");
@@ -95,22 +95,26 @@ export function App() {
                             >
                                 Profile
                             </Button>
-                            <Button
-                                onClick={() => {
-                                    setMenu("admin");
-                                }}
-                                active={menu === "admin" ? "true" : "false"}
-                            >
-                                Admin
-                            </Button>
-                            <Button
-                                onClick={() => {
-                                    setMenu("develop");
-                                }}
-                                active={menu === "develop" ? "true" : "false"}
-                            >
-                                Develop
-                            </Button>
+                            {isAdmin && (
+                                <>
+                                    <Button
+                                        onClick={() => {
+                                            setMenu("admin");
+                                        }}
+                                        active={menu === "admin" ? "true" : "false"}
+                                    >
+                                        Admin
+                                    </Button>
+                                    <Button
+                                        onClick={() => {
+                                            setMenu("develop");
+                                        }}
+                                        active={menu === "develop" ? "true" : "false"}
+                                    >
+                                        Develop
+                                    </Button>
+                                </>
+                            )}
                             <Button
                                 onClick={() => {
                                     setToken_AuthService("");
