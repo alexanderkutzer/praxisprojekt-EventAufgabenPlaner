@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "../../../../components/Button";
 
-function SelectedEventMenu({ switchContent, selectedEvent, setSelectedEvent, activeContent }) {
+function SelectedEventMenu({ switchContent, selectedEvent, setSelectedEvent, activeContent, events, tasks }) {
     return (
         <>
             <div className="flex w-full justify-between">
@@ -21,12 +21,14 @@ function SelectedEventMenu({ switchContent, selectedEvent, setSelectedEvent, act
                 >
                     Event Bearbeiten
                 </Button>
-                <Button
-                    active={activeContent === "AddTask" ? "true" : "false"}
-                    onClick={() => switchContent(activeContent === "AddTask" ? "EventOverview" : "AddTask")}
-                >
-                    Neue Aufgabe
-                </Button>
+                {events.length > 0 && (
+                    <Button
+                        active={activeContent === "AddTask" ? "true" : "false"}
+                        onClick={() => switchContent(activeContent === "AddTask" ? "EventOverview" : "AddTask")}
+                    >
+                        Neue Aufgabe
+                    </Button>
+                )}
             </div>
         </>
     );
