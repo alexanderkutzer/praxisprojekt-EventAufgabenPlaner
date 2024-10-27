@@ -61,6 +61,7 @@ function EventNew({
                     className="resize-none w-1/2"
                     onClick={() => {
                         saveEvent("new");
+                        setMenuSensitive("date");
                     }}
                 >
                     Event erstellen

@@ -4,8 +4,8 @@
 
 echo "EventAufgabenPlaner - Menu"
 echo "1 - Start Development Local"
-echo "2 - Start AWS Public IP"
-echo "3 - Update AWS Public IP from the Rpository"
+echo "2 - Deploy on  AWS Public IP"
+echo "3 - Update on AWS Public IP from the Rpository"
 echo "4 - Backup Database from AWS"
 echo "5 - Restore Database to AWS"
 echo "0 - Exit"
