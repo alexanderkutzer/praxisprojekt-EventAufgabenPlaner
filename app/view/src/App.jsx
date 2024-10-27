@@ -70,7 +70,7 @@ export function App() {
                     <ButtonStart onClick={navigateToHome}></ButtonStart>
                 </div>
                 <div id="nav" className=" ">
-                    <ButtonLightDark className={" w-14 h-14 "}>
+                    <ButtonLightDark onClick={toggleDarkMode} className={" w-14 h-14 "}>
                         <DarkModeSwitch checked={isDarkMode} size={30} moonColor="gray" sunColor="yellow" />
                     </ButtonLightDark>
                 </div>
