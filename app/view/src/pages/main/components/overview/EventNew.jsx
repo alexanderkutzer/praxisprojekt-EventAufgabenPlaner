@@ -2,7 +2,17 @@ import React from "react";
 import Button from "../../../../components/Button";
 import Input from "../../../../components/Input";
 
-function EventNew({ selectedDate, selectedDateForInputs, inputValues, saveEvent, handleInputChange, switchContent, errorMessage }) {
+function EventNew({
+    selectedDate,
+    selectedDateForInputs,
+    inputValues,
+    saveEvent,
+    handleInputChange,
+    switchContent,
+    errorMessage,
+    menuSesitive,
+    setMenuSensitive,
+}) {
     inputValues.startDate = selectedDateForInputs;
     inputValues.endDate = selectedDateForInputs;
     inputValues.startDateUnix = selectedDate;
@@ -55,7 +65,13 @@ function EventNew({ selectedDate, selectedDateForInputs, inputValues, saveEvent,
                 >
                     Event erstellen
                 </Button>
-                <Button className="resize-none w-1/2" onClick={() => switchContent("EventOverview")}>
+                <Button
+                    className="resize-none w-1/2"
+                    onClick={() => {
+                        switchContent("EventOverview");
+                        setMenuSensitive("date");
+                    }}
+                >
                     Abbrechen
                 </Button>
             </div>

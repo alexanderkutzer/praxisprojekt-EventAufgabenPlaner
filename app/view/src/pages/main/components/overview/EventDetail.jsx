@@ -17,6 +17,8 @@ function EventDetail({
     formatTime,
     update,
     setUpdate,
+    menuSesitive,
+    setMenuSensitive,
 }) {
     const [event, setEvent] = useState(selectedEvent);
     const [deleteEventMenu, setDeleteEventMenu] = useState(false);
@@ -68,6 +70,7 @@ function EventDetail({
                         apiUpdateEvent(updatedEvent.id, updatedEvent);
                         setUpdate(!update);
                         switchContent("EventOverview");
+                        setMenuSensitive("date");
                     }}
                 >
                     Event updaten
@@ -91,13 +94,20 @@ function EventDetail({
                                 apiDeleteEvent(event.id);
                                 setUpdate(!update);
                                 switchContent("EventOverview");
+                                setMenuSensitive("date");
                             }}
                         >
                             Ja
                         </Button>
                     </div>
                 )}
-                <Button className="resize-none w-1/2" onClick={() => switchContent("EventOverview")}>
+                <Button
+                    className="resize-none w-1/2"
+                    onClick={() => {
+                        switchContent("EventOverview");
+                        setMenuSensitive("date");
+                    }}
+                >
                     Abbrechen
                 </Button>
             </div>

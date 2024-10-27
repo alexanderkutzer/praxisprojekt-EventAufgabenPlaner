@@ -16,6 +16,8 @@ function EventList({
     boxHight,
     selectedDate,
     setTop,
+    update,
+    setUpdate,
 }) {
     const scrollContainer = useRef(null);
     const scrollContainerInner = useRef(null);
@@ -28,14 +30,22 @@ function EventList({
             scrollContainer.current.style.height = `${boxNewHeight}px`;
         }
     };
+    const paddingBottom = () => {
+        if (scrollContainer.current) {
+            scrollContainer.current.style.paddingBottom = `${(scrollContainer.current.getBoundingClientRect().height / 3) * 2}px`;
+        }
+    };
     useLayoutEffect(() => {
         setTimeout(() => {
             positionBoxAtBottom();
+            paddingBottom();
         }, 10);
 
         window.addEventListener("resize", positionBoxAtBottom);
+        window.addEventListener("resize", paddingBottom);
         return () => {
             window.removeEventListener("resize", positionBoxAtBottom);
+            window.removeEventListener("resize", paddingBottom);
         };
     }, []);
     useEffect(() => {
@@ -63,6 +73,7 @@ function EventList({
             }
         }
     }, [selectedDate]);
+    console.log("update", update);
     return (
         <div ref={scrollContainer} className="overflow-y-scroll">
             <ul className="flex flex-col gap-1">
@@ -101,87 +112,88 @@ function EventList({
                                     </span>
                                 </div>
                                 <div className="text-gray-600 dark:text-gray-400 block px-2">{formatDate(event.start)}</div>
-                                <div className="relative w-full h-5 bg-red-200">
-                                    <div style={{ width: testpercentage + "%" }} className="absolut inset-0 h-full bg-red-500"></div>
+                                {event.hasTasks && (
+                                    <div className="relative w-full h-5 bg-red-200">
+                                        <div style={{ width: event.taskPercentage + "%" }} className="absolut inset-0 h-full bg-red-500"></div>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                let newShow = eventTaskShow.map((e) => {
+                                                    if (e.id === event.id) {
+                                                        e.show = !e.show;
+                                                    } else {
+                                                        e.show = false;
+                                                    }
 
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            let newShow = eventTaskShow.map((e) => {
-                                                if (e.id === event.id) {
-                                                    e.show = !e.show;
-                                                } else {
-                                                    e.show = false;
-                                                }
-
-                                                return e;
-                                            });
-                                            setEventTaskShow(newShow);
-                                        }}
-                                        className="absolute inset-0 ml-2"
-                                    >
-                                        <svg
-                                            className={`w-4 h-4 transition-transform duration-200 ${
-                                                eventTaskShow.find((e) => e.id === event.id)?.show ? "rotate-180" : "rotate-0"
-                                            }`}
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
+                                                    return e;
+                                                });
+                                                setEventTaskShow(newShow);
+                                            }}
+                                            className="absolute inset-0 ml-2"
                                         >
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 10l5 5 5-5" />
-                                        </svg>
-                                    </button>
-                                </div>
-                                <div className={eventTaskShow.length > 0 && eventTaskShow.filter((ets) => ets.id === event.id)[0]?.show ? " " : " hidden "}>
-                                    <div
-                                        className="cursor-pointer hover:bg-orange-500 hover:text-white"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            console.log("Task 1");
-                                        }}
-                                    >
-                                        Test 1
+                                            <svg
+                                                className={`w-4 h-4 transition-transform duration-200 ${
+                                                    eventTaskShow.find((e) => e.id === event.id)?.show ? "rotate-180" : "rotate-0"
+                                                }`}
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 10l5 5 5-5" />
+                                            </svg>
+                                        </button>
                                     </div>
-                                    <div
-                                        className="cursor-pointer hover:bg-orange-500 hover:text-white"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            console.log("Task 2");
-                                        }}
-                                    >
-                                        Test 2
+                                )}
+                                {event.hasTasks && (
+                                    <div className={eventTaskShow.length > 0 && eventTaskShow.filter((ets) => ets.id === event.id)[0]?.show ? " " : " hidden "}>
+                                        {/* <div
+                                            className="cursor-pointer hover:bg-orange-500 hover:text-white"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                console.log("Task 1");
+                                            }}
+                                        >
+                                            Test 1
+                                        </div>
+                                        <div
+                                            className="cursor-pointer hover:bg-orange-500 hover:text-white"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                console.log("Task 2");
+                                            }}
+                                        >
+                                            Test 2
+                                        </div>
+                                        <div
+                                            className="cursor-pointer hover:bg-orange-500 hover:text-white"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                console.log("Task 3");
+                                            }}
+                                        >
+                                            Test 3
+                                        </div> */}
+                                        {tasks
+                                            .filter((t) => t.id_event === event.id)
+                                            .map((t, i) => (
+                                                <React.Fragment key={t.id}>
+                                                    <div
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            toggleTaskSelection(t);
+                                                        }}
+                                                        className={
+                                                            "cursor-pointer hover:bg-orange-600 hover:text-white " +
+                                                            (isTaskSelected(t) ? " bg-orange-500 text-white " : " ") +
+                                                            (i + 1 === tasks.filter((t) => t.id_event === event.id).length ? " rounded-b-sm " : " ")
+                                                        }
+                                                    >
+                                                        {t.title}
+                                                    </div>
+                                                </React.Fragment>
+                                            ))}
                                     </div>
-                                    <div
-                                        className="cursor-pointer hover:bg-orange-500 hover:text-white"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            console.log("Task 3");
-                                        }}
-                                    >
-                                        Test 3
-                                    </div>
-                                    {/* {tasks
-                                        .filter((t) => t.id_event === event.id)
-                                        .map((t) => (
-                                            <>
-                                                <div
-                                                    key={t.id}
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        toggleTaskSelection(t);
-                                                    }}
-                                                    style={{
-                                                        cursor: "pointer",
-                                                        color: isTaskSelected(t) ? "green" : "gray-600 dark:gray-400", // Ändere die Farbe, wenn markiert
-                                                    }}
-                                                    onMouseEnter={(e) => (e.target.style.color = "blue")}
-                                                    onMouseLeave={(e) => (e.target.style.color = isTaskSelected(t) ? "green" : "gray-600 dark:gray-400")}
-                                                >
-                                                    {t.title}
-                                                </div>
-                                            </>
-                                        ))} */}
-                                </div>
+                                )}
                             </div>
                         </li>
                     </React.Fragment>

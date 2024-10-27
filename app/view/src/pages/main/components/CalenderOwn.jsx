@@ -123,7 +123,7 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
             let day = date.getDate();
             let month = date.getMonth();
             let year = date.getFullYear();
-            event.taskpercent = testPercentage; //getEventTasksDone(event);
+            // event.taskpercent = testPercentage; //getEventTasksDone(event);
             calBoxes.forEach((calBox) => {
                 if (calBox.day == day && calBox.month - 1 == month && calBox.year == year) {
                     event.color = colors[calBox.events.length % colors.length];
