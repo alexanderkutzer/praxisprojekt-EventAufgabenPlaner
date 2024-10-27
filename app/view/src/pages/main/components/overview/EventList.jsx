@@ -73,7 +73,7 @@ function EventList({
             }
         }
     }, [selectedDate]);
-    console.log("update", update);
+
     return (
         <div ref={scrollContainer} className="overflow-y-scroll">
             <ul className="flex flex-col gap-1">
@@ -114,7 +114,7 @@ function EventList({
                                 <div className="text-gray-600 dark:text-gray-400 block px-2">{formatDate(event.start)}</div>
                                 {event.hasTasks && (
                                     <div className="relative w-full h-5 bg-red-200">
-                                        <div style={{ width: event.taskPercentage + "%" }} className="absolut inset-0 h-full bg-red-500"></div>
+                                        <div style={{ width: event.taskpercent + "%" }} className="absolut inset-0 h-full bg-red-500"></div>
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
@@ -150,7 +150,7 @@ function EventList({
                                             className="cursor-pointer hover:bg-orange-500 hover:text-white"
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                console.log("Task 1");
+                                                
                                             }}
                                         >
                                             Test 1
@@ -159,7 +159,7 @@ function EventList({
                                             className="cursor-pointer hover:bg-orange-500 hover:text-white"
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                console.log("Task 2");
+                                                
                                             }}
                                         >
                                             Test 2
@@ -168,7 +168,7 @@ function EventList({
                                             className="cursor-pointer hover:bg-orange-500 hover:text-white"
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                console.log("Task 3");
+                                                
                                             }}
                                         >
                                             Test 3

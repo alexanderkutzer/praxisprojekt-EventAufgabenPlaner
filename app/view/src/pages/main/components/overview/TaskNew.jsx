@@ -38,7 +38,6 @@ function TaskNew({
                     value={task.id_event}
                     onChange={(e) => {
                         setTask({ ...task, id_event: e.target.value });
-                        console.log(task);
                     }}
                     className="p-2 border rounded"
                 >
@@ -56,7 +55,6 @@ function TaskNew({
                     name="title"
                     value={task.title}
                     onChange={(e) => {
-                        console.log(task);
                         setTask({ ...task, title: e.target.value });
                     }}
                     placeholder="Aufgabe eingeben"

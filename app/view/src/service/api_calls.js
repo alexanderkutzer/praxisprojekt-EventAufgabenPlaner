@@ -125,7 +125,6 @@ export async function apiLogin(email, password) {
 }
 
 async function fetchApi(url, method, data) {
-    console.log("fetchApi", url, method, data);
     return fetch(apiUrl + url, {
         method: method,
         headers: {

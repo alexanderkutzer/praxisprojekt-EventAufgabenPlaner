@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const user = async (token) => {
             const response = await apiUserByToken(token);
-            console.log(response);
+
             response.isAdmin && setIsAdmin(true);
         };
         if (token_AuthService !== "") {

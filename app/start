@@ -27,11 +27,11 @@ case $choice in
     ;;
 4)
     echo "Backup Database from AWS"
-    ./backup-download.sh
+    ./backup_download.sh
     ;;
 5)
     echo "Restore Database to AWS"
-    ./backup-upload.sh
+    ./backup_upload.sh
     ;;
 0)
     echo "Exit"

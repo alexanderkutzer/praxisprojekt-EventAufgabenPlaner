@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "../../../../components/Button";
 
-function SelectedTaskMenu({ activeContent, switchContent, selectedEvent, setSelectedEvent }) {
+function SelectedTaskMenu({ activeContent, switchContent, selectedEvent, setSelectedEvent, events, tasks }) {
     return (
         <>
             <div className="flex w-full justify-between">

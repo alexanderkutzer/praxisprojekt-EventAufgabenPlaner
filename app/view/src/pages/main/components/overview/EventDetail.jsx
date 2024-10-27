@@ -23,7 +23,6 @@ function EventDetail({
     const [event, setEvent] = useState(selectedEvent);
     const [deleteEventMenu, setDeleteEventMenu] = useState(false);
     useEffect(() => {
-        console.log(123, selectedEvent);
         setEvent({ ...selectedEvent, start: selectedDate, end: selectedDate });
     }, [selectedDate]);
     return (

@@ -101,7 +101,7 @@ function PageMain({ setTop }) {
                 return;
             }
             const tasks = response;
-            console.log("tasks", tasks);
+
             tasks.forEach((task) => {
                 task.inProgress = task.in_progress == 1 ? true : false;
                 task.todo = task.todo == 1 ? true : false;
@@ -152,7 +152,7 @@ function PageMain({ setTop }) {
             let percentage = 100;
             let tasks2 = tasks?.filter((task) => task.id_event == event.id);
             let hasEventTasks = tasks2?.length > 0;
-            console.log("hasEventTasks", hasEventTasks);
+
             if (hasEventTasks) {
                 let done = tasks2.filter((task) => task.done == true).length;
                 let inProgress = tasks2.filter((task) => task.in_progress == true).length;
@@ -427,6 +427,8 @@ function PageMain({ setTop }) {
                                     selectedEvent={selectedEvent}
                                     setSelectedEvent={setSelectedEvent}
                                     activeContent={activeContent}
+                                    events={events}
+                                    tasks={tasks}
                                 ></SelectedDateMenu>
                             </>
                         )}
@@ -436,6 +438,8 @@ function PageMain({ setTop }) {
                                 selectedEvent={selectedEvent}
                                 setSelectedEvent={setSelectedEvent}
                                 activeContent={activeContent}
+                                events={events}
+                                tasks={tasks}
                             ></SelectedEventMenu>
                         )}
                         {menuSesitive == "task" && (
@@ -445,6 +449,8 @@ function PageMain({ setTop }) {
                                     selectedEvent={selectedEvent}
                                     setSelectedEvent={setSelectedEvent}
                                     activeContent={activeContent}
+                                    events={events}
+                                    tasks={tasks}
                                 ></SelectedTaskMenu>
                             </>
                         )}
