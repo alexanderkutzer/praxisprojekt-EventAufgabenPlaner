@@ -71,7 +71,7 @@ export function App() {
                 </div>
                 <div id="nav" className=" ">
                     <ButtonLightDark className={" w-14 h-14 "}>
-                        <DarkModeSwitch checked={isDarkMode} onChange={toggleDarkMode} size={30} moonColor="gray" sunColor="yellow" />
+                        <DarkModeSwitch checked={isDarkMode} size={30} moonColor="gray" sunColor="yellow" />
                     </ButtonLightDark>
                 </div>
             </div>
