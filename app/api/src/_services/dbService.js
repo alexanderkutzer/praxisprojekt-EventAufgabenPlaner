@@ -34,6 +34,7 @@ const sqls = [
         isAdmin BOOLEAN, 
         token TEXT
     )`,
+    // `ALTER TABLE 'events' ADD COLUMN color`,
 ];
 
 export class DBService {

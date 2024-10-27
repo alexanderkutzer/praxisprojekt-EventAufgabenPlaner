@@ -54,7 +54,7 @@ export class TaskController {
             const id_user = (await this.userService.getUserByToken(token)).id;
             const id = req.params.id;
             const updateTask = req.body;
-            res.json((await this.taskService.update(id_user, updateTask)) ?? {});
+            res.json((await this.taskService.update(id_user, id, updateTask)) ?? {});
         } catch (err) {
             console.error("1acb096b-5bc9-4156-a4ff-c25051002fa3", err);
             res.status(500).json({

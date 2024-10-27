@@ -110,7 +110,7 @@ export async function apiCreateTask(data) {
 }
 
 export async function apiUpdateTask(id, data) {
-    const response = await fetchApi(`tasks`, "PUT", data);
+    const response = await fetchApi(`tasks/${id == "" ? "noId" : id}`, "PUT", data);
     return response.json();
 }
 
@@ -125,6 +125,7 @@ export async function apiLogin(email, password) {
 }
 
 async function fetchApi(url, method, data) {
+    console.log("fetchApi", url, method, data);
     return fetch(apiUrl + url, {
         method: method,
         headers: {

@@ -61,38 +61,58 @@ function PageMain({ setTop }) {
             window.removeEventListener("resize", positionBoxAtBottom);
         };
     }, []);
-    useEffect(() => {
-        const fetchEvents = async () => {
-            try {
-                const response = await apiGetEvents();
-                if (response.error) {
-                    if (response.error === "Invalid token") {
-                        console.error("Token abgelaufen");
-                        setToken_AuthService(null);
-                        setIsLoggedIn_AuthService(false);
-                        return;
-                    }
-                    console.error("Fehler beim Abrufen der Events", response.error);
+    const fetch = async () => {
+        await fetchEvents();
+        await fetchTasks();
+    };
+    const fetchEvents = async () => {
+        try {
+            const response = await apiGetEvents();
+            if (response.error) {
+                if (response.error === "Invalid token") {
+                    console.error("Token abgelaufen");
+                    setToken_AuthService(null);
+                    setIsLoggedIn_AuthService(false);
                     return;
                 }
-                const events = response;
-
-                events.forEach((event) => {
-                    event.start = event.startDateTime;
-                    event.end = event.endDateTime;
-                    event.extendedProps = { description: event.description };
-                    delete event.startDateTime;
-                    delete event.endDateTime;
-                    delete event.description;
-                });
-
-                setEvents(events);
-            } catch (error) {
-                console.error("Fehler beim Abrufen der Events", error);
+                console.error("Fehler beim Abrufen der Events", response.error);
+                return;
             }
-        };
-        fetchEvents();
-    }, [, update]);
+            const events = response;
+
+            events.forEach((event) => {
+                event.start = event.startDateTime;
+                event.end = event.endDateTime;
+                event.extendedProps = { description: event.description };
+                delete event.startDateTime;
+                delete event.endDateTime;
+                delete event.description;
+            });
+
+            setEvents(events);
+        } catch (error) {
+            console.error("Fehler beim Abrufen der Events", error);
+        }
+    };
+    const fetchTasks = async () => {
+        try {
+            const response = await apiGetTasks();
+            if (response.error) {
+                return;
+            }
+            const tasks = response;
+            console.log("tasks", tasks);
+            tasks.forEach((task) => {
+                task.inProgress = task.in_progress == 1 ? true : false;
+                task.todo = task.todo == 1 ? true : false;
+                task.done = task.done == 1 ? true : false;
+            });
+            setTask(tasks);
+        } catch (error) {}
+    };
+    useEffect(() => {
+        fetch();
+    }, [update]);
     useEffect(() => {
         if (calendarRef.current) {
             const calendarApi = calendarRef.current.getApi();
@@ -102,18 +122,7 @@ function PageMain({ setTop }) {
         sortEvents(events);
     }, [events]);
     useEffect(() => {
-        const fetchTasks = async () => {
-            try {
-                const response = await apiGetTasks();
-                if (response.error) {
-                    return;
-                }
-                const task = response.tasks;
-
-                setTask(tasks);
-            } catch (error) {}
-        };
-        fetchTasks();
+        fetch();
     }, []);
 
     useEffect(() => {
@@ -137,10 +146,35 @@ function PageMain({ setTop }) {
         });
         setEventTaskShow(list);
     }, [events]);
-    useEffect(() => {}, [tasks]);
+
+    useEffect(() => {
+        events.forEach((event) => {
+            let percentage = 100;
+            let tasks2 = tasks?.filter((task) => task.id_event == event.id);
+            let hasEventTasks = tasks2?.length > 0;
+            console.log("hasEventTasks", hasEventTasks);
+            if (hasEventTasks) {
+                let done = tasks2.filter((task) => task.done == true).length;
+                let inProgress = tasks2.filter((task) => task.in_progress == true).length;
+                let todo = tasks2.filter((task) => task.todo == true).length;
+
+                let donePercentage = (done / tasks2.length) * 100;
+                event.taskpercent = donePercentage;
+            } else {
+                event.taskpercent = percentage;
+            }
+            event.hasTasks = hasEventTasks;
+        });
+        setEvents([...events]);
+    }, [tasks]);
     useEffect(() => {
         //
     }, [eventTaskShow]);
+    useEffect(() => {
+        selectedTasks.length == 0 && setMenuSensitive("date");
+        selectedTasks.length == 1 && setMenuSensitive("task");
+        selectedTasks.length == 2 && setMenuSensitive("tasks");
+    }, [selectedTasks]);
     useEffect(() => {
         setMenuSensitive("event");
         selectedEvent &&
@@ -172,10 +206,10 @@ function PageMain({ setTop }) {
     };
 
     const toggleTaskSelection = (task) => {
-        if (selectedTasks.includes(task)) {
-            setSelectedTasks(selectedTasks.filter((t) => t.id !== task.id));
+        if (selectedTasks.filter((t) => t.id == task.id).length == 1) {
+            setSelectedTasks([]);
         } else {
-            setSelectedTasks([...selectedTasks, task]);
+            setSelectedTasks([task]);
         }
     };
 
@@ -346,8 +380,8 @@ function PageMain({ setTop }) {
 
     return (
         <>
-            <div className="flex flex-col md:flex-row items-center md:items-start w-full  md:gap-5">
-                <div className="w-full md:w-1/2 min-w-96 border border-gray-300 p-2 md:p-4 rounded-lg shadow-lg ">
+            <div className="flex flex-col min-[880px]:flex-row items-center min-[880px]:items-start w-full  min-[880px]:gap-5">
+                <div className="w-full min-[880px]:w-1/2 min-w-96 border border-gray-300 p-2 min-[880px]:p-4 rounded-lg shadow-lg ">
                     <CalendarOwn
                         testPercentage={testpercentage}
                         setTestPercentage={setTestPercentage}
@@ -367,8 +401,25 @@ function PageMain({ setTop }) {
                     /> */}
                 </div>
 
-                <div ref={containerRef} className="bottom-0 w-full md:w-1/2  min-w-96 border border-gray-300 p-2 md:p-4 rounded-lg shadow-lg">
-                    <div className="text-xs md:text-xs lg:text-base flex gap-2 w-full justify-between mb-2">
+                <div ref={containerRef} className="bottom-0 w-full min-[880px]:w-1/2  min-w-96 border border-gray-300 p-2 min-[880px]:p-4 rounded-lg shadow-lg">
+                    <div className="lg:text-base flex gap-2 w-full justify-between mb-2">
+                        <Button
+                            onClick={() => {
+                                setMenuSensitive("date");
+                                setActiveContent("EventOverview");
+                                setSelectedTasks([]);
+                            }}
+                        >
+                            {"<<"}
+                        </Button>
+                        <div>
+                            {menuSesitive == "date" && "Datum"}
+                            {menuSesitive == "event" && "Event"}
+                            {menuSesitive == "task" && "Task"}
+                            {menuSesitive == "tasks" && "Tasks"}
+                        </div>
+                    </div>
+                    <div className="lg:text-base flex gap-2 w-full justify-between mb-2">
                         {menuSesitive == "date" && (
                             <>
                                 <SelectedDateMenu
@@ -389,12 +440,12 @@ function PageMain({ setTop }) {
                         )}
                         {menuSesitive == "task" && (
                             <>
-                                <SelectedTaskMenu></SelectedTaskMenu>
-                                <div>
-                                    <Button onClick={() => switchContent("EditTask")} activeContent={activeContent}>
-                                        Aufgabe Bearbeiten
-                                    </Button>
-                                </div>
+                                <SelectedTaskMenu
+                                    switchContent={switchContent}
+                                    selectedEvent={selectedEvent}
+                                    setSelectedEvent={setSelectedEvent}
+                                    activeContent={activeContent}
+                                ></SelectedTaskMenu>
                             </>
                         )}
                         {menuSesitive == "tasks" && (
@@ -444,6 +495,8 @@ function PageMain({ setTop }) {
                             boxHight={boxHight}
                             update={update}
                             setUpdate={setUpdate}
+                            menuSesitive={menuSesitive}
+                            setMenuSensitive={setMenuSensitive}
                         ></EventNew>
                     ) : activeContent === "EditEvent" ? (
                         <EventDetail
@@ -461,6 +514,8 @@ function PageMain({ setTop }) {
                             boxHight={boxHight}
                             update={update}
                             setUpdate={setUpdate}
+                            menuSesitive={menuSesitive}
+                            setMenuSensitive={setMenuSensitive}
                         ></EventDetail>
                     ) : activeContent === "AddTask" ? (
                         <TaskNew
@@ -475,6 +530,10 @@ function PageMain({ setTop }) {
                             formatDate={formatDate}
                             formatTime={formatTime}
                             boxHight={boxHight}
+                            update={update}
+                            setUpdate={setUpdate}
+                            menuSesitive={menuSesitive}
+                            setMenuSensitive={setMenuSensitive}
                         ></TaskNew>
                     ) : activeContent === "EditTask" ? (
                         <TaskDetail
@@ -486,9 +545,14 @@ function PageMain({ setTop }) {
                             events={events}
                             selectedEvent={selectedEvent}
                             selectedEventForTask={selectedEventForTask}
+                            selectedTasks={selectedTasks}
                             formatDate={formatDate}
                             formatTime={formatTime}
                             boxHight={boxHight}
+                            update={update}
+                            setUpdate={setUpdate}
+                            menuSesitive={menuSesitive}
+                            setMenuSensitive={setMenuSensitive}
                         ></TaskDetail>
                     ) : null}
 
@@ -509,6 +573,10 @@ function PageMain({ setTop }) {
                             boxHight={boxHight}
                             selectedDate={selectedDate}
                             setTop={setTop}
+                            update={update}
+                            setUpdate={setUpdate}
+                            menuSesitive={menuSesitive}
+                            setMenuSensitive={setMenuSensitive}
                         ></EventList>
                     )}
                 </div>
