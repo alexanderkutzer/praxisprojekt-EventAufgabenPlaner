@@ -96,11 +96,11 @@ function EventList({
                                 }
                             >
                                 <div className="flex justify-between px-2 rounded">
-                                    <span className="font-semibold text-lg cursor-pointer">{event.title}</span>
+                                    <span className="font-semibold text-lg cursor-pointer" title={event.description}>
+                                        {event.title}
+                                    </span>
                                 </div>
-                                <span className="text-gray-600 dark:text-gray-400 block">
-                                    {formatDate(event.start)} {formatTime(event.start)} {event.end && `bis ${formatDate(event.end)} ${formatTime(event.end)}`}
-                                </span>
+                                <div className="text-gray-600 dark:text-gray-400 block px-2">{formatDate(event.start)}</div>
                                 <div className="relative w-full h-5 bg-red-200">
                                     <div style={{ width: testpercentage + "%" }} className="absolut inset-0 h-full bg-red-500"></div>
 

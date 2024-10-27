@@ -1,6 +1,7 @@
 import React, { useEffect, useInsertionEffect, useLayoutEffect, useState } from "react";
 import Button from "../../../../components/Button";
 import { apiDeleteEvent, apiUpdateEvent } from "../../../../service/api_calls";
+import Input from "../../../../components/Input";
 
 function EventDetail({
     selectedDate,
@@ -25,33 +26,23 @@ function EventDetail({
     }, [selectedDate]);
     return (
         <>
-            <div className="flex flex-col space-y-4 p-4 border border-gray-300 rounded-lg shadow-lg">
-                <h1 className="text-2xl font-semibold">Neues Event hinzufügen</h1>
-                <input
-                    type="text"
-                    name="title"
-                    value={event.title}
-                    onChange={(e) => setEvent({ ...event, title: e.target.value })}
-                    placeholder="Event Titel"
-                    className="p-2 border rounded resize-none w-1/2"
-                />
-                <p className="mt-3">Eventbeginn</p>
-                <input
-                    type="text"
-                    name="startDate"
-                    value={formatDate(event.start)}
-                    onChange={(e) => setEvent({ ...event, startDate: e.target.value })}
-                    className="p-2 border rounded resize-none w-1/2 text-gray-500"
-                />
-                <p className="mt-3">Event Ende (Angabe nur notwendig, wenn das Event mehrtägig ist)</p>
+            <div className="flex flex-col gap-1 p-2 border border-gray-300 rounded-lg shadow-lg">
+                <div>Title</div>
+                <Input type="text" name="title" value={event.title} onChange={(e) => setEvent({ ...event, title: e.target.value })} placeholder="Event Titel" />
+                <div>Datum</div>
+                <Input type="text" name="startDate" value={formatDate(event.start)} onChange={(e) => setEvent({ ...event, startDate: e.target.value })} />
+                <div>Uhrzeit</div>
+                <div>Farbe</div>
+                <div>Aufgaben</div>
+                {/* <p className="mt-3">Event Ende (Angabe nur notwendig, wenn das Event mehrtägig ist)</p>
                 <input
                     type="text"
                     name="endDate"
                     value={formatDate(event.end)}
                     onChange={(e) => setEvent({ ...event, endDate: e.target.value })}
                     className="p-2 border rounded resize-none w-1/2 text-gray-500"
-                />
-                <p className="mt-3">Details zu deinem Event</p>
+                /> */}
+                <div className="mt-3">Details zu deinem Event</div>
                 <textarea
                     name="description"
                     value={event.description}
