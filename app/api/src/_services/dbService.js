@@ -5,6 +5,7 @@ const sqls = [
         title TEXT,
         description TEXT,
         startDateTime TEXT,
+        startTime TEXT,
         endDateTime TEXT,
         color TEXT
     )`,
