@@ -8,6 +8,8 @@ import ColorPicker from "./components/ColorPicker";
 function EventDetail({
     selectedDate,
     selectedEvent,
+    setSelectedDate,
+    setSelectedEvent,
     selectedDateForInputs,
     saveEvent,
     handleInputChange,
@@ -25,6 +27,7 @@ function EventDetail({
     const [event, setEvent] = useState(selectedEvent);
     const [deleteEventMenu, setDeleteEventMenu] = useState(false);
     const [color, setColor] = useState(event.colors.normal);
+    setSelectedEvent(selectedEvent);
     useEffect(() => {
         setEvent({ ...selectedEvent, start: selectedDate });
     }, [selectedDate]);
