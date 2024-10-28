@@ -50,9 +50,9 @@ export function App() {
         !isLoggedIn_AuthService && setMenu("start");
     }, [isLoggedIn_AuthService]);
     return (
-        <div className="m-1 md:mx-16 dark:text-[#0b0a22]">
+        <div className="md:m-1 md:mx-16 dark:text-[#0b0a22]">
             <div id="top"></div>
-            <div className="flex justify-between">
+            <div className="flex justify-between md:mb-2">
                 <div className="">
                     <ButtonFingerprint
                         onClick={() => {
@@ -63,21 +63,21 @@ export function App() {
                                 setMenu("start");
                             }
                         }}
-                        className=" w-14 h-14 fill-gray-200 dark:fill-gray-800 hover:fill-gray-800 dark:hover:fill-gray-200"
+                        className=" fill-gray-200 dark:fill-gray-800 hover:fill-gray-800 dark:hover:fill-gray-200"
                     ></ButtonFingerprint>
                 </div>
                 <div className="">
                     <ButtonStart onClick={navigateToHome}></ButtonStart>
                 </div>
                 <div id="nav" className=" ">
-                    <ButtonLightDark onClick={toggleDarkMode} className={" w-14 h-14 "}>
+                    <ButtonLightDark onClick={toggleDarkMode} className={" w-10 h-10 md:w-14 md:h-14"}>
                         <DarkModeSwitch checked={isDarkMode} size={30} moonColor="gray" sunColor="yellow" />
                     </ButtonLightDark>
                 </div>
             </div>
 
-            <div className="flex flex-col items-center ">
-                <div id="main" className="w-full flex flex-col items-center ">
+            <div className="flex flex-col items-center bg-[#fafafa]">
+                <div id="main" className="w-full flex flex-col items-center bg-[#fafafa]">
                     {menu == "start" && (
                         <StartPage
                             setMenu={setMenu}

@@ -1,8 +1,9 @@
 import React from "react";
 
-function Button({ type, onClick, active, children, disabled, className }) {
+function Button({ type, onClick, active, children, disabled, className, id }) {
     return (
         <button
+            id={id}
             disabled={disabled}
             className={
                 " " +

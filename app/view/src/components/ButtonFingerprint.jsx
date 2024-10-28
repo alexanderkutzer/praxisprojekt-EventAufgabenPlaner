@@ -5,7 +5,7 @@ function ButtonFingerprint({ className, disabled, onClick, type, active }) {
         <button
             disabled={disabled}
             className={
-                "rounded-full px-2 py-0.5  border border-transparent font-bold " +
+                "w-10 h-10 md:w-14 md:h-14 flex justify-center items-center rounded-full border border-transparent font-bold aspect-square" +
                 (disabled
                     ? "text-gray-300 dark:text-gray-700 cursor-not-allowed"
                     : "text-gray-200 dark:text-gray-800 bg-gray-700 dark:bg-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700 hover:text-black dark:hover:text-white hover:border-black dark:hover:border-white") +
@@ -16,7 +16,7 @@ function ButtonFingerprint({ className, disabled, onClick, type, active }) {
             onClick={onClick}
             active={active}
         >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="" className="w-full h-full" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="" className="w-7 h-7 md:w-10 md:h-10" viewBox="0 0 16 16">
                 <path d="M8.06 6.5a.5.5 0 0 1 .5.5v.776a11.5 11.5 0 0 1-.552 3.519l-1.331 4.14a.5.5 0 0 1-.952-.305l1.33-4.141a10.5 10.5 0 0 0 .504-3.213V7a.5.5 0 0 1 .5-.5Z" />
                 <path d="M6.06 7a2 2 0 1 1 4 0 .5.5 0 1 1-1 0 1 1 0 1 0-2 0v.332q0 .613-.066 1.221A.5.5 0 0 1 6 8.447q.06-.555.06-1.115zm3.509 1a.5.5 0 0 1 .487.513 11.5 11.5 0 0 1-.587 3.339l-1.266 3.8a.5.5 0 0 1-.949-.317l1.267-3.8a10.5 10.5 0 0 0 .535-3.048A.5.5 0 0 1 9.569 8m-3.356 2.115a.5.5 0 0 1 .33.626L5.24 14.939a.5.5 0 1 1-.955-.296l1.303-4.199a.5.5 0 0 1 .625-.329" />
                 <path d="M4.759 5.833A3.501 3.501 0 0 1 11.559 7a.5.5 0 0 1-1 0 2.5 2.5 0 0 0-4.857-.833.5.5 0 1 1-.943-.334m.3 1.67a.5.5 0 0 1 .449.546 10.7 10.7 0 0 1-.4 2.031l-1.222 4.072a.5.5 0 1 1-.958-.287L4.15 9.793a9.7 9.7 0 0 0 .363-1.842.5.5 0 0 1 .546-.449Zm6 .647a.5.5 0 0 1 .5.5c0 1.28-.213 2.552-.632 3.762l-1.09 3.145a.5.5 0 0 1-.944-.327l1.089-3.145c.382-1.105.578-2.266.578-3.435a.5.5 0 0 1 .5-.5Z" />

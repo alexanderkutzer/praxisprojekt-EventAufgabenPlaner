@@ -16,6 +16,7 @@ function PageMain({ setTop }) {
     const { isLoggedIn_AuthService, setIsLoggedIn_AuthService, token_AuthService, setToken_AuthService } = useAuth();
     const [testpercentage, setTestPercentage] = useState(50);
     const [selectedDate, setSelectedDate] = useState(new Date().setHours(0, 0, 0, 0));
+    const [selectedTime, setSelectedTime] = useState({ hour: 12, minute: 0 });
     const [selectedDateForInputs, setSelectedDateForInputs] = useState("");
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [update, setUpdate] = useState(false);
@@ -27,17 +28,7 @@ function PageMain({ setTop }) {
     const [eventTaskShow, setEventTaskShow] = useState([]);
     const [selectedTasks, setSelectedTasks] = useState([]);
     const [activeContent, setActiveContent] = useState("EventOverview");
-    const [inputValues, setInputValues] = useState({
-        title: "",
-        startDate: "",
-        startDateUnix: "",
-        startTime: "",
-        endDate: "",
-        endDateUnix: "",
-        endTime: "",
-        description: "",
-        color: "",
-    });
+
     const [errorMessage, setErrorMessage] = useState("");
 
     const containerRef = useRef(null);
@@ -48,7 +39,8 @@ function PageMain({ setTop }) {
         if (containerRef.current) {
             const windowHeight = window.innerHeight;
             const boxTop = containerRef.current.getBoundingClientRect().top;
-            boxNewHeight = windowHeight - boxTop - 16;
+            const extra = window.innerWidth < 780 ? 0 : 16;
+            boxNewHeight = windowHeight - boxTop - extra;
             containerRef.current.style.height = `${boxNewHeight}px`;
             setBoxHight(boxNewHeight);
         }
@@ -83,7 +75,13 @@ function PageMain({ setTop }) {
             events.forEach((event) => {
                 event.start = event.startDateTime;
                 event.end = event.endDateTime;
-                event.extendedProps = { description: event.description };
+                //try catch in onliner
+
+                try {
+                    event.startTime = JSON.parse(event.startTime);
+                } catch (error) {
+                    event.startTime = { hour: 12, minute: 0 };
+                }
                 delete event.startDateTime;
                 delete event.endDateTime;
                 delete event.description;
@@ -103,7 +101,7 @@ function PageMain({ setTop }) {
             const tasks = response;
 
             tasks.forEach((task) => {
-                task.inProgress = task.in_progress == 1 ? true : false;
+                task.in_progress = task.in_progress == 1 ? true : false;
                 task.todo = task.todo == 1 ? true : false;
                 task.done = task.done == 1 ? true : false;
             });
@@ -129,18 +127,17 @@ function PageMain({ setTop }) {
         let date = new Date(parseInt(selectedDate));
         let inputDate = date.getDate().toString().padStart(2, "0") + "." + (date.getMonth() + 1).toString().padStart(2, "0") + "." + date.getFullYear();
         setSelectedDateForInputs(inputDate);
-        inputValues.startDateUnix = selectedDateForInputs;
-        inputValues.endDateUnix = selectedDateForInputs;
-        setInputValues({ ...inputValues });
+
         setMenuSensitive("date");
     }, [selectedDate]);
+    const [updateTask, setUpdateTask] = useState(null);
     useEffect(() => {
         let list = [];
 
         events.forEach((event) => {
             let status = {
                 id: event.id,
-                show: false,
+                show: updateTask?.id_event == event.id,
             };
             list.push(status);
         });
@@ -155,7 +152,7 @@ function PageMain({ setTop }) {
 
             if (hasEventTasks) {
                 let done = tasks2.filter((task) => task.done == true).length;
-                let inProgress = tasks2.filter((task) => task.in_progress == true).length;
+                let in_progress = tasks2.filter((task) => task.in_progress == true).length;
                 let todo = tasks2.filter((task) => task.todo == true).length;
 
                 let donePercentage = (done / tasks2.length) * 100;
@@ -177,18 +174,31 @@ function PageMain({ setTop }) {
     }, [selectedTasks]);
     useEffect(() => {
         setMenuSensitive("event");
-        selectedEvent &&
-            setInputValues({
-                title: selectedEvent.title,
-                startDate: formatDate(selectedEvent.start),
-                endDate: formatDate(selectedEvent.end),
-                description: selectedEvent.description,
-            });
     }, [selectedEvent]);
 
     const sortEvents = (events) => {
+        //date .start = 1620000000000
+        //time .startTime = {hour: 12, minute: 0}
         events.sort((a, b) => {
-            return a.start - b.start;
+            if (a.start < b.start) {
+                return -1;
+            }
+            if (a.start > b.start) {
+                return 1;
+            }
+            if (a.startTime.hour < b.startTime.hour) {
+                return -1;
+            }
+            if (a.startTime.hour > b.startTime.hour) {
+                return 1;
+            }
+            if (a.startTime.minute < b.startTime.minute) {
+                return -1;
+            }
+            if (a.startTime.minute > b.startTime.minute) {
+                return 1;
+            }
+            return 0;
         });
     };
     const onClickDelete = async (event) => {
@@ -206,6 +216,10 @@ function PageMain({ setTop }) {
     };
 
     const toggleTaskSelection = (task) => {
+        if (!task) {
+            setSelectedTasks([]);
+            return;
+        }
         if (selectedTasks.filter((t) => t.id == task.id).length == 1) {
             setSelectedTasks([]);
         } else {
@@ -230,124 +244,32 @@ function PageMain({ setTop }) {
                 return;
             }
         }
-        setSelectedEvent({
-            id: event.id,
-            title: event.title,
-            start: event.start,
-            end: event.end,
-        });
+        setSelectedEvent(event);
     };
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
-        setInputValues({
-            ...inputValues,
-            [name]: value == "on" || value == "off" ? event.target.checked : value,
-        });
     };
 
     const switchContent = (content) => {
         setActiveContent(content);
         if (content === "AddEvent") {
-            setInputValues({ title: "", startDate: "", endDate: "", description: "" });
             setErrorMessage("");
         } else if (content === "EventOverview") {
-            setInputValues({ title: "", startDate: "", endDate: "", description: "" });
         } else if (content === "AddTask") {
-            setInputValues({ title: "", description: "", id_event: "", todo: false, inProgress: false, done: false });
             setErrorMessage("");
         }
     };
 
     const startEditing = () => {
         if (selectedEvent) {
-            setInputValues({
-                title: selectedEvent.title,
-                startDate: selectedEvent.start,
-                endDate: selectedEvent.end || "",
-                description: selectedEvent.description || "",
-            });
             setActiveContent("Bearbeiten");
         }
     };
 
-    const saveEvent = async (typeOfEvent) => {
-        if (!inputValues.title || !inputValues.startDate) {
-            setErrorMessage("Titel und Startdatum müssen angegeben werden.");
-            return;
-        }
+    const saveEvent = async (typeOfEvent) => {};
 
-        if (inputValues.endDate && inputValues.endDate < inputValues.startDate) {
-            setErrorMessage("Das Enddatum kann nicht vor dem Startdatum liegen.");
-            return;
-        }
-
-        try {
-            // Falls ein Event ausgewählt wurde, wird es aktualisiert
-            if (typeOfEvent == "update") {
-                const updatedEvent = {
-                    id: selectedEvent.id,
-                    title: inputValues.title,
-                    description: inputValues.description,
-                    startDateTime: inputValues.startDateUnix,
-                    endDateTime: inputValues.endDateUnix || null,
-                    id_user: id_user, // Dieser Wert muss definiert sein
-                };
-                await apiUpdateEvent(updatedEvent.id, updatedEvent); // Sende das aktualisierte Event an die API
-                setEvents(events.map((event) => (event.id === selectedEvent.id ? updatedEvent : event)));
-            } else {
-                // Neues Event erstellen und an die API senden
-
-                const newEvent = {
-                    title: inputValues.title,
-                    description: inputValues.description,
-                    startDateTime: inputValues.startDateUnix,
-                    endDateTime: inputValues.endDateUnix || inputValues.startDate,
-                    id_user: id_user, // Dieser Wert muss definiert sein
-                };
-
-                let createdEvent = await apiCreateEvent(newEvent); // API-Call zum Erstellen eines neuen Events
-
-                createdEvent.event.start = createdEvent.event.startDateTime;
-                createdEvent.event.end = createdEvent.event.endDateTime;
-
-                setEvents([...events, createdEvent.event]); // Das neue Event zur Eventliste hinzufügen
-            }
-
-            switchContent("EventOverview"); // Zur Eventübersicht wechseln
-        } catch (error) {
-            setErrorMessage("Fehler beim Speichern des Events.");
-            console.error("Fehler beim Speichern des Events:", error);
-        }
-    };
-
-    const saveTask = async () => {
-        if (!inputValues.title || !inputValues.id_event) {
-            setErrorMessage("Titel und Event müssen angegeben werden.");
-            return;
-        }
-
-        try {
-            <div>Test 1</div>;
-
-            const newTask = {
-                id_event: inputValues.id_event, // Event-ID aus dem Dropdown
-                title: inputValues.title,
-                description: inputValues.description,
-                todo: inputValues.todo,
-                in_Progress: inputValues.inProgress,
-                done: inputValues.done,
-            };
-
-            const createdTask = await apiCreateTask(newTask); // API-Call zum Erstellen einer neuen Aufgabe
-
-            setTask([...tasks, createdTask.Task]); // Die neue Aufgabe zur Aufgabenliste hinzufügen
-            switchContent("EventOverview"); // Zurück zur Eventübersicht
-        } catch (error) {
-            setErrorMessage("Fehler beim Erstellen der Aufgabe.");
-            console.error("Fehler beim Erstellen der Aufgabe:", error);
-        }
-    };
+    const saveTask = async () => {};
 
     // Aktualisiere den Kalender, wenn sich die Events ändern
 
@@ -373,15 +295,14 @@ function PageMain({ setTop }) {
         return day + "." + (month + 1).toString().padStart(2, "0") + "." + year;
     }
 
-    const formatTime = (dateString) => {
-        const options = { hour: "2-digit", minute: "2-digit", hour12: false };
-        return new Date(parseInt(dateString)).toLocaleTimeString("de-DE", options);
+    const formatTime = (time) => {
+        return time.hour.toString().padStart(2, "0") + ":" + time.minute.toString().padStart(2, "0");
     };
 
     return (
         <>
             <div className="flex flex-col min-[880px]:flex-row items-center min-[880px]:items-start w-full  min-[880px]:gap-5">
-                <div className="w-full min-[880px]:w-1/2 min-w-96 border border-gray-300 p-2 min-[880px]:p-4 rounded-lg shadow-lg ">
+                <div className="w-full min-[880px]:w-1/2 min-w-96 border border-gray-300 md:p-2 min-[880px]:p-4 rounded-lg shadow-lg bg-[#fafafa]">
                     <CalendarOwn
                         testPercentage={testpercentage}
                         setTestPercentage={setTestPercentage}
@@ -390,6 +311,8 @@ function PageMain({ setTop }) {
                         events={events}
                         selectedEvent={selectedEvent}
                         setSelectedEvent={setSelectedEvent}
+                        selectedTime={selectedTime}
+                        setSelectedTime={setSelectedTime}
                     ></CalendarOwn>
                     {/* <Calendar
                         key={JSON.stringify(events)} // Neurendering bei Änderung
@@ -401,8 +324,11 @@ function PageMain({ setTop }) {
                     /> */}
                 </div>
 
-                <div ref={containerRef} className="bottom-0 w-full min-[880px]:w-1/2  min-w-96 border border-gray-300 p-2 min-[880px]:p-4 rounded-lg shadow-lg">
-                    <div className="lg:text-base flex gap-2 w-full justify-between mb-2">
+                <div
+                    ref={containerRef}
+                    className="bottom-0 w-full min-[880px]:w-1/2  min-w-96 border border-gray-300 md:p-2 min-[880px]:p-4 rounded-lg shadow-lg bg-[#fafafa]"
+                >
+                    <div className="lg:text-base flex gap-2 w-full justify-between md:mb-2">
                         <Button
                             onClick={() => {
                                 setMenuSensitive("date");
@@ -412,14 +338,6 @@ function PageMain({ setTop }) {
                         >
                             {"<<"}
                         </Button>
-                        <div>
-                            {menuSesitive == "date" && "Datum"}
-                            {menuSesitive == "event" && "Event"}
-                            {menuSesitive == "task" && "Task"}
-                            {menuSesitive == "tasks" && "Tasks"}
-                        </div>
-                    </div>
-                    <div className="lg:text-base flex gap-2 w-full justify-between mb-2">
                         {menuSesitive == "date" && (
                             <>
                                 <SelectedDateMenu
@@ -493,8 +411,10 @@ function PageMain({ setTop }) {
                         <EventNew
                             selectedDate={selectedDate}
                             selectedDateForInputs={selectedDateForInputs}
+                            selectedEvent={selectedEvent}
+                            formatDate={formatDate}
+                            formatTime={formatTime}
                             saveEvent={saveEvent}
-                            inputValues={inputValues}
                             handleInputChange={handleInputChange}
                             switchContent={switchContent}
                             errorMessage={errorMessage}
@@ -503,6 +423,8 @@ function PageMain({ setTop }) {
                             setUpdate={setUpdate}
                             menuSesitive={menuSesitive}
                             setMenuSensitive={setMenuSensitive}
+                            selectedTime={selectedTime}
+                            setSelectedTime={setSelectedTime}
                         ></EventNew>
                     ) : activeContent === "EditEvent" ? (
                         <EventDetail
@@ -512,8 +434,6 @@ function PageMain({ setTop }) {
                             formatDate={formatDate}
                             formatTime={formatTime}
                             saveEvent={saveEvent}
-                            inputValues={inputValues}
-                            setInputValues={setInputValues}
                             handleInputChange={handleInputChange}
                             switchContent={switchContent}
                             errorMessage={errorMessage}
@@ -522,10 +442,11 @@ function PageMain({ setTop }) {
                             setUpdate={setUpdate}
                             menuSesitive={menuSesitive}
                             setMenuSensitive={setMenuSensitive}
+                            selectedTime={selectedTime}
+                            setSelectedTime={setSelectedTime}
                         ></EventDetail>
                     ) : activeContent === "AddTask" ? (
                         <TaskNew
-                            inputValues={inputValues}
                             saveTask={saveTask}
                             handleInputChange={handleInputChange}
                             switchContent={switchContent}
@@ -540,10 +461,11 @@ function PageMain({ setTop }) {
                             setUpdate={setUpdate}
                             menuSesitive={menuSesitive}
                             setMenuSensitive={setMenuSensitive}
+                            selectedTime={selectedTime}
+                            setSelectedTime={setSelectedTime}
                         ></TaskNew>
                     ) : activeContent === "EditTask" ? (
                         <TaskDetail
-                            inputValues={inputValues}
                             saveTask={saveTask}
                             handleInputChange={handleInputChange}
                             switchContent={switchContent}
@@ -559,6 +481,8 @@ function PageMain({ setTop }) {
                             setUpdate={setUpdate}
                             menuSesitive={menuSesitive}
                             setMenuSensitive={setMenuSensitive}
+                            selectedTime={selectedTime}
+                            setSelectedTime={setSelectedTime}
                         ></TaskDetail>
                     ) : null}
 
@@ -583,6 +507,11 @@ function PageMain({ setTop }) {
                             setUpdate={setUpdate}
                             menuSesitive={menuSesitive}
                             setMenuSensitive={setMenuSensitive}
+                            selectedTime={selectedTime}
+                            setSelectedTime={setSelectedTime}
+                            setTasks={setTask}
+                            updateTask={updateTask}
+                            setUpdateTask={setUpdateTask}
                         ></EventList>
                     )}
                 </div>
@@ -593,7 +522,6 @@ function PageMain({ setTop }) {
                 <div>menuSesitive:{menuSesitive}</div>
                 <div>activeContent:{activeContent}</div>
                 <div>selectedEvent:{JSON.stringify(selectedEvent)}</div>
-                <div>inputValues:{JSON.stringify(inputValues)}</div>
                 <Button onClick={() => setMenuSensitive(menuSesitive != "date" ? "date" : "")}>Select a Date</Button>
                 <Button onClick={() => setMenuSensitive(menuSesitive != "task" ? "task" : "")}>Select a Task</Button>
                 <Button onClick={() => setMenuSensitive(menuSesitive != "tasks" ? "tasks" : "")}>Selected Tasks</Button>

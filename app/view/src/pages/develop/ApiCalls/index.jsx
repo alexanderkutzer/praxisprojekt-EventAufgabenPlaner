@@ -53,7 +53,7 @@ function DevelopApiCalls() {
     const [titleTask, setTitleTask] = React.useState("");
     const [descriptionTask, setDescriptionTask] = React.useState("");
     const [todo, setTodo] = React.useState("");
-    const [inProgress, setInProgress] = React.useState("");
+    const [in_progress, setInProgress] = React.useState("");
     const [done, setDone] = React.useState("");
     const [userIdList, setUserIdList] = React.useState([]);
 
@@ -623,7 +623,7 @@ function DevelopApiCalls() {
                                                     description: descriptionTask,
                                                     user_id: userIdList,
                                                     todo: todo,
-                                                    in_Progress: inProgress,
+                                                    in_Progress: in_progress,
                                                     done: done,
                                                 })
                                             )
@@ -651,8 +651,8 @@ function DevelopApiCalls() {
                                     <label className="inline-flex w-24 mx-2">ToDo:</label>
                                     <input className="p-1 m-1" type="checkbox" checked={todo} onChange={(e) => setTodo(!todo)} />
                                     <br />
-                                    <label className="inline-flex w-24 mx-2">inProgress:</label>
-                                    <input className="p-1 m-1" type="checkbox" checked={inProgress} onChange={(e) => setInProgress(!inProgress)} />
+                                    <label className="inline-flex w-24 mx-2">in_progress:</label>
+                                    <input className="p-1 m-1" type="checkbox" checked={in_progress} onChange={(e) => setInProgress(!in_progress)} />
                                     <br />
                                     <label className="inline-flex w-24 mx-2">Done:</label>
                                     <input className="p-1 m-1" type="checkbox" checked={done} onChange={(e) => setDone(!done)} />
@@ -697,8 +697,8 @@ function DevelopApiCalls() {
                                     <label className="inline-flex w-24 mx-2">ToDo:</label>
                                     <input className="p-1 m-1" type="checkbox" checked={todo} onChange={(e) => setTodo(!todo)} />
                                     <br />
-                                    <label className="inline-flex w-24 mx-2">inProgress:</label>
-                                    <input className="p-1 m-1" type="checkbox" checked={inProgress} onChange={(e) => setInProgress(!inProgress)} />
+                                    <label className="inline-flex w-24 mx-2">in_progress:</label>
+                                    <input className="p-1 m-1" type="checkbox" checked={in_progress} onChange={(e) => setInProgress(!in_progress)} />
                                     <br />
                                     <label className="inline-flex w-24 mx-2">Done:</label>
                                     <input className="p-1 m-1" type="checkbox" checked={done} onChange={(e) => setDone(!done)} />

@@ -1,4 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef } from "react";
+import { apiUpdateTask } from "../../../../service/api_calls";
 
 function EventList({
     testpercentage,
@@ -18,6 +19,11 @@ function EventList({
     setTop,
     update,
     setUpdate,
+    selectedTime,
+    setSelectedTime,
+    setTasks,
+    updateTask,
+    setUpdateTask,
 }) {
     const scrollContainer = useRef(null);
     const scrollContainerInner = useRef(null);
@@ -26,7 +32,8 @@ function EventList({
         if (scrollContainer.current) {
             const windowHeight = window.innerHeight;
             const boxTop = scrollContainer.current.getBoundingClientRect().top;
-            boxNewHeight = windowHeight - boxTop - 32;
+            const extra = window.innerWidth < 780 ? 0 : 32;
+            boxNewHeight = windowHeight - boxTop - extra;
             scrollContainer.current.style.height = `${boxNewHeight}px`;
         }
     };
@@ -76,7 +83,7 @@ function EventList({
 
     return (
         <div ref={scrollContainer} className="overflow-y-scroll">
-            <ul className="flex flex-col gap-1">
+            <ul className="flex flex-col md:gap-1">
                 {events.map((event, i) => (
                     <React.Fragment key={event.id}>
                         {(new Date(parseInt(events[i - 1 < 0 ? 0 : i - 1].start)).toLocaleString("de", { month: "long" }) !=
@@ -99,11 +106,12 @@ function EventList({
                             onClick={() => {
                                 handleEventClick({ event });
                             }}
-                            className="sticky top-0 p-1 border bg-white border-gray-300 rounded-lg shadow shadow-gray-300 z-10 "
+                            className="flex w-full sticky top-0 md:p-1 border bg-white border-gray-300 rounded-lg shadow shadow-gray-300 z-10 "
                         >
                             <div
                                 className={
-                                    "border-2 hover:border-gray-700 rounded " + (event.id === selectedEvent?.id && " border-orange-500 hover:border-orange-700")
+                                    "w-full border-2 hover:border-gray-700 rounded-s " +
+                                    (event.id === selectedEvent?.id && " border-orange-500 hover:border-orange-700")
                                 }
                             >
                                 <div className="flex justify-between px-2 rounded">
@@ -111,10 +119,15 @@ function EventList({
                                         {event.title}
                                     </span>
                                 </div>
-                                <div className="text-gray-600 dark:text-gray-400 block px-2">{formatDate(event.start)}</div>
+                                <div className="text-gray-600 dark:text-gray-400 block px-2">
+                                    {formatDate(event.start)} {formatTime(event.startTime)}Uhr
+                                </div>
                                 {event.hasTasks && (
-                                    <div className="relative w-full h-5 bg-red-200">
-                                        <div style={{ width: event.taskpercent + "%" }} className="absolut inset-0 h-full bg-red-500"></div>
+                                    <div className={"relative w-full h-5"} style={{ backgroundColor: event.colors.light }}>
+                                        <div
+                                            style={{ width: event.taskpercent + "%", backgroundColor: event.colors.normal }}
+                                            className="absolut inset-0 h-full"
+                                        ></div>
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
@@ -122,6 +135,7 @@ function EventList({
                                                     if (e.id === event.id) {
                                                         e.show = !e.show;
                                                     } else {
+                                                        toggleTaskSelection(null);
                                                         e.show = false;
                                                     }
 
@@ -176,25 +190,61 @@ function EventList({
                                         {tasks
                                             .filter((t) => t.id_event === event.id)
                                             .map((t, i) => (
-                                                <React.Fragment key={t.id}>
+                                                <div className="flex justify-between" key={t.id}>
                                                     <div
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             toggleTaskSelection(t);
                                                         }}
                                                         className={
-                                                            "cursor-pointer hover:bg-orange-600 hover:text-white " +
+                                                            "w-full cursor-pointer hover:bg-orange-600 hover:text-white " +
                                                             (isTaskSelected(t) ? " bg-orange-500 text-white " : " ") +
                                                             (i + 1 === tasks.filter((t) => t.id_event === event.id).length ? " rounded-b-sm " : " ")
                                                         }
                                                     >
                                                         {t.title}
                                                     </div>
-                                                </React.Fragment>
+                                                    <div className="flex">
+                                                        <div
+                                                            onClick={async (e) => {
+                                                                e.stopPropagation();
+                                                                setUpdateTask(t);
+                                                                t.todo = !t.todo;
+                                                                setTasks([...tasks]);
+                                                                await apiUpdateTask(t.id, t);
+                                                                setUpdateTask(null);
+                                                            }}
+                                                            className={"w-6 h-6 m-1 rounded-full " + (t.todo ? "bg-orange-500" : "bg-orange-200")}
+                                                        ></div>
+                                                        <div
+                                                            onClick={async (e) => {
+                                                                e.stopPropagation();
+                                                                setUpdateTask(t);
+                                                                t.in_progress = !t.in_progress;
+                                                                setTasks([...tasks]);
+                                                                await apiUpdateTask(t.id, t);
+                                                                setUpdateTask(null);
+                                                            }}
+                                                            className={"w-6 h-6 m-1 rounded-full " + (t.in_progress ? "bg-yellow-500" : "bg-yellow-200")}
+                                                        ></div>
+                                                        <div
+                                                            onClick={async (e) => {
+                                                                e.stopPropagation();
+                                                                setUpdateTask(t);
+                                                                t.done = !t.done;
+                                                                setTasks([...tasks]);
+                                                                await apiUpdateTask(t.id, t);
+                                                                setUpdateTask(null);
+                                                            }}
+                                                            className={"w-6 h-6 m-1 rounded-full " + (t.done ? "bg-green-500" : "bg-green-200")}
+                                                        ></div>
+                                                    </div>
+                                                </div>
                                             ))}
                                     </div>
                                 )}
                             </div>
+                            <div className="w-5 rounded-e" style={{ background: event.color }}></div>
                         </li>
                     </React.Fragment>
                 ))}

@@ -3,7 +3,6 @@ import Button from "../../../../components/Button";
 import { apiCreateTask } from "../../../../service/api_calls";
 
 function TaskNew({
-    inputValues,
     saveTask,
     handleInputChange,
     switchContent,
@@ -17,13 +16,15 @@ function TaskNew({
     setUpdate,
     menuSesitive,
     setMenuSensitive,
+    selectedTime,
+    setSelectedTime,
 }) {
     const [task, setTask] = useState({
         title: "",
         description: "",
         id_event: selectedEvent?.id ?? events[0].id,
         todo: false,
-        inProgress: false,
+        in_progress: false,
         done: false,
     });
 
@@ -90,10 +91,10 @@ function TaskNew({
                         <input
                             className="w-6"
                             type="checkbox"
-                            name="inProgress"
-                            checked={task.inProgress}
+                            name="in_progress"
+                            checked={task.in_progress}
                             onChange={(e) => {
-                                setTask({ ...task, inProgress: e.target.checked });
+                                setTask({ ...task, in_progress: e.target.checked });
                             }}
                         />
                     </div>
@@ -127,7 +128,7 @@ function TaskNew({
                             timetrackestimate: null,
                             user_id: null,
                             todo: task.todo,
-                            in_progress: task.inProgress,
+                            in_progress: task.in_progress,
                             done: task.done,
                         };
                         await apiCreateTask(newTask);
