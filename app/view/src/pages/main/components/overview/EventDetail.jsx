@@ -26,7 +26,7 @@ function EventDetail({
 }) {
     const [event, setEvent] = useState(selectedEvent);
     const [deleteEventMenu, setDeleteEventMenu] = useState(false);
-    const [color, setColor] = useState(event.colors.normal ?? "#ff0000");
+    const [color, setColor] = useState(event.colors?.normal ?? "#ff0000");
     setSelectedEvent(selectedEvent);
     useEffect(() => {
         setEvent({ ...selectedEvent, start: selectedDate });

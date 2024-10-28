@@ -270,14 +270,14 @@ function CalendarOwn({
                                                 }}
                                                 key={index}
                                                 style={{
-                                                    backgroundColor: event.colors.light ?? "#fb7f7f",
+                                                    backgroundColor: event.colors?.light ?? "#fb7f7f",
                                                     borderColor: selectedEvent?.id == event?.id ? "orange" : "",
                                                     borderWidth: selectedEvent?.id == event?.id ? "1px" : "0px",
                                                 }}
                                                 className="flex items-end w-full h-full"
                                             >
                                                 <div
-                                                    style={{ backgroundColor: event.colors.normal ?? "#ff0000", height: event.taskpercent + "%" }}
+                                                    style={{ backgroundColor: event.colors?.normal ?? "#ff0000", height: event.taskpercent + "%" }}
                                                     className="w-full"
                                                 ></div>
                                             </div>
