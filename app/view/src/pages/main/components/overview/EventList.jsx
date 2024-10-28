@@ -123,9 +123,9 @@ function EventList({
                                     {formatDate(event.start)} {formatTime(event.startTime)}Uhr
                                 </div>
                                 {event.hasTasks && (
-                                    <div className={"relative w-full h-5"} style={{ backgroundColor: event.colors.light }}>
+                                    <div className={"relative w-full h-5"} style={{ backgroundColor: event.colors.light ?? "#fb7f7f" }}>
                                         <div
-                                            style={{ width: event.taskpercent + "%", backgroundColor: event.colors.normal }}
+                                            style={{ width: event.taskpercent + "%", backgroundColor: event.colors.normal ?? "#ff0000" }}
                                             className="absolut inset-0 h-full"
                                         ></div>
                                         <button

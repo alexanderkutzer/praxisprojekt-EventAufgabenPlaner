@@ -23,7 +23,7 @@ function CalendarOwn({
     const [calView, setCalView] = React.useState(false);
 
     useEffect(() => {
-        if (selectedEvent && new Date(parseInt(selectedEvent.start)).getMonth() != date.getMonth()) {
+        if (selectedEvent != null) {
             setDate(new Date(parseInt(selectedEvent.start) ?? Date.now()));
         }
     }, [selectedEvent]);
@@ -270,7 +270,7 @@ function CalendarOwn({
                                                 }}
                                                 key={index}
                                                 style={{
-                                                    backgroundColor: event.colors.light,
+                                                    backgroundColor: event.colors.light ?? "#ff0000",
                                                     borderColor: selectedEvent?.id == event?.id ? "orange" : "",
                                                     borderWidth: selectedEvent?.id == event?.id ? "1px" : "0px",
                                                 }}

@@ -174,6 +174,7 @@ function PageMain({ setTop }) {
     }, [selectedTasks]);
     useEffect(() => {
         setMenuSensitive("event");
+        selectedEvent && setSelectedDate(selectedEvent.start);
     }, [selectedEvent]);
 
     const sortEvents = (events) => {
@@ -431,6 +432,8 @@ function PageMain({ setTop }) {
                             selectedDate={selectedDate}
                             selectedDateForInputs={selectedDateForInputs}
                             selectedEvent={selectedEvent}
+                            setSelectedEvent={setSelectedEvent}
+                            setSelectedDate={setSelectedDate}
                             formatDate={formatDate}
                             formatTime={formatTime}
                             saveEvent={saveEvent}
