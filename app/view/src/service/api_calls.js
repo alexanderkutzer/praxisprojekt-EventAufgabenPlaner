@@ -1,6 +1,18 @@
 let token_AuthService = "";
 const public_ip = "";
-const apiUrl = "http://" + (public_ip === "" ? "localhost" : public_ip) + ":3000/api/v1/";
+
+let apiUrl = "http://localhost:3000/api/v1/";
+if (window.location.origin.includes("evito-org.de")) {
+    apiUrl = "https://evito-org.de/api/v1/";
+}
+if (!window.location.origin.includes("localhost")) {
+    console.log("localhost");
+    const ip = window.location.origin.replace("http://", "").split(":")[0];
+    console.log(ip);
+    apiUrl = `http://${ip}:3000/api/v1/`;
+}
+console.log(window.location.origin);
+console.log("api url", apiUrl);
 
 export function setToken_ApiCalls(token) {
     token_AuthService = token;
