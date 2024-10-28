@@ -13,13 +13,13 @@ function SelectedTaskMenu({ activeContent, switchContent, selectedEvent, setSele
                     }}
                     activeContent={activeContent}
                 >
-                    Aufgabe Bearbeiten
+                    Edit Aufgabe
                 </Button>
                 <Button
                     active={activeContent === "AddTask" ? "true" : "false"}
                     onClick={() => switchContent(activeContent === "AddTask" ? "EventOverview" : "AddTask")}
                 >
-                    Neue Aufgabe
+                    + Aufgabe
                 </Button>
             </div>
         </>

@@ -2,13 +2,13 @@ import React, { useEffect, useInsertionEffect, useLayoutEffect, useState } from 
 import Button from "../../../../components/Button";
 import { apiDeleteEvent, apiUpdateEvent } from "../../../../service/api_calls";
 import Input from "../../../../components/Input";
+import TimeViewSelector from "./components/TimeViewSelector";
+import ColorPicker from "./components/ColorPicker";
 
 function EventDetail({
     selectedDate,
     selectedEvent,
     selectedDateForInputs,
-    inputValues,
-    setInputValues,
     saveEvent,
     handleInputChange,
     switchContent,
@@ -19,21 +19,33 @@ function EventDetail({
     setUpdate,
     menuSesitive,
     setMenuSensitive,
+    selectedTime,
+    setSelectedTime,
 }) {
     const [event, setEvent] = useState(selectedEvent);
     const [deleteEventMenu, setDeleteEventMenu] = useState(false);
+    const [color, setColor] = useState(event.colors.normal);
     useEffect(() => {
-        setEvent({ ...selectedEvent, start: selectedDate, end: selectedDate });
+        setEvent({ ...selectedEvent, start: selectedDate });
     }, [selectedDate]);
     return (
         <>
             <div className="flex flex-col gap-1 p-2 border border-gray-300 rounded-lg shadow-lg">
                 <div>Title</div>
                 <Input type="text" name="title" value={event.title} onChange={(e) => setEvent({ ...event, title: e.target.value })} placeholder="Event Titel" />
-                <div>Datum</div>
-                <Input type="text" name="startDate" value={formatDate(event.start)} onChange={(e) => setEvent({ ...event, startDate: e.target.value })} />
-                <div>Uhrzeit</div>
-                <div>Farbe</div>
+                <div className="flex flex-row items-center gap-2">
+                    <div>Datum</div>
+                    <div>{formatDate(event.start)}</div>
+                    <div>Uhrzeit</div>
+                    <TimeViewSelector
+                        getTime={event.startTime ?? { hour: 12, minute: 0 }}
+                        selectedTime={selectedTime}
+                        setSelectedTime={setSelectedTime}
+                    ></TimeViewSelector>
+                </div>
+                <div>
+                    <ColorPicker color={color} setColor={setColor}></ColorPicker>
+                </div>
                 <div>Aufgaben</div>
                 {/* <p className="mt-3">Event Ende (Angabe nur notwendig, wenn das Event mehrtägig ist)</p>
                 <input
@@ -49,7 +61,7 @@ function EventDetail({
                     value={event.description}
                     onChange={(e) => setEvent({ ...event, description: e.target.value })}
                     placeholder="Details"
-                    className="p-2 border rounded h-32"
+                    className="p-2 border rounded"
                 />
                 {errorMessage && <p className="text-red-500">{errorMessage}</p>}
                 <Button
@@ -63,7 +75,9 @@ function EventDetail({
                             title: event.title,
                             description: event.description,
                             startDateTime: event.start,
+                            startTime: JSON.stringify(selectedTime),
                             endDateTime: event.end,
+                            color: color,
                         };
 
                         apiUpdateEvent(updatedEvent.id, updatedEvent);

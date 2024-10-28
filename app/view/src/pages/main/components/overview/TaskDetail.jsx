@@ -3,7 +3,6 @@ import Button from "../../../../components/Button";
 import { apiDeleteTask, apiUpdateTask } from "../../../../service/api_calls";
 
 function TaskDetail({
-    inputValues,
     handleInputChange,
     events,
     errorMessage,
@@ -16,6 +15,8 @@ function TaskDetail({
     setUpdate,
     menuSesitive,
     setMenuSensitive,
+    selectedTime,
+    setSelectedTime,
 }) {
     const [task, setTask] = useState(selectedTasks[0]);
     const [deleteTaskMenu, setDeleteTaskMenu] = useState(false);
@@ -74,10 +75,10 @@ function TaskDetail({
                         <input
                             className="w-6"
                             type="checkbox"
-                            name="inProgress"
-                            checked={task.inProgress}
+                            name="in_progress"
+                            checked={task.in_progress}
                             onChange={(e) => {
-                                setTask({ ...task, inProgress: e.target.checked });
+                                setTask({ ...task, in_progress: e.target.checked });
                             }}
                         />
                     </div>
@@ -112,7 +113,7 @@ function TaskDetail({
                                 timetrackestimate: null,
                                 user_id: null,
                                 todo: task.todo,
-                                in_progress: task.inProgress,
+                                in_progress: task.in_progress,
                                 done: task.done,
                             };
                             await apiUpdateTask(task.id, updatedTask);

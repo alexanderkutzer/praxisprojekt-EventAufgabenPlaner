@@ -14,17 +14,10 @@
     "setip": "PUBLIC_IP=$(curl http://checkip.amazonaws.com/ 2> /dev/null) && echo $PUBLIC_IP && export PUBLIC_IP && node environment.js"
   },
   "dependencies": {
-    "@fullcalendar/core": "^6.1.15",
-    "@fullcalendar/daygrid": "^6.1.15",
-    "@fullcalendar/interaction": "^6.1.15",
-    "@fullcalendar/multimonth": "^6.1.15",
-    "@fullcalendar/react": "^6.1.15",
-    "@fullcalendar/timegrid": "^6.1.15",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-toggle-dark-mode": "^1.1.1",
-    "sweetalert2": "^11.14.3",
-    "tailwind": "^4.0.0"
+    "tailwind": "^2.2.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.25.4",

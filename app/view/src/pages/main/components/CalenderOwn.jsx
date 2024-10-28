@@ -1,8 +1,18 @@
 import React, { useEffect } from "react";
-import Calendar from "../../../Calendar";
 import Button from "../../../components/Button";
+import { colors } from "../../../service/colors";
 
-function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelectedDate, events, selectedEvent, setSelectedEvent }) {
+function CalendarOwn({
+    testPercentage,
+    setTestPercentage,
+    selectedDate,
+    setSelectedDate,
+    events,
+    selectedEvent,
+    setSelectedEvent,
+    selectedTime,
+    setSelectedTime,
+}) {
     const [date, setDate] = React.useState(new Date());
     const [day, setDay] = React.useState(new Date().getDay());
     const [dayName, setDayName] = React.useState(new Date().toLocaleString("de-DE", { weekday: "short" }));
@@ -10,25 +20,8 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
     const [monthName, setMonthName] = React.useState(new Date().toLocaleString("de-DE", { month: "long" }));
     const [year, setYear] = React.useState(new Date().getFullYear());
     const [calBoxes, setCalBoxes] = React.useState([]);
-    const colors = [
-        { normal: "#ef4444", light: "#fecaca", dark: "#991b1b" },
-        { normal: "#f97316", light: "#fed7aa", dark: "#9a3412" },
-        { normal: "#f59e0b", light: "#fde68a", dark: "#92400e" },
-        { normal: "#eab308", light: "#fef08a", dark: "#854d0e" },
-        { normal: "#84cc16", light: "#d9f99d", dark: "#3f6212" },
-        { normal: "#22c55e", light: "#bbf7d0", dark: "#166534" },
-        { normal: "#10b981", light: "#a7f3d0", dark: "#065f46" },
-        { normal: "#14b8a6", light: "#99f6e4", dark: "#115e59" },
-        { normal: "#06b6d4", light: "#a5f3fc", dark: "#155e75" },
-        { normal: "#0ea5e9", light: "#bae6fd", dark: "#075985" },
-        { normal: "#3b82f6", light: "#bfdbfe", dark: "#1e40af" },
-        { normal: "#6366f1", light: "#c7d2fe", dark: "#3730a3" },
-        { normal: "#8b5cf6", light: "#ddd6fe", dark: "#5b21b6" },
-        { normal: "#a855f7", light: "#e9d5ff", dark: "#6b21a8" },
-        { normal: "#d946ef", light: "#f5d0fe", dark: "#86198f" },
-        { normal: "#ec4899", light: "#fbcfe8", dark: "#9d174d" },
-        { normal: "#f43f5e", light: "#fecdd3", dark: "#9f1239" },
-    ];
+    const [calView, setCalView] = React.useState(false);
+
     useEffect(() => {
         if (selectedEvent && new Date(parseInt(selectedEvent.start)).getMonth() != date.getMonth()) {
             setDate(new Date(parseInt(selectedEvent.start) ?? Date.now()));
@@ -126,7 +119,7 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
             // event.taskpercent = testPercentage; //getEventTasksDone(event);
             calBoxes.forEach((calBox) => {
                 if (calBox.day == day && calBox.month - 1 == month && calBox.year == year) {
-                    event.color = colors[calBox.events.length % colors.length];
+                    event.colors = event.color ? colors.filter((c) => c.normal == event.color)[0] : colors[calBox.events.length % colors.length];
                     calBox.events.push(event);
                 }
             });
@@ -146,8 +139,20 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
         return 100;
     }
     return (
-        <div className="w-full">
-            <div className="w-full flex-col flex gap-2 ">
+        <div className={`w-full transition-all  max-h-screen ease-in-out duration-1000  ${calView ? " h-[100px]" : ""}`}>
+            {/* <div className="min-[880px]:hidden pb-1">
+                {!calView && (
+                    <Button className={"w-full"} onClick={() => setCalView(!calView)}>
+                        -
+                    </Button>
+                )}
+                {calView && (
+                    <Button className={"w-full"} onClick={() => setCalView(!calView)}>
+                        +
+                    </Button>
+                )}
+            </div> */}
+            <div className="w-full flex-col flex md:gap-2 bg-[#fafafa]">
                 <div className="flex justify-between">
                     <div className="whitespace-nowrap">
                         <Button
@@ -265,13 +270,13 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
                                                 }}
                                                 key={index}
                                                 style={{
-                                                    backgroundColor: event.color.light,
+                                                    backgroundColor: event.colors.light,
                                                     borderColor: selectedEvent?.id == event?.id ? "orange" : "",
                                                     borderWidth: selectedEvent?.id == event?.id ? "1px" : "0px",
                                                 }}
                                                 className="flex items-end w-full h-full"
                                             >
-                                                <div style={{ backgroundColor: event.color.normal, height: event.taskpercent + "%" }} className="w-full"></div>
+                                                <div style={{ backgroundColor: event.colors.normal, height: event.taskpercent + "%" }} className="w-full"></div>
                                             </div>
                                         );
                                     })}

@@ -13,21 +13,21 @@ function SelectedDateMenu({ switchContent, selectedEvent, setSelectedEvent, acti
                         switchContent(activeContent === "AddEvent" ? "EventOverview" : "AddEvent");
                     }}
                 >
-                    Neues Event
+                    + Event
                 </Button>
                 <Button
                     disabled={selectedEvent == null}
                     active={activeContent === "EditEvent" ? "true" : "false"}
                     onClick={() => switchContent(activeContent === "EditEvent" ? "EventOverview" : "EditEvent")}
                 >
-                    Event Bearbeiten
+                    Edit Event
                 </Button>
                 {events.length > 0 && (
                     <Button
                         active={activeContent === "AddTask" ? "true" : "false"}
                         onClick={() => switchContent(activeContent === "AddTask" ? "EventOverview" : "AddTask")}
                     >
-                        Neue Aufgabe
+                        + Aufgabe
                     </Button>
                 )}
             </div>
