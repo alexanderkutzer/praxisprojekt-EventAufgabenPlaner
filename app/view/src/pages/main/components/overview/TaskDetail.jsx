@@ -22,8 +22,8 @@ function TaskDetail({
     const [deleteTaskMenu, setDeleteTaskMenu] = useState(false);
     return (
         <>
-            <div>
-                <h1>Aufgabe bearbeiten</h1>
+            <div className="flex flex-col md:gap-2">
+                <div className="font-bold">Event auswahl</div>
                 <select
                     name="id_event"
                     value={task.id_event}
@@ -39,7 +39,7 @@ function TaskDetail({
                         );
                     })}
                 </select>
-                <p className="mt-3">Title</p>
+                <div className="font-bold">Title</div>
                 <input
                     type="text"
                     name="title"
@@ -47,7 +47,7 @@ function TaskDetail({
                     onChange={(e) => setTask({ ...task, title: e.target.value })}
                     className="p-2 border rounded text-gray-500"
                 />
-                <p className="mt-3">Beschreibung</p>
+                {/* <div className="font-bold">Beschreibung</div>
                 <textarea
                     type="text"
                     name="description"
@@ -55,10 +55,10 @@ function TaskDetail({
                     onChange={(e) => setTask({ ...task, description: e.target.value })}
                     placeholder="Details"
                     className="p-2 border rounded h-32"
-                />
-                <p>Status</p>
+                /> */}
+                <div className="font-bold">Status</div>
                 <div className="flex flex-col gap-2 my-4">
-                    <div className="flex">
+                    {/* <div className="flex">
                         <label className="flex w-1/4">Todo:</label>
                         <input
                             className="w-6"
@@ -81,7 +81,7 @@ function TaskDetail({
                                 setTask({ ...task, in_progress: e.target.checked });
                             }}
                         />
-                    </div>
+                    </div> */}
                     <div className="flex">
                         <label className="flex w-1/4">Fertig:</label>
                         <input
@@ -97,69 +97,71 @@ function TaskDetail({
 
                     {errorMessage && <p className="text-red-500">{errorMessage}</p>}
 
-                    <Button
-                        onClick={async () => {
-                            let updatedTask = {
-                                id: task.id,
-                                id_user: task.id_user,
-                                id_event: task.id_event,
-                                id_tasks_parent: null,
-                                title: task.title,
-                                description: task.description,
-                                importancy: null,
-                                urgency: null,
-                                timetrack: null,
-                                timetrackstart: null,
-                                timetrackestimate: null,
-                                user_id: null,
-                                todo: task.todo,
-                                in_progress: task.in_progress,
-                                done: task.done,
-                            };
-                            await apiUpdateTask(task.id, updatedTask);
-                            setUpdate(!update);
-                            switchContent("EventOverview");
-                            setMenuSensitive("date");
-                        }}
-                        className="resize-none w-1/2"
-                    >
-                        Änderungen speichern
-                    </Button>
-                    {!deleteTaskMenu && (
-                        <Button onClick={() => setDeleteTaskMenu(true)} className="resize-none w-1/2">
-                            Löschen
+                    <div className="flex justify-between">
+                        <Button
+                            onClick={async () => {
+                                let updatedTask = {
+                                    id: task.id,
+                                    id_user: task.id_user,
+                                    id_event: task.id_event,
+                                    id_tasks_parent: null,
+                                    title: task.title,
+                                    description: task.description,
+                                    importancy: null,
+                                    urgency: null,
+                                    timetrack: null,
+                                    timetrackstart: null,
+                                    timetrackestimate: null,
+                                    user_id: null,
+                                    todo: task.todo,
+                                    in_progress: task.in_progress,
+                                    done: task.done,
+                                };
+                                await apiUpdateTask(task.id, updatedTask);
+                                setUpdate(!update);
+                                switchContent("EventOverview");
+                                setMenuSensitive("date");
+                            }}
+                            className="text-nowrap"
+                        >
+                            Änderungen speichern
                         </Button>
-                    )}
-                    {deleteTaskMenu && (
-                        <div className="flex justify-between">
-                            <Button
-                                className="resize-none w-1/4 bg-green-500 hover:bg-green-600 dark:bg-green-500 dark:hover:bg-green-600"
-                                onClick={() => setDeleteTaskMenu(false)}
-                            >
-                                Nein
+                        {!deleteTaskMenu && (
+                            <Button onClick={() => setDeleteTaskMenu(true)} className="">
+                                Löschen
                             </Button>
-                            <Button
-                                className="resize-none w-1/4 bg-red-500 hover:bg-red-600  dark:bg-red-500 dark:hover:bg-red-600"
-                                onClick={async () => {
-                                    await apiDeleteTask(task.id);
-                                    setUpdate(!update);
-                                    switchContent("EventOverview");
-                                    setMenuSensitive("date");
-                                }}
-                            >
-                                Ja
-                            </Button>
-                        </div>
-                    )}
-                    <Button
-                        onClick={() => {
-                            switchContent("EventOverview");
-                            setMenuSensitive("date");
-                        }}
-                        className="resize-none w-1/2"
-                    >
-                        Abbrechen
-                    </Button>
+                        )}
+                        {deleteTaskMenu && (
+                            <div className="flex w-full justify-between px-1">
+                                <Button
+                                    className=" bg-green-500 hover:bg-green-600 dark:bg-green-500 dark:hover:bg-green-600"
+                                    onClick={() => setDeleteTaskMenu(false)}
+                                >
+                                    Nein
+                                </Button>
+                                <Button
+                                    className="px-5  bg-red-500 hover:bg-red-600  dark:bg-red-500 dark:hover:bg-red-600"
+                                    onClick={async () => {
+                                        await apiDeleteTask(task.id);
+                                        setUpdate(!update);
+                                        switchContent("EventOverview");
+                                        setMenuSensitive("date");
+                                    }}
+                                >
+                                    Ja
+                                </Button>
+                            </div>
+                        )}
+                        <Button
+                            onClick={() => {
+                                switchContent("EventOverview");
+                                setMenuSensitive("date");
+                            }}
+                            className="text-nowrap"
+                        >
+                            Abbrechen
+                        </Button>
+                    </div>
                 </div>
             </div>
         </>

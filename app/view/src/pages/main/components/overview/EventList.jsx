@@ -24,6 +24,7 @@ function EventList({
     setTasks,
     updateTask,
     setUpdateTask,
+    switchContent,
 }) {
     const scrollContainer = useRef(null);
     const scrollContainerInner = useRef(null);
@@ -190,14 +191,14 @@ function EventList({
                                         {tasks
                                             .filter((t) => t.id_event === event.id)
                                             .map((t, i) => (
-                                                <div className="flex justify-between" key={t.id}>
+                                                <div className="flex justify-between items-center" key={t.id}>
                                                     <div
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             toggleTaskSelection(t);
                                                         }}
                                                         className={
-                                                            "w-full cursor-pointer hover:bg-orange-600 hover:text-white " +
+                                                            " w-full cursor-pointer hover:bg-orange-600 hover:text-white " +
                                                             (isTaskSelected(t) ? " bg-orange-500 text-white " : " ") +
                                                             (i + 1 === tasks.filter((t) => t.id_event === event.id).length ? " rounded-b-sm " : " ")
                                                         }
@@ -205,7 +206,7 @@ function EventList({
                                                         {t.title}
                                                     </div>
                                                     <div className="flex">
-                                                        <div
+                                                        {/* <div
                                                             onClick={async (e) => {
                                                                 e.stopPropagation();
                                                                 setUpdateTask(t);
@@ -226,7 +227,7 @@ function EventList({
                                                                 setUpdateTask(null);
                                                             }}
                                                             className={"w-6 h-6 m-1 rounded-full " + (t.in_progress ? "bg-yellow-500" : "bg-yellow-200")}
-                                                        ></div>
+                                                        ></div> */}
                                                         <div
                                                             onClick={async (e) => {
                                                                 e.stopPropagation();
@@ -244,7 +245,15 @@ function EventList({
                                     </div>
                                 )}
                             </div>
-                            <div className="w-5 rounded-e" style={{ background: event.color }}></div>
+                            <div
+                                className="w-5 rounded-e"
+                                style={{ background: event.color }}
+                                onClick={async (e) => {
+                                    e.stopPropagation();
+                                    setSelectedEvent(event);
+                                    switchContent("EditEvent");
+                                }}
+                            ></div>
                         </li>
                     </React.Fragment>
                 ))}

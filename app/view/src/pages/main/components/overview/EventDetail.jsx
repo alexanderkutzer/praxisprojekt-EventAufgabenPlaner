@@ -67,65 +67,66 @@ function EventDetail({
                     className="p-2 border rounded"
                 />
                 {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-                <Button
-                    className="resize-none w-1/2"
-                    onClick={() => {
-                        event.startDateTime = event.start;
-                        event.endDateTime = event.end;
-                        let updatedEvent = {
-                            id: event.id,
-                            id_user: event.id_user,
-                            title: event.title,
-                            description: event.description,
-                            startDateTime: event.start,
-                            startTime: JSON.stringify(selectedTime),
-                            endDateTime: event.end,
-                            color: color,
-                        };
-
-                        apiUpdateEvent(updatedEvent.id, updatedEvent);
-                        setUpdate(!update);
-                        switchContent("EventOverview");
-                        setMenuSensitive("date");
-                    }}
-                >
-                    Event updaten
-                </Button>
-                {!deleteEventMenu && (
-                    <Button onClick={() => setDeleteEventMenu(true)} className="resize-none w-1/2">
-                        Löschen
+                <div className="flex justify-between">
+                    <Button
+                        className="text-nowrap"
+                        onClick={() => {
+                            event.startDateTime = event.start;
+                            event.endDateTime = event.end;
+                            let updatedEvent = {
+                                id: event.id,
+                                id_user: event.id_user,
+                                title: event.title,
+                                description: event.description,
+                                startDateTime: event.start,
+                                startTime: JSON.stringify(selectedTime),
+                                endDateTime: event.end,
+                                color: color,
+                            };
+                            apiUpdateEvent(updatedEvent.id, updatedEvent);
+                            setUpdate(!update);
+                            switchContent("EventOverview");
+                            setMenuSensitive("date");
+                        }}
+                    >
+                        Event updaten
                     </Button>
-                )}
-                {deleteEventMenu && (
-                    <div className="flex justify-between">
-                        <Button
-                            className="resize-none w-1/4 bg-green-500 hover:bg-green-600 dark:bg-green-500 dark:hover:bg-green-600"
-                            onClick={() => setDeleteEventMenu(false)}
-                        >
-                            Nein
+                    {!deleteEventMenu && (
+                        <Button onClick={() => setDeleteEventMenu(true)} className="">
+                            Löschen
                         </Button>
-                        <Button
-                            className="resize-none w-1/4 bg-red-500 hover:bg-red-600  dark:bg-red-500 dark:hover:bg-red-600"
-                            onClick={() => {
-                                apiDeleteEvent(event.id);
-                                setUpdate(!update);
-                                switchContent("EventOverview");
-                                setMenuSensitive("date");
-                            }}
-                        >
-                            Ja
-                        </Button>
-                    </div>
-                )}
-                <Button
-                    className="resize-none w-1/2"
-                    onClick={() => {
-                        switchContent("EventOverview");
-                        setMenuSensitive("date");
-                    }}
-                >
-                    Abbrechen
-                </Button>
+                    )}
+                    {deleteEventMenu && (
+                        <div className="flex w-full justify-between px-1">
+                            <Button
+                                className=" bg-green-500 hover:bg-green-600 dark:bg-green-500 dark:hover:bg-green-600"
+                                onClick={() => setDeleteEventMenu(false)}
+                            >
+                                Nein
+                            </Button>
+                            <Button
+                                className="px-5 bg-red-500 hover:bg-red-600  dark:bg-red-500 dark:hover:bg-red-600"
+                                onClick={() => {
+                                    apiDeleteEvent(event.id);
+                                    setUpdate(!update);
+                                    switchContent("EventOverview");
+                                    setMenuSensitive("date");
+                                }}
+                            >
+                                Ja
+                            </Button>
+                        </div>
+                    )}
+                    <Button
+                        className="text-nowrap"
+                        onClick={() => {
+                            switchContent("EventOverview");
+                            setMenuSensitive("date");
+                        }}
+                    >
+                        Abbrechen
+                    </Button>
+                </div>
             </div>
         </>
     );
