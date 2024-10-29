@@ -5,7 +5,7 @@ function ButtonStart({ className, disabled, onClick, type, active }) {
         <button
             disabled={disabled}
             className={
-                "rounded-full w-14 h-14 m-2 border border-transparent font-bold flex items-center justify-center overflow-hidden " +
+                "rounded-full w-14 h-14  border border-transparent font-bold flex items-center justify-center overflow-hidden " +
                 (disabled
                     ? "text-gray-300 dark:text-gray-700 cursor-not-allowed"
                     : "text-gray-200 dark:text-gray-800 bg-gray-700 dark:bg-gray-[#393632] hover:bg-gray-300 dark:hover:bg-gray-700 hover:text-black dark:hover:text-white hover:border-black dark:hover:border-white") +
@@ -17,11 +17,7 @@ function ButtonStart({ className, disabled, onClick, type, active }) {
             active={active}
         >
             {/* Bild, das im Button integriert ist */}
-            <img 
-                src="/img.png" 
-                alt="Icon" 
-                className="w-full h-full object-cover rounded-full" 
-            />
+            <img src="/img.png" alt="Icon" className="w-full h-full object-cover rounded-full" />
         </button>
     );
 }

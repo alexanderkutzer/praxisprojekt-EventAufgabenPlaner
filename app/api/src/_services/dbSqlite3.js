@@ -64,7 +64,7 @@ export class DBServiceSqlite3 {
             .join(", ");
 
         const values = Object.values(fieldsToUpdate);
-        const sql = `UPDATE ${table} SET ${setClause} WHERE id = '${id}'`;
+        let sql = `UPDATE ${table} SET ${setClause} WHERE id = '${id}'`;
         if (filter) {
             let key = Object.keys(filter)[0];
             let value = Object.values(filter)[0];

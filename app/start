@@ -18,20 +18,20 @@ case $choice in
     ./start-dev.sh
     ;;
 2)
-    echo "Start AWS Public IP"
+    echo "Deploy on AWS Public IP"
     ./deployment.sh
     ;;
 3)
-    echo "Update AWS Public IP from the Rpository"
+    echo "Update on AWS Public IP from the Rpository"
     ./update.sh
     ;;
 4)
     echo "Backup Database from AWS"
-    ./backup-download.sh
+    ./backup_download.sh
     ;;
 5)
     echo "Restore Database to AWS"
-    ./backup-upload.sh
+    ./backup_upload.sh
     ;;
 0)
     echo "Exit"

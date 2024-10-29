@@ -8,42 +8,36 @@ function LoginPage({ setMenu, setFingerMenu }) {
     const { isLoggedIn_AuthService, setToken_AuthService } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [errorMessage, setErrorMessage] = useState(""); 
+    const [errorMessage, setErrorMessage] = useState("");
 
     function onClickRegister() {
         setMenu("register");
     }
 
     async function onClickLogin() {
-      
         let response = await apiUserLogin(email, password);
         if (response.login) {
             setToken_AuthService(response.token);
-            setErrorMessage(""); 
+            setErrorMessage("");
             if (email === "jane@doe.com") {
                 localStorage.setItem("isTestUser", true);
-                
-            
-            } else{
+            } else {
                 localStorage.removeItem("isTestUser");
             }
-            
-        
-           
         } else {
-            setErrorMessage("Incorrect email or password, or account not registered."); 
+            setErrorMessage("Incorrect email or password, or account not registered.");
         }
     }
 
     useEffect(() => {
         if (isLoggedIn_AuthService) {
             setFingerMenu("start");
-            setMenu("main");
+            setMenu("start");
         }
     }, [isLoggedIn_AuthService]);
 
     return (
-        <div className="container flex flex-col md:mt-40 items-center justify-center space-y-4 p-4 border border-gray-300 rounded-lg shadow-lg max-w-md mx-auto">
+        <div className="container flex flex-col items-center justify-center space-y-4 p-4 border border-gray-300 rounded-lg shadow-lg md:max-w-md">
             <p className="text-xl font-bold">Login</p>
             <h2 className="text-xl ">Wilkommen!</h2>
 
@@ -66,6 +60,8 @@ function LoginPage({ setMenu, setFingerMenu }) {
                         }
                     }}
                     type="email"
+                    name="email"
+                    autocomplete="username"
                     className=" w-3/4 form-control p-1,5 border rounded"
                     id="email"
                 />
@@ -81,6 +77,8 @@ function LoginPage({ setMenu, setFingerMenu }) {
                     type="password"
                     className="form-control p-1,5 border rounded w-3/4"
                     id="password"
+                    name="password"
+                    autocomplete="current-password"
                     onKeyDown={(event) => {
                         if (event.key === "Enter") {
                             onClickLogin();

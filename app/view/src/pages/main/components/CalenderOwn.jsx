@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Calendar from "../../../Calendar";
 import Button from "../../../components/Button";
 
-function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelectedDate, events }) {
+function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelectedDate, events, selectedEvent, setSelectedEvent }) {
     const [date, setDate] = React.useState(new Date());
     const [day, setDay] = React.useState(new Date().getDay());
     const [dayName, setDayName] = React.useState(new Date().toLocaleString("de-DE", { weekday: "short" }));
@@ -11,25 +11,29 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
     const [year, setYear] = React.useState(new Date().getFullYear());
     const [calBoxes, setCalBoxes] = React.useState([]);
     const colors = [
-        { normal: "#ef4444", light: "#fecaca" },
-        { normal: "#f97316", light: "#fed7aa" },
-        { normal: "#f59e0b", light: "#fde68a" },
-        { normal: "#eab308", light: "#fef08a" },
-        { normal: "#84cc16", light: "#d9f99d" },
-        { normal: "#22c55e", light: "#bbf7d0" },
-        { normal: "#10b981", light: "#a7f3d0" },
-        { normal: "#14b8a6", light: "#99f6e4" },
-        { normal: "#06b6d4", light: "#a5f3fc" },
-        { normal: "#0ea5e9", light: "#bae6fd" },
-        { normal: "#3b82f6", light: "#bfdbfe" },
-        { normal: "#6366f1", light: "#c7d2fe" },
-        { normal: "#8b5cf6", light: "#ddd6fe" },
-        { normal: "#a855f7", light: "#e9d5ff" },
-        { normal: "#d946ef", light: "#f5d0fe" },
-        { normal: "#ec4899", light: "#fbcfe8" },
-        { normal: "#f43f5e", light: "#fecdd3" },
+        { normal: "#ef4444", light: "#fecaca", dark: "#991b1b" },
+        { normal: "#f97316", light: "#fed7aa", dark: "#9a3412" },
+        { normal: "#f59e0b", light: "#fde68a", dark: "#92400e" },
+        { normal: "#eab308", light: "#fef08a", dark: "#854d0e" },
+        { normal: "#84cc16", light: "#d9f99d", dark: "#3f6212" },
+        { normal: "#22c55e", light: "#bbf7d0", dark: "#166534" },
+        { normal: "#10b981", light: "#a7f3d0", dark: "#065f46" },
+        { normal: "#14b8a6", light: "#99f6e4", dark: "#115e59" },
+        { normal: "#06b6d4", light: "#a5f3fc", dark: "#155e75" },
+        { normal: "#0ea5e9", light: "#bae6fd", dark: "#075985" },
+        { normal: "#3b82f6", light: "#bfdbfe", dark: "#1e40af" },
+        { normal: "#6366f1", light: "#c7d2fe", dark: "#3730a3" },
+        { normal: "#8b5cf6", light: "#ddd6fe", dark: "#5b21b6" },
+        { normal: "#a855f7", light: "#e9d5ff", dark: "#6b21a8" },
+        { normal: "#d946ef", light: "#f5d0fe", dark: "#86198f" },
+        { normal: "#ec4899", light: "#fbcfe8", dark: "#9d174d" },
+        { normal: "#f43f5e", light: "#fecdd3", dark: "#9f1239" },
     ];
-
+    useEffect(() => {
+        if (selectedEvent && new Date(parseInt(selectedEvent.start)).getMonth() != date.getMonth()) {
+            setDate(new Date(parseInt(selectedEvent.start) ?? Date.now()));
+        }
+    }, [selectedEvent]);
     useEffect(() => {
         setPlacesInCalenderFromMonth(date);
     }, [events, testPercentage]);
@@ -119,7 +123,7 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
             let day = date.getDate();
             let month = date.getMonth();
             let year = date.getFullYear();
-            event.taskpercent = testPercentage; //getEventTasksDone(event);
+            // event.taskpercent = testPercentage; //getEventTasksDone(event);
             calBoxes.forEach((calBox) => {
                 if (calBox.day == day && calBox.month - 1 == month && calBox.year == year) {
                     event.color = colors[calBox.events.length % colors.length];
@@ -142,7 +146,7 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
         return 100;
     }
     return (
-        <div className="w-full p-2">
+        <div className="w-full">
             <div className="w-full flex-col flex gap-2 ">
                 <div className="flex justify-between">
                     <div className="whitespace-nowrap">
@@ -150,6 +154,7 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
                             className={"rounded-e-[0]"}
                             onClick={() => {
                                 setDate(new Date(date.setMonth(date.getMonth() - 1)));
+                                setSelectedDate(new Date(date.setMonth(date.getMonth() - 1)).setHours(0, 0, 0, 0));
                             }}
                         >
                             {"<"}
@@ -158,16 +163,14 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
                             className={"rounded-s-[0] rounded-e-[0]"}
                             onClick={() => {
                                 setDate(new Date(date.setMonth(date.getMonth() + 1)));
+                                setSelectedDate(new Date(date.setMonth(date.getMonth() + 1)).setHours(0, 0, 0, 0));
                             }}
                         >
                             {">"}
                         </Button>
                         <Button className={"rounded-s-[0]"}>{monthName}</Button>
                     </div>
-                    <div className="whitespace-nowrap">
-                        <Button onClick={() => setTestPercentage(testPercentage <= 0 ? 0 : testPercentage - 5)}>-</Button>
-                        <Button onClick={() => setTestPercentage(testPercentage >= 100 ? 100 : testPercentage + 5)}>+</Button>
-                    </div>
+
                     <div className="whitespace-nowrap">
                         <Button
                             onClick={() => {
@@ -175,7 +178,7 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
                                 setSelectedDate(new Date().setHours(0, 0, 0, 0));
                             }}
                         >
-                            {new Date(Date.now()).getDay() + "." + (new Date(Date.now()).getMonth() + 1) + "." + new Date(Date.now()).getFullYear()}
+                            {new Date(Date.now()).getDate() + "." + (new Date(Date.now()).getMonth() + 1) + "." + new Date(Date.now()).getFullYear()}
                         </Button>
                     </div>
                     <div className="whitespace-nowrap">
@@ -184,6 +187,7 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
                             className={"rounded-s-[0] rounded-e-[0]"}
                             onClick={() => {
                                 setDate(new Date(date.setYear(date.getFullYear() + -1)));
+                                setSelectedDate(new Date(date.setYear(date.getFullYear() + -1)).setHours(0, 0, 0, 0));
                             }}
                         >
                             {"<"}
@@ -192,27 +196,41 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
                             className={"rounded-s-[0]"}
                             onClick={() => {
                                 setDate(new Date(date.setYear(date.getFullYear() + 1)));
+                                setSelectedDate(new Date(date.setYear(date.getFullYear() + 1)).setHours(0, 0, 0, 0));
                             }}
                         >
                             {">"}
                         </Button>
                     </div>
                 </div>
-                <div className="grid grid-cols-8 border border-gray-500 rounded">
-                    <div className=" select-none border border-gray-500 w-full justify-center flex">KW</div>
-                    <div className=" select-none border border-gray-500 w-full justify-center flex">Mo</div>
-                    <div className=" select-none border border-gray-500 w-full justify-center flex">Di</div>
-                    <div className=" select-none border border-gray-500 w-full justify-center flex">Mi</div>
-                    <div className=" select-none border border-gray-500 w-full justify-center flex">Do</div>
-                    <div className=" select-none border border-gray-500 w-full justify-center flex">Fr</div>
-                    <div className=" select-none border border-gray-500 w-full justify-center flex">Sa</div>
-                    <div className=" select-none border border-gray-500 w-full justify-center flex">So</div>
+                <div
+                    onWheel={(e) => {
+                        if (e.deltaY < 0) {
+                            //month back
+                            setDate(new Date(date.setMonth(date.getMonth() - 1)));
+                            setSelectedDate(new Date(date.setMonth(date.getMonth() - 1)).setHours(0, 0, 0, 0));
+                        } else {
+                            //month forward
+                            setDate(new Date(date.setMonth(date.getMonth() + 1)));
+                            setSelectedDate(new Date(date.setMonth(date.getMonth() + 1)).setHours(0, 0, 0, 0));
+                        }
+                    }}
+                    className="grid grid-cols-8 border border-gray-500 rounded dark:text-[#D5CDB8]"
+                >
+                    <div className=" select-none border border-gray-500 w-full justify-center flex dark:text-orange-300">KW</div>
+                    <div className=" select-none border border-gray-500 w-full justify-center flex dark:text-orange-300">Mo</div>
+                    <div className=" select-none border border-gray-500 w-full justify-center flex dark:text-orange-300">Di</div>
+                    <div className=" select-none border border-gray-500 w-full justify-center flex dark:text-orange-300">Mi</div>
+                    <div className=" select-none border border-gray-500 w-full justify-center flex dark:text-orange-300">Do</div>
+                    <div className=" select-none border border-gray-500 w-full justify-center flex dark:text-orange-300">Fr</div>
+                    <div className=" select-none border border-gray-500 w-full justify-center flex dark:text-orange-300">Sa</div>
+                    <div className=" select-none border border-gray-500 w-full justify-center flex dark:text-orange-300">So</div>
 
                     {calBoxes.map((calBox, index) => {
                         return index % 8 == 0 ? (
                             <div
                                 key={index}
-                                className="flex items-center justify-center border border-gray-500 w-full select-none aspect-square text-gray-500 text-sm  "
+                                className="flex items-center justify-center border border-gray-500 w-full max-h-[42px] h-full select-none aspect-square text-gray-500 dark:text-orange-300 text-sm  "
                             >
                                 {calBox.text}
                             </div>
@@ -228,9 +246,9 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
                                 }}
                                 key={index}
                                 className={
-                                    " flex flex-col justify-between select-none cursor-pointer border border-gray-500 aspect-square" +
-                                    (calBox.active == false ? " text-gray-400 " : "") +
-                                    (calBox.active2 == true ? " bg-orange-300 " : "")
+                                    " flex flex-col justify-between select-none cursor-pointer border border-gray-500 max-h-[42px]" +
+                                    (calBox.active == false ? " text-gray-400 dark:text-[#949083] " : "") +
+                                    (calBox.active2 == true ? " bg-orange-300 dark:text-[#393632]" : "")
                                 }
                             >
                                 {calBox.today && <div className="bg-blue-600 rounded-full w-6 h-6 text-center">{calBox.text}</div>}
@@ -238,7 +256,21 @@ function CalendarOwn({ testPercentage, setTestPercentage, selectedDate, setSelec
                                 <div className="h-[1.5rem] flex">
                                     {calBox.events.map((event, index) => {
                                         return (
-                                            <div key={index} style={{ backgroundColor: event.color.light }} className="flex items-end w-full h-full ">
+                                            <div
+                                                title={event.id}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+
+                                                    setSelectedEvent(selectedEvent == null ? event : selectedEvent?.id != event.id ? event : null);
+                                                }}
+                                                key={index}
+                                                style={{
+                                                    backgroundColor: event.color.light,
+                                                    borderColor: selectedEvent?.id == event?.id ? "orange" : "",
+                                                    borderWidth: selectedEvent?.id == event?.id ? "1px" : "0px",
+                                                }}
+                                                className="flex items-end w-full h-full"
+                                            >
                                                 <div style={{ backgroundColor: event.color.normal, height: event.taskpercent + "%" }} className="w-full"></div>
                                             </div>
                                         );

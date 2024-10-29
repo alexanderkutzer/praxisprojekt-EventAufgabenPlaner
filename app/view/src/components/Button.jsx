@@ -25,5 +25,3 @@ function Button({ type, onClick, active, children, disabled, className }) {
 }
 
 export default Button;
-
-

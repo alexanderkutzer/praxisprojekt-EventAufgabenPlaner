@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
 import Button from "../../components/Button.jsx";
 import { useAuth } from "../../service/authStatus.jsx";
 import { apiGetEvents, apiGetTasks, apiCreateEvent, apiCreateTask, apiUpdateEvent, apiDeleteEvent } from "../../service/api_calls.js";
@@ -8,13 +8,17 @@ import TaskNew from "./components/overview/TaskNew.jsx";
 import EventDetail from "./components/overview/EventDetail.jsx";
 import EventList from "./components/overview/EventList.jsx";
 import TaskDetail from "./components/overview/TaskDetail.jsx";
+import SelectedEventMenu from "./components/overview/SelectedEventMenu";
+import SelectedDateMenu from "./components/overview/SelectedDateMenu";
+import SelectedTaskMenu from "./components/overview/SelectedTaskMenu";
 
-function PageMain() {
+function PageMain({ setTop }) {
     const { isLoggedIn_AuthService, setIsLoggedIn_AuthService, token_AuthService, setToken_AuthService } = useAuth();
     const [testpercentage, setTestPercentage] = useState(50);
     const [selectedDate, setSelectedDate] = useState(new Date().setHours(0, 0, 0, 0));
     const [selectedDateForInputs, setSelectedDateForInputs] = useState("");
     const [selectedEvent, setSelectedEvent] = useState(null);
+    const [update, setUpdate] = useState(false);
     const [id_user, setIdUser] = useState("");
     const [selectedEventForTask, setSelectedEventForTask] = useState(""); // Für das Dropdown der Events
     const [menuSesitive, setMenuSensitive] = useState("");
@@ -35,67 +39,100 @@ function PageMain() {
         color: "",
     });
     const [errorMessage, setErrorMessage] = useState("");
-    useEffect(() => {
-        const fetchEvents = async () => {
-            try {
-                const response = await apiGetEvents();
-                if (response.error) {
-                    if (response.error === "Invalid token") {
-                        console.error("Token abgelaufen");
-                        setToken_AuthService(null);
-                        setIsLoggedIn_AuthService(false);
-                        return;
-                    }
-                    console.error("Fehler beim Abrufen der Events", response.error);
+
+    const containerRef = useRef(null);
+    const [boxHight, setBoxHight] = useState(0);
+
+    const positionBoxAtBottom = () => {
+        let boxNewHeight = 0;
+        if (containerRef.current) {
+            const windowHeight = window.innerHeight;
+            const boxTop = containerRef.current.getBoundingClientRect().top;
+            boxNewHeight = windowHeight - boxTop - 16;
+            containerRef.current.style.height = `${boxNewHeight}px`;
+            setBoxHight(boxNewHeight);
+        }
+    };
+
+    useLayoutEffect(() => {
+        setTimeout(() => positionBoxAtBottom(), 10);
+        window.addEventListener("resize", positionBoxAtBottom);
+        return () => {
+            window.removeEventListener("resize", positionBoxAtBottom);
+        };
+    }, []);
+    const fetch = async () => {
+        await fetchEvents();
+        await fetchTasks();
+    };
+    const fetchEvents = async () => {
+        try {
+            const response = await apiGetEvents();
+            if (response.error) {
+                if (response.error === "Invalid token") {
+                    console.error("Token abgelaufen");
+                    setToken_AuthService(null);
+                    setIsLoggedIn_AuthService(false);
                     return;
                 }
-                const events = response;
-
-                events.forEach((event) => {
-                    event.start = event.startDateTime;
-                    event.end = event.endDateTime;
-                    event.extendedProps = { description: event.description };
-                    delete event.startDateTime;
-                    delete event.endDateTime;
-                    delete event.description;
-                });
-
-                setEvents(events);
-            } catch (error) {
-                console.error("Fehler beim Abrufen der Events", error);
+                console.error("Fehler beim Abrufen der Events", response.error);
+                return;
             }
-        };
-        fetchEvents();
-    }, []);
+            const events = response;
+
+            events.forEach((event) => {
+                event.start = event.startDateTime;
+                event.end = event.endDateTime;
+                event.extendedProps = { description: event.description };
+                delete event.startDateTime;
+                delete event.endDateTime;
+                delete event.description;
+            });
+
+            setEvents(events);
+        } catch (error) {
+            console.error("Fehler beim Abrufen der Events", error);
+        }
+    };
+    const fetchTasks = async () => {
+        try {
+            const response = await apiGetTasks();
+            if (response.error) {
+                return;
+            }
+            const tasks = response;
+
+            tasks.forEach((task) => {
+                task.inProgress = task.in_progress == 1 ? true : false;
+                task.todo = task.todo == 1 ? true : false;
+                task.done = task.done == 1 ? true : false;
+            });
+            setTask(tasks);
+        } catch (error) {}
+    };
+    useEffect(() => {
+        fetch();
+    }, [update]);
     useEffect(() => {
         if (calendarRef.current) {
             const calendarApi = calendarRef.current.getApi();
             calendarApi.removeAllEvents();
             calendarApi.addEventSource(events); // Füge die aktualisierte Eventliste hinzu
         }
+        sortEvents(events);
     }, [events]);
     useEffect(() => {
-        const fetchTasks = async () => {
-            try {
-                const response = await apiGetTasks();
-                if (response.error) {
-                    return;
-                }
-                const task = response.tasks;
-
-                setTask(tasks);
-            } catch (error) {}
-        };
-        fetchTasks();
+        fetch();
     }, []);
 
     useEffect(() => {
-        let date = new Date(selectedDate);
-        let inputDate = date.getDay().toString().padStart(2, "0") + "." + (date.getMonth() + 1).toString().padStart(2, "0") + "." + date.getFullYear();
+        let date = new Date(parseInt(selectedDate));
+        let inputDate = date.getDate().toString().padStart(2, "0") + "." + (date.getMonth() + 1).toString().padStart(2, "0") + "." + date.getFullYear();
         setSelectedDateForInputs(inputDate);
         inputValues.startDateUnix = selectedDateForInputs;
         inputValues.endDateUnix = selectedDateForInputs;
         setInputValues({ ...inputValues });
+        setMenuSensitive("date");
     }, [selectedDate]);
     useEffect(() => {
         let list = [];
@@ -109,10 +146,51 @@ function PageMain() {
         });
         setEventTaskShow(list);
     }, [events]);
-    useEffect(() => {}, [tasks]);
+
+    useEffect(() => {
+        events.forEach((event) => {
+            let percentage = 100;
+            let tasks2 = tasks?.filter((task) => task.id_event == event.id);
+            let hasEventTasks = tasks2?.length > 0;
+
+            if (hasEventTasks) {
+                let done = tasks2.filter((task) => task.done == true).length;
+                let inProgress = tasks2.filter((task) => task.in_progress == true).length;
+                let todo = tasks2.filter((task) => task.todo == true).length;
+
+                let donePercentage = (done / tasks2.length) * 100;
+                event.taskpercent = donePercentage;
+            } else {
+                event.taskpercent = percentage;
+            }
+            event.hasTasks = hasEventTasks;
+        });
+        setEvents([...events]);
+    }, [tasks]);
     useEffect(() => {
         //
     }, [eventTaskShow]);
+    useEffect(() => {
+        selectedTasks.length == 0 && setMenuSensitive("date");
+        selectedTasks.length == 1 && setMenuSensitive("task");
+        selectedTasks.length == 2 && setMenuSensitive("tasks");
+    }, [selectedTasks]);
+    useEffect(() => {
+        setMenuSensitive("event");
+        selectedEvent &&
+            setInputValues({
+                title: selectedEvent.title,
+                startDate: formatDate(selectedEvent.start),
+                endDate: formatDate(selectedEvent.end),
+                description: selectedEvent.description,
+            });
+    }, [selectedEvent]);
+
+    const sortEvents = (events) => {
+        events.sort((a, b) => {
+            return a.start - b.start;
+        });
+    };
     const onClickDelete = async (event) => {
         let response = await apiDeleteEvent(event.id);
         if (response.error) {
@@ -128,10 +206,10 @@ function PageMain() {
     };
 
     const toggleTaskSelection = (task) => {
-        if (selectedTasks.includes(task)) {
-            setSelectedTasks(selectedTasks.filter((t) => t.id !== task.id));
+        if (selectedTasks.filter((t) => t.id == task.id).length == 1) {
+            setSelectedTasks([]);
         } else {
-            setSelectedTasks([...selectedTasks, task]);
+            setSelectedTasks([task]);
         }
     };
 
@@ -145,19 +223,23 @@ function PageMain() {
 
     const onDateSelect = ({ start, end }) => {};
 
-    const handleEventClick = (info) => {
+    const handleEventClick = ({ event }) => {
+        if (selectedEvent) {
+            if (selectedEvent.id === event.id) {
+                setSelectedEvent(null);
+                return;
+            }
+        }
         setSelectedEvent({
-            id: info.event.id,
-            title: info.event.title,
-            start: info.event.startStr,
-            end: info.event.endStr,
+            id: event.id,
+            title: event.title,
+            start: event.start,
+            end: event.end,
         });
-        setActiveContent("Details");
     };
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
-        console.log(name, value);
         setInputValues({
             ...inputValues,
             [name]: value == "on" || value == "off" ? event.target.checked : value,
@@ -167,11 +249,9 @@ function PageMain() {
     const switchContent = (content) => {
         setActiveContent(content);
         if (content === "AddEvent") {
-            setSelectedEvent(null);
             setInputValues({ title: "", startDate: "", endDate: "", description: "" });
             setErrorMessage("");
         } else if (content === "EventOverview") {
-            setSelectedEvent(null);
             setInputValues({ title: "", startDate: "", endDate: "", description: "" });
         } else if (content === "AddTask") {
             setInputValues({ title: "", description: "", id_event: "", todo: false, inProgress: false, done: false });
@@ -191,7 +271,7 @@ function PageMain() {
         }
     };
 
-    const saveEvent = async () => {
+    const saveEvent = async (typeOfEvent) => {
         if (!inputValues.title || !inputValues.startDate) {
             setErrorMessage("Titel und Startdatum müssen angegeben werden.");
             return;
@@ -204,7 +284,7 @@ function PageMain() {
 
         try {
             // Falls ein Event ausgewählt wurde, wird es aktualisiert
-            if (selectedEvent) {
+            if (typeOfEvent == "update") {
                 const updatedEvent = {
                     id: selectedEvent.id,
                     title: inputValues.title,
@@ -248,6 +328,8 @@ function PageMain() {
         }
 
         try {
+            <div>Test 1</div>;
+
             const newTask = {
                 id_event: inputValues.id_event, // Event-ID aus dem Dropdown
                 title: inputValues.title,
@@ -298,16 +380,6 @@ function PageMain() {
 
     return (
         <>
-            <div>
-                <div>{selectedDate}</div>
-                <div>{selectedDateForInputs}</div>
-                <div>{menuSesitive}</div>
-                <div>{activeContent}</div>
-                <div>{JSON.stringify(inputValues)}</div>
-                <Button onClick={() => setMenuSensitive(menuSesitive != "date" ? "date" : "")}>Select a Date</Button>
-                <Button onClick={() => setMenuSensitive(menuSesitive != "task" ? "task" : "")}>Select a Task</Button>
-                <Button onClick={() => setMenuSensitive(menuSesitive != "tasks" ? "tasks" : "")}>Selected Tasks</Button>
-            </div>
             <div className="flex flex-col lg:flex-row  lg:items-start sm:items-center  w-full mt-8 space-x-5">
                 <div className="w-full sm:w-1/2 max-w-[50%] min-w-[450px] border border-gray-300 dark:border-[#D5CDB8] p-4 rounded-lg shadow-lg ">
                     <CalendarOwn
@@ -316,6 +388,8 @@ function PageMain() {
                         selectedDate={selectedDate}
                         setSelectedDate={setSelectedDate}
                         events={events}
+                        selectedEvent={selectedEvent}
+                        setSelectedEvent={setSelectedEvent}
                     ></CalendarOwn>
                     {/* <Calendar
                         key={JSON.stringify(events)} // Neurendering bei Änderung
@@ -326,21 +400,59 @@ function PageMain() {
                         ref={calendarRef}
                     /> */}
                 </div>
-                        <div className="hidden sm:block p-2">{/*Dient als Padding zwischen den DIV's bei sm view (wird zurzeit noch bei jeder ansicht angezeigt*/}</div>
-                <div className="w-full  sm:w-1/2 max-w-[50%] min-w-[450px] border border-gray-300 dark:border-[#D5CDB8] p-4 rounded-lg shadow-lg">
-                    <div className="flex gap-2 w-full justify-between">
+                <div className="hidden sm:block p-2">{/*Dient als Padding zwischen den DIV's bei sm view (wird zurzeit noch bei jeder ansicht angezeigt*/}</div>
+                <div ref={containerRef} className="w-full  sm:w-1/2 max-w-[50%] min-w-[450px] border border-gray-300 dark:border-[#D5CDB8] p-4 rounded-lg shadow-lg">
+                    <div className="lg:text-base flex gap-2 w-full justify-between mb-2">
+                        <Button
+                            onClick={() => {
+                                setMenuSensitive("date");
+                                setActiveContent("EventOverview");
+                                setSelectedTasks([]);
+                            }}
+                        >
+                            {"<<"}
+                        </Button>
+                        <div>
+                            {menuSesitive == "date" && "Datum"}
+                            {menuSesitive == "event" && "Event"}
+                            {menuSesitive == "task" && "Task"}
+                            {menuSesitive == "tasks" && "Tasks"}
+                        </div>
+                    </div>
+                    <div className="lg:text-base flex gap-2 w-full justify-between mb-2">
                         {menuSesitive == "date" && (
-                            <div className="flex w-full justify-between">
-                                <Button onClick={() => switchContent("EventOverview")}>Event Übersicht</Button>
-                                <Button onClick={() => switchContent("AddEvent")}>Neues Event</Button>
-                                <Button onClick={() => switchContent("AddTask")}>Neue Aufgabe</Button>
-                            </div>
+                            <>
+                                <SelectedDateMenu
+                                    switchContent={switchContent}
+                                    selectedEvent={selectedEvent}
+                                    setSelectedEvent={setSelectedEvent}
+                                    activeContent={activeContent}
+                                    events={events}
+                                    tasks={tasks}
+                                ></SelectedDateMenu>
+                            </>
                         )}
-                        {menuSesitive == "events" && "Events"}
+                        {menuSesitive == "event" && (
+                            <SelectedEventMenu
+                                switchContent={switchContent}
+                                selectedEvent={selectedEvent}
+                                setSelectedEvent={setSelectedEvent}
+                                activeContent={activeContent}
+                                events={events}
+                                tasks={tasks}
+                            ></SelectedEventMenu>
+                        )}
                         {menuSesitive == "task" && (
-                            <div>
-                                <Button onClick={() => switchContent("EditTask")}>Aufgabe Bearbeiten</Button>
-                            </div>
+                            <>
+                                <SelectedTaskMenu
+                                    switchContent={switchContent}
+                                    selectedEvent={selectedEvent}
+                                    setSelectedEvent={setSelectedEvent}
+                                    activeContent={activeContent}
+                                    events={events}
+                                    tasks={tasks}
+                                ></SelectedTaskMenu>
+                            </>
                         )}
                         {menuSesitive == "tasks" && (
                             <div className="flex w-full justify-between">
@@ -386,50 +498,76 @@ function PageMain() {
                             handleInputChange={handleInputChange}
                             switchContent={switchContent}
                             errorMessage={errorMessage}
+                            boxHight={boxHight}
+                            update={update}
+                            setUpdate={setUpdate}
+                            menuSesitive={menuSesitive}
+                            setMenuSensitive={setMenuSensitive}
                         ></EventNew>
-                    ) : activeContent === "AddTask" ? (
-                        <TaskNew
-                            events={events}
-                            saveTask={saveTask}
-                            inputValues={inputValues}
-                            handleInputChange={handleInputChange}
-                            handleEventSelectChange={handleEventSelectChange}
-                            switchContent={switchContent}
-                            errorMessage={errorMessage}
+                    ) : activeContent === "EditEvent" ? (
+                        <EventDetail
+                            selectedDate={selectedDate}
+                            selectedDateForInputs={selectedDateForInputs}
+                            selectedEvent={selectedEvent}
                             formatDate={formatDate}
                             formatTime={formatTime}
-                        ></TaskNew>
-                    ) : activeContent === "Bearbeiten" ? (
-                        <EventDetail
                             saveEvent={saveEvent}
-                            switchContent={switchContent}
                             inputValues={inputValues}
+                            setInputValues={setInputValues}
                             handleInputChange={handleInputChange}
+                            switchContent={switchContent}
                             errorMessage={errorMessage}
+                            boxHight={boxHight}
+                            update={update}
+                            setUpdate={setUpdate}
+                            menuSesitive={menuSesitive}
+                            setMenuSensitive={setMenuSensitive}
                         ></EventDetail>
-                    ) : activeContent === "EditTask" ? (
-                        <TaskNewTaskNew
+                    ) : activeContent === "AddTask" ? (
+                        <TaskNew
                             inputValues={inputValues}
                             saveTask={saveTask}
                             handleInputChange={handleInputChange}
                             switchContent={switchContent}
                             errorMessage={errorMessage}
                             events={events}
+                            selectedEvent={selectedEvent}
                             selectedEventForTask={selectedEventForTask}
                             formatDate={formatDate}
                             formatTime={formatTime}
-                        ></TaskNewTaskNew>
-                    ) : (
-                        <div>
-                            <h1 className="text-xl flex-col font-bold"></h1>
-                            <p></p>
-                        </div>
-                    )}
+                            boxHight={boxHight}
+                            update={update}
+                            setUpdate={setUpdate}
+                            menuSesitive={menuSesitive}
+                            setMenuSensitive={setMenuSensitive}
+                        ></TaskNew>
+                    ) : activeContent === "EditTask" ? (
+                        <TaskDetail
+                            inputValues={inputValues}
+                            saveTask={saveTask}
+                            handleInputChange={handleInputChange}
+                            switchContent={switchContent}
+                            errorMessage={errorMessage}
+                            events={events}
+                            selectedEvent={selectedEvent}
+                            selectedEventForTask={selectedEventForTask}
+                            selectedTasks={selectedTasks}
+                            formatDate={formatDate}
+                            formatTime={formatTime}
+                            boxHight={boxHight}
+                            update={update}
+                            setUpdate={setUpdate}
+                            menuSesitive={menuSesitive}
+                            setMenuSensitive={setMenuSensitive}
+                        ></TaskDetail>
+                    ) : null}
 
                     {activeContent === "EventOverview" && (
                         <EventList
                             testpercentage={testpercentage}
                             events={events}
+                            selectedEvent={selectedEvent}
+                            setSelectedEvent={setSelectedEvent}
                             handleEventClick={handleEventClick}
                             formatDate={formatDate}
                             formatTime={formatTime}
@@ -438,9 +576,30 @@ function PageMain() {
                             tasks={tasks}
                             toggleTaskSelection={toggleTaskSelection}
                             isTaskSelected={isTaskSelected}
+                            boxHight={boxHight}
+                            selectedDate={selectedDate}
+                            setTop={setTop}
+                            update={update}
+                            setUpdate={setUpdate}
+                            menuSesitive={menuSesitive}
+                            setMenuSensitive={setMenuSensitive}
                         ></EventList>
                     )}
                 </div>
+            </div>
+            <div className="text-xs hidden">
+                <div>selectedDate:{selectedDate}</div>
+                <div>selectedDateForInputs:{selectedDateForInputs}</div>
+                <div>menuSesitive:{menuSesitive}</div>
+                <div>activeContent:{activeContent}</div>
+                <div>selectedEvent:{JSON.stringify(selectedEvent)}</div>
+                <div>inputValues:{JSON.stringify(inputValues)}</div>
+                <Button onClick={() => setMenuSensitive(menuSesitive != "date" ? "date" : "")}>Select a Date</Button>
+                <Button onClick={() => setMenuSensitive(menuSesitive != "task" ? "task" : "")}>Select a Task</Button>
+                <Button onClick={() => setMenuSensitive(menuSesitive != "tasks" ? "tasks" : "")}>Selected Tasks</Button>
+
+                <Button onClick={() => setTestPercentage(testpercentage <= 0 ? 0 : testpercentage - 5)}>Percentage -</Button>
+                <Button onClick={() => setTestPercentage(testpercentage >= 100 ? 100 : testpercentage + 5)}>Percentage +</Button>
             </div>
         </>
     );

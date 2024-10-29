@@ -5,7 +5,8 @@ const sqls = [
         title TEXT,
         description TEXT,
         startDateTime TEXT,
-        endDateTime TEXT
+        endDateTime TEXT,
+        color TEXT
     )`,
     `CREATE TABLE IF NOT EXISTS tasks (
         id TEXT PRIMARY KEY,
@@ -34,6 +35,7 @@ const sqls = [
         isAdmin BOOLEAN, 
         token TEXT
     )`,
+    // `ALTER TABLE 'events' ADD COLUMN color`,
 ];
 
 export class DBService {
