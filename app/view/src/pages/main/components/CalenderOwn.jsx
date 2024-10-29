@@ -21,6 +21,8 @@ function CalendarOwn({
     const [year, setYear] = React.useState(new Date().getFullYear());
     const [calBoxes, setCalBoxes] = React.useState([]);
     const [calView, setCalView] = React.useState(false);
+    const [lastClientX, setLastClientX] = React.useState(0);
+    const [move, setMove] = React.useState(true);
 
     useEffect(() => {
         if (selectedEvent != null) {
@@ -209,6 +211,29 @@ function CalendarOwn({
                     </div>
                 </div>
                 <div
+                    onTouchMove={(e) => {
+                        e.preventDefault();
+
+                        console.log("touchmove", lastClientX - e.changedTouches[0].clientX);
+                        //check is only left or right move
+                        console.log("lastClientX", Math.abs(lastClientX - e.changedTouches[0].clientX));
+                        if (Math.abs(lastClientX - e.changedTouches[0].clientX) > 200 && move) {
+                            setLastClientX(e.changedTouches[0].clientX);
+                            if (lastClientX > e.changedTouches[0].clientX) {
+                                //month back
+                                setDate(new Date(date.setMonth(date.getMonth() - 1)));
+                                setSelectedDate(new Date(date.setMonth(date.getMonth() - 1)).setHours(0, 0, 0, 0));
+                            } else {
+                                //month forward
+                                setDate(new Date(date.setMonth(date.getMonth() + 1)));
+                                setSelectedDate(new Date(date.setMonth(date.getMonth() + 1)).setHours(0, 0, 0, 0));
+                            }
+                            setMove(false);
+                        }
+                    }}
+                    onTouchEnd={(e) => {
+                        setMove(true);
+                    }}
                     onWheel={(e) => {
                         if (e.deltaY < 0) {
                             //month back

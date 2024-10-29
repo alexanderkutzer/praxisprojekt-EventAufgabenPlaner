@@ -84,7 +84,6 @@ function PageMain({ setTop }) {
                 }
                 delete event.startDateTime;
                 delete event.endDateTime;
-                delete event.description;
             });
 
             setEvents(events);
@@ -515,6 +514,7 @@ function PageMain({ setTop }) {
                             setTasks={setTask}
                             updateTask={updateTask}
                             setUpdateTask={setUpdateTask}
+                            switchContent={switchContent}
                         ></EventList>
                     )}
                 </div>

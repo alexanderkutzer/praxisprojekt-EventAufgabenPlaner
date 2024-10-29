@@ -61,7 +61,7 @@ function TaskNew({
                     placeholder="Aufgabe eingeben"
                     className="p-2 border rounded"
                 />
-                <p className="mt-3">Details zur Aufgabe</p>
+                {/* <p className="mt-3">Details zur Aufgabe</p>
                 <input
                     type="text"
                     name="description"
@@ -71,7 +71,7 @@ function TaskNew({
                     }}
                     placeholder="Aufgaben Details"
                     className="p-2 border rounded"
-                />
+                /> */}
                 <p>Status</p>
                 <div className="flex flex-col gap-2 my-4">
                     <div className="flex">
