@@ -11,6 +11,7 @@
 ### Variante 1:
 
 **über das oben genannte start script:**
+- Hier findet man ein Menu, womit man alle Developement Optionen auswählen kann -> Deployment, Update, Backup, ... 
 
 ### Variante 2: bevorzugt
 
