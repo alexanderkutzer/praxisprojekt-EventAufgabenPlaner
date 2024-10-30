@@ -1,6 +1,8 @@
 #Dies ist eine Beispieldetei für die Erstellung der ".env" Datei
 #Du musst von deinem AWS Konto alle AWS-Umgebungsvariablen  importieren!
 # Hier deine AWS Zugangsschlüssel reinkopieren (Option 1):
+#Da es sich bei unserem Projekt um Test-AWS Acounts gehandelt hat, wurden täglich die Keys geändert. 
+#aus diesem grun wurden diese hier tägöich neu genötigt und so abgefragt:
 export AWS_ACCESS_KEY_ID=
 export AWS_SECRET_ACCESS_KEY=
 export AWS_SESSION_TOKEN=
